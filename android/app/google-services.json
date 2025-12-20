@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "414108113530",
+    "project_id": "receipt-book-95606",
+    "storage_bucket": "receipt-book-95606.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414108113530:android:ed8fa031f71307a3b679c3",
+        "android_client_info": {
+          "package_name": "com.example.receipt_book"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "414108113530-pc4pq3l45m9s56sqha4jkppq209e85cs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.receipt_book",
+            "certificate_hash": "cbb5adb7f22d0fbb30b3fafa8e8a96b0ff52570c"
+          }
+        },
+        {
+          "client_id": "414108113530-4lq20d0psa980i49am1u4hi5jc2fcrg4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKxW_Cv6ueUHBY5mY9ogqK_LJMqX2oVQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "414108113530-4lq20d0psa980i49am1u4hi5jc2fcrg4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "414108113530-3nbt6sskrtd24kaalp5t1g54nvmpdnkg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.receiptBook"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
