@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:receipt_book/app.dart';
 import 'firebase_options.dart';
 
-void main() async {
+Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

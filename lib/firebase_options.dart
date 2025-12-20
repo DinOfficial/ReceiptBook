@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -63,6 +54,40 @@ class DefaultFirebaseOptions {
     messagingSenderId: '414108113530',
     projectId: 'receipt-book-95606',
     storageBucket: 'receipt-book-95606.firebasestorage.app',
+    androidClientId: '414108113530-pc4pq3l45m9s56sqha4jkppq209e85cs.apps.googleusercontent.com',
+    iosClientId: '414108113530-3nbt6sskrtd24kaalp5t1g54nvmpdnkg.apps.googleusercontent.com',
     iosBundleId: 'com.example.receiptBook',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyArdH1cKIfRyNjrwsWvYKnR3zfsrhIqqbk',
+    appId: '1:414108113530:web:113bafb9d44ddfeab679c3',
+    messagingSenderId: '414108113530',
+    projectId: 'receipt-book-95606',
+    authDomain: 'receipt-book-95606.firebaseapp.com',
+    storageBucket: 'receipt-book-95606.firebasestorage.app',
+    measurementId: 'G-7Y1BFHR9NT',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAGP5fiOgehQkozTgEN5AX1NBqrhh_-bDM',
+    appId: '1:414108113530:ios:082deafcb5676fc3b679c3',
+    messagingSenderId: '414108113530',
+    projectId: 'receipt-book-95606',
+    storageBucket: 'receipt-book-95606.firebasestorage.app',
+    androidClientId: '414108113530-pc4pq3l45m9s56sqha4jkppq209e85cs.apps.googleusercontent.com',
+    iosClientId: '414108113530-3nbt6sskrtd24kaalp5t1g54nvmpdnkg.apps.googleusercontent.com',
+    iosBundleId: 'com.example.receiptBook',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyArdH1cKIfRyNjrwsWvYKnR3zfsrhIqqbk',
+    appId: '1:414108113530:web:b267b1e67827f17eb679c3',
+    messagingSenderId: '414108113530',
+    projectId: 'receipt-book-95606',
+    authDomain: 'receipt-book-95606.firebaseapp.com',
+    storageBucket: 'receipt-book-95606.firebasestorage.app',
+    measurementId: 'G-D81D52F96M',
+  );
+
 }
