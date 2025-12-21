@@ -38,7 +38,7 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
             ),
           ),
           inputDecorationTheme: InputDecorationThemeData(
-            hintStyle: TextStyle(color: Color(0xff2692ce)),
+            labelStyle: TextStyle(color: Colors.black54),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Color(0xff2692ce), width: 1.5),

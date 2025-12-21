@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ForgotEmailScreen extends StatefulWidget {
   const ForgotEmailScreen({super.key});
+
   static final String name = 'forgot-email';
 
   @override

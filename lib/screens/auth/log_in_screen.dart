@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/common_provider.dart';
+import 'package:receipt_book/screens/app_main_layout.dart';
 import 'package:receipt_book/screens/auth/register_screen.dart';
 import 'package:receipt_book/welcome_app_bar.dart';
 
@@ -47,12 +48,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 SizedBox(height: 16),
-                TextFormField(decoration: InputDecoration(hintText: 'Email')),
+                TextFormField(decoration: InputDecoration(label: Text('Email'))),
                 SizedBox(height: 16),
                 TextFormField(
                   obscureText: passwordToggleProvider.isVisible,
                   decoration: InputDecoration(
-                    hintText: 'Password',
+                    label: Text('Password'),
                     suffixIcon: IconButton(
                       onPressed: () {
                         passwordToggleProvider.togglePassword();
@@ -90,7 +91,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _onTapLogin() {}
+  void _onTapLogin() {
+    Navigator.pushNamedAndRemoveUntil(context, AppMainLayout.name, (p) => false);
+  }
 
   void _onTapRegistration() {
     Navigator.pushNamed(context, RegistrationScreen.name);

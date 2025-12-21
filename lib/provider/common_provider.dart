@@ -19,13 +19,23 @@ class WelcomeScreenProvider extends ChangeNotifier {
 
 class PasswordTogglerProvider extends ChangeNotifier {
   bool _isVisible = false;
+  bool _isConfirmVisible = false;
 
   void _togglePassword() {
     _isVisible = !_isVisible;
     notifyListeners();
   }
 
+  void _toggleConfirmPassword() {
+    _isConfirmVisible = !_isConfirmVisible;
+    notifyListeners();
+  }
+
   bool get isVisible => _isVisible;
 
+  bool get isConfirmVisible => _isConfirmVisible;
+
   void Function() get togglePassword => _togglePassword;
+
+  void Function() get toggleConfirmPassword => _toggleConfirmPassword;
 }
