@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 // *********** Welcome Screen Provider ***************//
 class WelcomeScreenProvider extends ChangeNotifier {
   String? _selectedValue = 'English';
@@ -16,4 +15,17 @@ class WelcomeScreenProvider extends ChangeNotifier {
   List<String> get menuItemList => _items;
 
   void Function(String?) get onChangeMenu => _onChangeMenu;
+}
+
+class PasswordTogglerProvider extends ChangeNotifier {
+  bool _isVisible = false;
+
+  void _togglePassword() {
+    _isVisible = !_isVisible;
+    notifyListeners();
+  }
+
+  bool get isVisible => _isVisible;
+
+  void Function() get togglePassword => _togglePassword;
 }

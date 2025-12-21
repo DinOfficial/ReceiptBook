@@ -105,6 +105,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   void _onTapLogin() {
-    Navigator.pushNamed(context, RegisterScreen.name);
+    Navigator.pushNamed(context, RegistrationScreen.name);
   }
 }

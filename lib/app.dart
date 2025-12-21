@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/common_provider.dart';
+import 'package:receipt_book/provider/login_provider.dart';
 import 'package:receipt_book/screens/app_main_layout.dart';
 import 'package:receipt_book/screens/auth/forgot_email_screen.dart';
 import 'package:receipt_book/screens/auth/log_in_screen.dart';
@@ -19,7 +20,12 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => WelcomeScreenProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
+        ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
+        ChangeNotifierProvider(create: (_) => PasswordTogglerProvider()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -29,7 +35,6 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
               foregroundColor: Color(0xff2692ce),
               side: BorderSide(color: Color(0xff2692ce)),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              // padding: EdgeInsets.zero,
             ),
           ),
           inputDecorationTheme: InputDecorationThemeData(
@@ -52,7 +57,7 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
         routes: {
           SplashScreen.name: (_) => SplashScreen(),
           WelcomeScreen.name: (_) => WelcomeScreen(),
-          RegisterScreen.name: (_) => RegisterScreen(),
+          RegistrationScreen.name: (_) => RegistrationScreen(),
           LoginScreen.name: (_) => LoginScreen(),
           ForgotEmailScreen.name: (_) => ForgotEmailScreen(),
           AppMainLayout.name: (_) => AppMainLayout(),
