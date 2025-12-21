@@ -14,13 +14,9 @@ class WelcomeScreen extends StatefulWidget {
 
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
-
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  String selectedValue = 'English';
-  List<String> items = ['English', 'বাংলা', 'हिन्दी'];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,12 +30,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             SizedBox(height: 52),
             Image.asset(
               'assets/images/logo.png',
-              width: 160,
-              height: 160,
+              width: 140,
+              height: 140,
             ).animate().fadeIn(duration: 900.ms),
             Text(
               '"Receipt Book"',
-              style: GoogleFonts.akayaKanadaka(fontSize: 38, fontWeight: FontWeight.w600),
+              style: GoogleFonts.akayaKanadaka(fontSize: 38, fontWeight: FontWeight.w600, color: Color(0xff2692ce)),
             ),
             SizedBox(height: 16),
             SizedBox(
@@ -88,7 +84,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             TextButton(
               onPressed: _onTapLogin,
               child: Text(
-                'Have an account ? Login',
+                'Don\'t have an account ? Create Account',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ),
@@ -101,7 +97,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void _onTapGoogle() {}
 
   void _onTapEmail() {
-    Navigator.pushNamed(context, RegisterScreen.name);
+    Navigator.pushNamed(context, LoginScreen.name);
   }
 
   void _onTapForgot() {
@@ -109,6 +105,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   void _onTapLogin() {
-    Navigator.pushNamed(context, LogInScreen.name);
+    Navigator.pushNamed(context, RegisterScreen.name);
   }
 }
