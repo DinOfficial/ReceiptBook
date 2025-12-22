@@ -5,7 +5,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/common_provider.dart';
 import 'package:receipt_book/screens/auth/log_in_screen.dart';
-import 'package:receipt_book/welcome_app_bar.dart';
+import 'package:receipt_book/screens/welcome_app_bar.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});

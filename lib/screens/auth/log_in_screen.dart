@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/common_provider.dart';
 import 'package:receipt_book/screens/auth/register_screen.dart';
 import 'package:receipt_book/screens/company_setup_screen.dart';
-import 'package:receipt_book/welcome_app_bar.dart';
+import 'package:receipt_book/screens/welcome_app_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
