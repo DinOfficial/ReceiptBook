@@ -6,6 +6,7 @@ import 'package:receipt_book/screens/app_main_layout.dart';
 import 'package:receipt_book/screens/auth/forgot_email_screen.dart';
 import 'package:receipt_book/screens/auth/log_in_screen.dart';
 import 'package:receipt_book/screens/auth/register_screen.dart';
+import 'package:receipt_book/screens/company_setup_screen.dart';
 import 'package:receipt_book/screens/splash_screen.dart';
 import 'package:receipt_book/screens/welcome_screen.dart';
 
@@ -61,6 +62,7 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
           LoginScreen.name: (_) => LoginScreen(),
           ForgotEmailScreen.name: (_) => ForgotEmailScreen(),
           AppMainLayout.name: (_) => AppMainLayout(),
+          CompanySetupScreen.name:(_)=> CompanySetupScreen(),
         },
       ),
     );
