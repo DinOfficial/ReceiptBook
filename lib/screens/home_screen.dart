@@ -1,30 +1,22 @@
 import 'package:flutter/material.dart';
+import '../widgets/header_home.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.title});
+
   final String title;
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title),),
-      body: SliverAppBar(
-          expandedHeight: 150.0,
-          flexibleSpace: const FlexibleSpaceBar(
-            title: Text('Available seats'),
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.add_circle),
-              tooltip: 'Add new entry',
-              onPressed: () { /* ... */ },
-            ),
-          ]
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        body: Column(
+          children: [
+            HeaderHome(title: title),
+            Expanded(child: Center(child: Text("Below Content"))),
+          ],
+        ),
       ),
     );
   }
