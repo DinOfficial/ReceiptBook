@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:receipt_book/screens/add_new_screen.dart';
 import 'package:receipt_book/screens/home_screen.dart';
 import 'package:receipt_book/screens/persons_screen.dart';
@@ -49,8 +50,8 @@ class _AppMainLayoutState extends State<AppMainLayout> {
             duration: Duration(milliseconds: 400),
             tabBackgroundColor: Colors.grey[100]!,
             color: Colors.black,
-            tabs: [
-              GButton(icon: Icons.home_filled, text: 'Home'),
+            tabs: <GButton>[
+              GButton(icon: Icons.home, text: 'Home'),
               GButton(icon: Icons.add, text: 'Add New'),
               GButton(icon: Icons.person, text: 'Persons'),
               GButton(icon: Icons.settings, text: 'Settings'),

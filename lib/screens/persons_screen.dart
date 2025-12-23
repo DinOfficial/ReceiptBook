@@ -16,7 +16,7 @@ class _PersonsScreenState extends State<PersonsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(title: 'Customer List'),
+      appBar: MainAppBar(title: 'Persons List'),
       body: ListView.separated(
         separatorBuilder: (context, index) => const SizedBox(height: 12),
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),

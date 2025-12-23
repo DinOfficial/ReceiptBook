@@ -38,28 +38,9 @@ class _HeaderHomeState extends State<HeaderHome> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: .spaceBetween,
-            crossAxisAlignment: .start,
-            children: [
-              Text(
-                widget.title,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-              Switch(
-                value: _isDark,
-                thumbIcon: thumbIcon,
-                onChanged: (bool value) {
-                  setState(() {
-                    _isDark = value;
-                  });
-                },
-              ),
-            ],
+          Text(
+            widget.title,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: Colors.white),
           ),
           const SizedBox(height: 8),
           const TabBar(
