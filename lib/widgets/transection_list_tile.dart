@@ -49,6 +49,7 @@ class TransectionListTile extends StatelessWidget {
         ],
       ),
       child: ListTile(
+        onTap: (){},
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(color: Color(0xff2692ce), width: 1.5),
