@@ -55,7 +55,7 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
             ),
           ),
         ),
-        initialRoute: AppMainLayout.name,
+        initialRoute: SplashScreen.name,
         routes: {
           SplashScreen.name: (_) => SplashScreen(),
           WelcomeScreen.name: (_) => WelcomeScreen(),
