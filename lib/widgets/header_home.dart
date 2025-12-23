@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:receipt_book/widgets/summery_data.dart';
 
-class HeaderHome extends StatelessWidget {
-  const HeaderHome({
-    super.key,
-    required this.title,
-  });
+class HeaderHome extends StatefulWidget {
+  const HeaderHome({super.key, required this.title});
 
   final String title;
 
   @override
+  State<HeaderHome> createState() => _HeaderHomeState();
+}
+
+class _HeaderHomeState extends State<HeaderHome> {
+  bool _isDark = false;
+  final WidgetStateProperty<Icon?> thumbIcon = WidgetStateProperty.resolveWith<Icon?>((
+    Set<WidgetState> states,
+  ) {
+    if (states.contains(WidgetState.selected)) {
+      return const Icon(Icons.nights_stay, color: Colors.black87);
+    }
+    return const Icon(Icons.wb_sunny, color: Colors.orange);
+  });
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      height: 240,
+      height: 250,
       width: double.infinity,
       padding: const EdgeInsets.only(top: 40, left: 12, right: 12, bottom: 12),
       decoration: const BoxDecoration(
@@ -26,13 +38,28 @@ class HeaderHome extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-            ),
+          Row(
+            mainAxisAlignment: .spaceBetween,
+            crossAxisAlignment: .start,
+            children: [
+              Text(
+                widget.title,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+              Switch(
+                value: _isDark,
+                thumbIcon: thumbIcon,
+                onChanged: (bool value) {
+                  setState(() {
+                    _isDark = value;
+                  });
+                },
+              ),
+            ],
           ),
           const SizedBox(height: 8),
           const TabBar(

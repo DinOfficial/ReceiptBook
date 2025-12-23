@@ -5,7 +5,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:receipt_book/screens/auth/forgot_email_screen.dart';
 import 'package:receipt_book/screens/auth/log_in_screen.dart';
 import 'package:receipt_book/screens/auth/register_screen.dart';
-import 'package:receipt_book/screens/welcome_app_bar.dart';
+import 'package:receipt_book/widgets/welcome_app_bar.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});

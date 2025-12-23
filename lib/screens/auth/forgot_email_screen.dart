@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../welcome_app_bar.dart';
+import '../../widgets/welcome_app_bar.dart';
 
 class ForgotEmailScreen extends StatefulWidget {
   const ForgotEmailScreen({super.key});
