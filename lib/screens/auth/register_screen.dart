@@ -22,6 +22,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final TextEditingController _confirmPasswordTEController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,12 +56,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   SizedBox(height: 16),
                   TextFormField(
-                      controller: _nameTEController,
-                      decoration: InputDecoration(label: Text('Your Name'))),
+                    controller: _nameTEController,
+                    decoration: InputDecoration(label: Text('Your Name')),
+                  ),
                   SizedBox(height: 16),
                   TextFormField(
-                      controller: _emailTEController,
-                      decoration: InputDecoration(label: Text('Email'))),
+                    controller: _emailTEController,
+                    decoration: InputDecoration(label: Text('Email')),
+                  ),
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordTEController,
@@ -111,7 +114,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     onPressed: _onTapLogin,
                     child: Text(
                       'Have an account ? Login',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                   ),
                 ],

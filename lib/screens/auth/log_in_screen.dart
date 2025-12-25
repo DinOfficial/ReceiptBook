@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: _onTapRegistration,
                   child: Text(
                     'Don\'t have an account ? Create Account',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ),
               ],
