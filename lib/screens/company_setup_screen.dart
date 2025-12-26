@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:receipt_book/models/company_model.dart';
 import 'package:receipt_book/provider/company_provider.dart';
 import 'package:receipt_book/screens/app_main_layout.dart';
-import 'package:receipt_book/screens/home_screen.dart';
 
 class CompanySetupScreen extends StatefulWidget {
   const CompanySetupScreen({super.key});
@@ -23,6 +22,13 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final picker = ImagePicker();
+  XFile? _image;
+
+  Future pickImage() async {
+    final img = await picker.pickImage(source: ImageSource.gallery);
+    if (img != null) setState(() => _image = img);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +55,9 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
               ),
               SizedBox(height: 48),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  pickImage();
+                },
                 child: Container(
                   height: 50,
                   width: double.infinity,
@@ -77,7 +85,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Expanded(child: Text('Select your company logo')),
+                      Expanded(child: Text(_image?.name ?? 'Select your company logo')),
                     ],
                   ),
                 ),
@@ -101,7 +109,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                 decoration: InputDecoration(label: Text('Email')),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Email name required !';
+                    return 'Email  required !';
                   }
                   return null;
                 },
@@ -113,7 +121,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                 decoration: InputDecoration(label: Text('Address')),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Address name required !';
+                    return 'Address  required !';
                   }
                   return null;
                 },
@@ -125,7 +133,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                 decoration: InputDecoration(label: Text('Phone')),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Phone name required !';
+                    return 'Phone  required !';
                   }
                   return null;
                 },
@@ -156,7 +164,14 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
   }
 
   void _onTapSubmit() {
-    if (_formKey.currentState!.validate()) {
+    final isFormValid = _formKey.currentState!.validate();
+    if (_image == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select company logo'), backgroundColor: Colors.red),
+      );
+      return;
+    }
+    if (isFormValid) {
       addCompany();
     }
   }
@@ -166,18 +181,10 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
     final String email = _emailController.text.trim();
     final String address = _addressController.text.trim();
     final String phone = _phoneController.text.trim();
-    final String photo = 'https://i.ibb.co/hFBB1jmW/logo.png';
-
-    final CompanyModel companyData = CompanyModel(
-      name: name,
-      email: email,
-      address: address,
-      phone: phone,
-      photo: photo,
-    );
+    final XFile photo = _image!;
 
     final CompanyProvider companyProvider = context.read<CompanyProvider>();
-    await companyProvider.addCompany(companyData);
+    await companyProvider.addCompany(name, email, address, phone, photo);
     if (mounted) {
       ScaffoldMessenger.of(
         context,
