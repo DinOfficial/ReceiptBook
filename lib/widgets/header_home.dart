@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
+import 'package:provider/provider.dart';
+import 'package:receipt_book/provider/log_out_provider.dart';
 import 'package:receipt_book/widgets/summery_data.dart';
 
 class HeaderHome extends StatefulWidget {
@@ -38,9 +41,31 @@ class _HeaderHomeState extends State<HeaderHome> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.title,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: Colors.white),
+          Row(
+            mainAxisAlignment: .spaceBetween,
+            crossAxisAlignment: .center,
+            children: [
+              Text(
+                widget.title,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+              Consumer<LogOutProvider>(
+                builder: (context, logOutProvider, _) {
+                  return IconButton(
+                    onPressed: logOutProvider.logOut,
+                    icon: HugeIcon(
+                      icon: HugeIcons.strokeRoundedLogout01,
+                      color: Colors.white70,
+                      size: 30,
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           const SizedBox(height: 8),
           const TabBar(

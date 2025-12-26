@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/common_provider.dart';
 import 'package:receipt_book/provider/company_provider.dart';
+import 'package:receipt_book/provider/log_out_provider.dart';
 import 'package:receipt_book/provider/login_provider.dart';
 import 'package:receipt_book/screens/app_main_layout.dart';
 import 'package:receipt_book/screens/auth/forgot_email_screen.dart';
@@ -26,6 +27,7 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
       providers: [
         ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
         ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(create: (_) => LogOutProvider()),
         ChangeNotifierProvider(create: (_) => GoogleLoginProvider()),
         ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
         ChangeNotifierProvider(create: (_) => PasswordTogglerProvider()),
