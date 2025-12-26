@@ -39,7 +39,7 @@ class GoogleLoginProvider extends ChangeNotifier {
       }
     } catch (error) {
       print('errrrror: $error');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User login failed')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User login failed'), backgroundColor: Colors.red,));
     }
 
     _isGoogleUserLoading = false;
