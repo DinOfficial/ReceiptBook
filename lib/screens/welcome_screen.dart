@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:provider/provider.dart';
+import 'package:receipt_book/provider/login_provider.dart';
 import 'package:receipt_book/screens/auth/forgot_email_screen.dart';
 import 'package:receipt_book/screens/auth/log_in_screen.dart';
 import 'package:receipt_book/screens/auth/register_screen.dart';
@@ -35,29 +37,43 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ).animate().fadeIn(duration: 900.ms),
             Text(
               '"Receipt Book"',
-              style: GoogleFonts.akayaKanadaka(fontSize: 38, fontWeight: FontWeight.w600, color: Color(0xff2692ce)),
+              style: GoogleFonts.akayaKanadaka(
+                fontSize: 38,
+                fontWeight: FontWeight.w600,
+                color: Color(0xff2692ce),
+              ),
             ),
             SizedBox(height: 16),
-            SizedBox(
-              height: 50,
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: _onTapGoogle,
-                child: Row(
-                  mainAxisAlignment: .center,
-                  crossAxisAlignment: .center,
-                  children: [
-                    Image.asset(
-                      'assets/images/glogo.png',
-                      width: 28,
-                      height: 28,
-                      fit: BoxFit.cover,
+            Consumer<GoogleLoginProvider>(
+              builder: (context, googleLogInProvider, _) {
+                return Visibility(
+                  visible: !googleLogInProvider.getGoogleUserLoading,
+                  replacement: Center(child: CircularProgressIndicator()),
+                  child: SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        googleLogInProvider.singInWithGoogle(context);
+                      },
+                      child: Row(
+                        mainAxisAlignment: .center,
+                        crossAxisAlignment: .center,
+                        children: [
+                          Image.asset(
+                            'assets/images/glogo.png',
+                            width: 28,
+                            height: 28,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(width: 8),
+                          Text('Continue with Google', style: TextStyle(fontSize: 20)),
+                        ],
+                      ),
                     ),
-                    SizedBox(width: 8),
-                    Text('Continue with Google', style: TextStyle(fontSize: 20)),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
             SizedBox(height: 16),
             SizedBox(

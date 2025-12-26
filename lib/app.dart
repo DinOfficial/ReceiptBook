@@ -25,6 +25,7 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
       providers: [
         ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
         ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(create: (_) => GoogleLoginProvider()),
         ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
         ChangeNotifierProvider(create: (_) => PasswordTogglerProvider()),
       ],
