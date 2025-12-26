@@ -110,8 +110,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  void _onTapGoogle() {}
-
   void _onTapEmail() {
     Navigator.pushNamed(context, LoginScreen.name);
   }
