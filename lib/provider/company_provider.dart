@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:receipt_book/models/company_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../controller/imgbb_controller.dart';
+import '../services/imgbb_controller.dart';
 
 class CompanyProvider extends ChangeNotifier {
   bool _isLoading = false;

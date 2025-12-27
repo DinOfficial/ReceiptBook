@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:receipt_book/provider/auth_check_provider.dart';
-import 'package:receipt_book/provider/common_provider.dart';
-import 'package:receipt_book/provider/company_provider.dart';
-import 'package:receipt_book/provider/log_out_provider.dart';
-import 'package:receipt_book/provider/login_provider.dart';
+import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:receipt_book/screens/app_main_layout.dart';
 import 'package:receipt_book/screens/auth/confirm_email_verification.dart';
 import 'package:receipt_book/screens/auth/forgot_email_screen.dart';
 import 'package:receipt_book/screens/auth/log_in_screen.dart';
 import 'package:receipt_book/screens/auth/register_screen.dart';
 import 'package:receipt_book/screens/company_setup_screen.dart';
-import 'package:receipt_book/screens/home_screen.dart';
 import 'package:receipt_book/screens/splash_screen.dart';
 import 'package:receipt_book/screens/welcome_screen.dart';
+import 'package:receipt_book/services/app_theme_style.dart';
 
 class ReceiptBookApp extends StatefulWidget {
   const ReceiptBookApp({super.key});
@@ -25,56 +21,22 @@ class ReceiptBookApp extends StatefulWidget {
 class _ReceiptBookAppState extends State<ReceiptBookApp> {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
-        ChangeNotifierProvider(create: (_) => LoginProvider()),
-        ChangeNotifierProvider(create: (_) => LogOutProvider()),
-        ChangeNotifierProvider(create: (_) => AuthCheckProvider()),
-        ChangeNotifierProvider(create: (_) => LoginProvider()),
-        ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
-        ChangeNotifierProvider(create: (_) => PasswordTogglerProvider()),
-        ChangeNotifierProvider(create: (_) => CompanyProvider()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          outlinedButtonTheme: OutlinedButtonThemeData(
-            style: OutlinedButton.styleFrom(
-              alignment: Alignment.center,
-              foregroundColor: Color(0xff2692ce),
-              side: BorderSide(color: Color(0xff2692ce)),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-          ),
-          inputDecorationTheme: InputDecorationThemeData(
-            labelStyle: TextStyle(color: Colors.black54),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Color(0xff2692ce), width: 1.5),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Color(0xff2692ce), width: 1.5),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Color(0xff2692ce), width: 1.5),
-            ),
-          ),
-        ),
-        initialRoute: SplashScreen.name,
-        routes: {
-          SplashScreen.name: (_) => SplashScreen(),
-          WelcomeScreen.name: (_) => WelcomeScreen(),
-          RegistrationScreen.name: (_) => RegistrationScreen(),
-          ConfirmEmailVerification.name: (_) => ConfirmEmailVerification(),
-          LoginScreen.name: (_) => LoginScreen(),
-          ForgotEmailScreen.name: (_) => ForgotEmailScreen(),
-          AppMainLayout.name: (_) => AppMainLayout(),
-          CompanySetupScreen.name: (_) => CompanySetupScreen(),
-        },
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppThemeStyle.lightTheme,
+      darkTheme: AppThemeStyle.darkTheme,
+      themeMode: context.watch<ThemeModeProvider>().themeMode,
+      initialRoute: SplashScreen.name,
+      routes: {
+        SplashScreen.name: (_) => SplashScreen(),
+        WelcomeScreen.name: (_) => WelcomeScreen(),
+        RegistrationScreen.name: (_) => RegistrationScreen(),
+        ConfirmEmailVerification.name: (_) => ConfirmEmailVerification(),
+        LoginScreen.name: (_) => LoginScreen(),
+        ForgotEmailScreen.name: (_) => ForgotEmailScreen(),
+        AppMainLayout.name: (_) => AppMainLayout(),
+        CompanySetupScreen.name: (_) => CompanySetupScreen(),
+      },
     );
   }
 }

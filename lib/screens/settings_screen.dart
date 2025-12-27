@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:provider/provider.dart';
+import 'package:receipt_book/provider/theme_mode_provider.dart';
+import 'package:receipt_book/services/app_theme_style.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -12,7 +15,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _isDark = false;
   final WidgetStateProperty<Icon?> thumbIcon = WidgetStateProperty.resolveWith<Icon?>((
     Set<WidgetState> states,
   ) {
@@ -24,6 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeModeProvider>(context);
     return Scaffold(
       appBar: MainAppBar(title: 'Settings'),
       body: ListView(
@@ -39,12 +42,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: HugeIcon(icon: HugeIcons.strokeRoundedSun02, size: 32),
             title: Text('Change apps mode', style: TextStyle(fontSize: 20)),
             trailing: Switch(
-              value: _isDark,
+              value: themeProvider.themeMode == ThemeMode.dark,
               thumbIcon: thumbIcon,
               onChanged: (bool value) {
-                setState(() {
-                  _isDark = value;
-                });
+                themeProvider.toggleThemeMode(value);
               },
             ),
           ),
