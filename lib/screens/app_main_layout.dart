@@ -51,10 +51,34 @@ class _AppMainLayoutState extends State<AppMainLayout> {
             tabBackgroundColor: Colors.grey[100]!,
             color: Colors.black,
             tabs: <GButton>[
-              GButton(icon: Icons.home, text: 'Home'),
-              GButton(icon: Icons.add, text: 'Add New'),
-              GButton(icon: Icons.person, text: 'Persons'),
-              GButton(icon: Icons.settings, text: 'Settings'),
+              GButton(
+                icon: Icons.home,
+                text: 'Home',
+                iconSize: 32,
+                iconColor: _selectedIndex == 0 ? Colors.black87 : Colors.white54,
+                gap: 4,
+              ),
+              GButton(
+                icon: Icons.add,
+                text: 'Add New',
+                iconSize: 32,
+                iconColor: _selectedIndex == 1 ? Colors.black87 : Colors.white54,
+                gap: 4,
+              ),
+              GButton(
+                icon: Icons.person,
+                text: 'Persons',
+                iconSize: 32,
+                iconColor: _selectedIndex == 2 ? Colors.black87 : Colors.white54,
+                gap: 4,
+              ),
+              GButton(
+                icon: Icons.settings,
+                text: 'Settings',
+                iconSize: 32,
+                iconColor: _selectedIndex == 3 ? Colors.black87 : Colors.white54,
+                gap: 4,
+              ),
             ],
             selectedIndex: _selectedIndex,
             onTabChange: (index) {

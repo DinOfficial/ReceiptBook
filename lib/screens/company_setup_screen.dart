@@ -186,10 +186,27 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
     final CompanyProvider companyProvider = context.read<CompanyProvider>();
     await companyProvider.addCompany(name, email, address, phone, photo);
     if (mounted) {
+      clearData();
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Company setup completed')));
       Navigator.of(context).pushNamedAndRemoveUntil(AppMainLayout.name, (p) => false);
     }
+  }
+
+  void clearData() {
+    _nameController.clear();
+    _emailController.clear();
+    _addressController.clear();
+    _phoneController.clear();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _addressController.dispose();
+    _phoneController.dispose();
+    super.dispose();
   }
 }

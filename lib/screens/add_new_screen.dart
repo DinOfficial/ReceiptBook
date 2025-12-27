@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:receipt_book/screens/create_update_customer_screen.dart';
 
 import '../widgets/main_app_bar.dart';
 
@@ -54,7 +55,7 @@ class _AddNewScreenState extends State<AddNewScreen> {
           ),
           const SizedBox(height: 12),
           GestureDetector(
-            onTap: () {},
+            onTap: _onTapAddCustomer,
             child: Container(
               height: MediaQuery.of(context).size.height * .36,
               width: double.infinity,
@@ -86,5 +87,9 @@ class _AddNewScreenState extends State<AddNewScreen> {
         ],
       ),
     );
+  }
+
+  void _onTapAddCustomer() {
+    Navigator.pushNamed(context, CreateUpdateCustomerScreen.name);
   }
 }

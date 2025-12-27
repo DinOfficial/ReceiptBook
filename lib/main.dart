@@ -5,6 +5,7 @@ import 'package:receipt_book/app.dart';
 import 'package:receipt_book/provider/auth_check_provider.dart';
 import 'package:receipt_book/provider/common_provider.dart';
 import 'package:receipt_book/provider/company_provider.dart';
+import 'package:receipt_book/provider/customer_provider.dart';
 import 'package:receipt_book/provider/log_out_provider.dart';
 import 'package:receipt_book/provider/login_provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
@@ -24,6 +25,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => PasswordTogglerProvider()),
         ChangeNotifierProvider(create: (_) => CompanyProvider()),
         ChangeNotifierProvider(create: (_) => ThemeModeProvider()),
+        ChangeNotifierProvider(create: (_) => CustomerProvider()),
       ],
       child: ReceiptBookApp(),
     ),

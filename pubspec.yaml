@@ -28,7 +28,6 @@ dependencies:
   flutter_slidable: ^4.0.3
   image_picker: ^1.0.4
   http: ^1.6.0
-  open_mail: ^1.2.1
 
 
 dev_dependencies:
