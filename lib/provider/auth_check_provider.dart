@@ -21,11 +21,7 @@ class AuthCheckProvider extends ChangeNotifier {
     }
     try {
       final uid = user.uid;
-      final hasCompany = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .collection('company')
-          .get();
+      final hasCompany = await _fireStore.collection('users').doc(uid).collection('company').get();
       if (!context.mounted) return;
       if (hasCompany.docs.isEmpty) {
         Navigator.of(context).pushNamedAndRemoveUntil(CompanySetupScreen.name, (p) => false);

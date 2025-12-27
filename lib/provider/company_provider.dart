@@ -8,10 +8,13 @@ import '../controller/imgbb_controller.dart';
 
 class CompanyProvider extends ChangeNotifier {
   bool _isLoading = false;
+  final _auth = FirebaseAuth.instance;
+  final _db = FirebaseFirestore.instance;
 
   bool get isLoading => _isLoading;
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  FirebaseFirestore db = FirebaseFirestore.instance;
+
+  String? get uid => _auth.currentUser?.uid;
+
   final _imgbb = ImgbbController();
 
   Future<void> addCompany(
@@ -21,6 +24,12 @@ class CompanyProvider extends ChangeNotifier {
     String phone,
     XFile photo,
   ) async {
+    if (uid == null) {
+      if (kDebugMode) {
+        print('User not logged in');
+      }
+      return;
+    }
     try {
       _isLoading = true;
       notifyListeners();
@@ -36,7 +45,7 @@ class CompanyProvider extends ChangeNotifier {
         phone: phone,
         photo: photoUrl,
       );
-      await db.collection('users').doc(uid).collection('company').add(company.toFirestore());
+      await _db.collection('users').doc(uid).collection('company').add(company.toFirestore());
       if (kDebugMode) {
         print('Company data save successfully!');
       }

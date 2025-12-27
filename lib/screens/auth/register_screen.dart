@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/common_provider.dart';
+import 'package:receipt_book/provider/login_provider.dart';
 import 'package:receipt_book/screens/auth/log_in_screen.dart';
 import 'package:receipt_book/widgets/welcome_app_bar.dart';
 
@@ -57,17 +58,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _nameTEController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(label: Text('Your Name')),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) return 'Enter your name';
+                      return null;
+                    },
                   ),
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _emailTEController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(label: Text('Email')),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) return 'Enter your email';
+                      return null;
+                    },
                   ),
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordTEController,
                     obscureText: passwordToggleProvider.isVisible,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
                       label: Text('Password'),
                       suffixIcon: IconButton(
@@ -81,11 +94,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                       ),
                     ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) return 'Enter your password';
+                      if (value.length < 5) return 'Password must be 6 character';
+                      return null;
+                    },
                   ),
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _confirmPasswordTEController,
                     obscureText: passwordToggleProvider.isConfirmVisible,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
                       label: Text('Confirm Password'),
                       suffixIcon: IconButton(
@@ -99,14 +118,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                       ),
                     ),
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) return 'Enter your confirm password';
+                      if (_passwordTEController.text != value) {
+                        return 'Password and confirm password must be same';
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 24),
                   SizedBox(
                     height: 50,
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: () {},
-                      child: Text('Log in ', style: TextStyle(fontSize: 20)),
+                      onPressed: _onTapSignUp,
+                      child: Text('Register ', style: TextStyle(fontSize: 20)),
                     ),
                   ),
                   SizedBox(height: 24),
@@ -124,6 +150,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
       ),
     );
+  }
+
+  void _onTapSignUp() {
+    if (_formKey.currentState!.validate()) {
+      signUp();
+    }
+  }
+  Future<void> signUp() async {
+    final name = _nameTEController.text.trim();
+    final email = _emailTEController.text.trim();
+    final password = _confirmPasswordTEController.text;
+    context.read<LoginProvider>().emailSignUp(context, email, password, name);
   }
 
   void _onTapLogin() {

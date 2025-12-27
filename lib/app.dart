@@ -6,6 +6,7 @@ import 'package:receipt_book/provider/company_provider.dart';
 import 'package:receipt_book/provider/log_out_provider.dart';
 import 'package:receipt_book/provider/login_provider.dart';
 import 'package:receipt_book/screens/app_main_layout.dart';
+import 'package:receipt_book/screens/auth/confirm_email_verification.dart';
 import 'package:receipt_book/screens/auth/forgot_email_screen.dart';
 import 'package:receipt_book/screens/auth/log_in_screen.dart';
 import 'package:receipt_book/screens/auth/register_screen.dart';
@@ -30,7 +31,7 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => LogOutProvider()),
         ChangeNotifierProvider(create: (_) => AuthCheckProvider()),
-        ChangeNotifierProvider(create: (_) => GoogleLoginProvider()),
+        ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
         ChangeNotifierProvider(create: (_) => PasswordTogglerProvider()),
         ChangeNotifierProvider(create: (_) => CompanyProvider()),
@@ -67,6 +68,7 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
           SplashScreen.name: (_) => SplashScreen(),
           WelcomeScreen.name: (_) => WelcomeScreen(),
           RegistrationScreen.name: (_) => RegistrationScreen(),
+          ConfirmEmailVerification.name: (_) => ConfirmEmailVerification(),
           LoginScreen.name: (_) => LoginScreen(),
           ForgotEmailScreen.name: (_) => ForgotEmailScreen(),
           AppMainLayout.name: (_) => AppMainLayout(),

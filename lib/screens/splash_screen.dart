@@ -22,8 +22,10 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Provider.of<AuthCheckProvider>(context, listen: false).authCheckAndRedirection(context);
     super.initState();
+    Future.microtask(() {
+      Provider.of<AuthCheckProvider>(context, listen: false).authCheckAndRedirection(context);
+    });
   }
 
   @override

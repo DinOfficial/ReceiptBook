@@ -44,7 +44,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             ),
             SizedBox(height: 16),
-            Consumer<GoogleLoginProvider>(
+            Consumer<LoginProvider>(
               builder: (context, googleLogInProvider, _) {
                 return Visibility(
                   visible: !googleLogInProvider.getGoogleUserLoading,

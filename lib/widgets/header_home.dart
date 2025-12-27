@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/log_out_provider.dart';
+import 'package:receipt_book/screens/welcome_screen.dart';
 import 'package:receipt_book/widgets/summery_data.dart';
 
 class HeaderHome extends StatefulWidget {
@@ -14,7 +15,6 @@ class HeaderHome extends StatefulWidget {
 }
 
 class _HeaderHomeState extends State<HeaderHome> {
-  bool _isDark = false;
   final WidgetStateProperty<Icon?> thumbIcon = WidgetStateProperty.resolveWith<Icon?>((
     Set<WidgetState> states,
   ) {
@@ -56,7 +56,12 @@ class _HeaderHomeState extends State<HeaderHome> {
               Consumer<LogOutProvider>(
                 builder: (context, logOutProvider, _) {
                   return IconButton(
-                    onPressed: logOutProvider.logOut,
+                    onPressed: () {
+                      logOutProvider.logOut();
+                      Navigator.of(
+                        context,
+                      ).pushNamedAndRemoveUntil(WelcomeScreen.name, (p) => false);
+                    },
                     icon: HugeIcon(
                       icon: HugeIcons.strokeRoundedLogout01,
                       color: Colors.white70,
