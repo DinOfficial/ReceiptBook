@@ -10,7 +10,6 @@ class AuthCheckProvider extends ChangeNotifier {
   final _fireStore = FirebaseFirestore.instance;
 
   Future<void> authCheckAndRedirection(BuildContext context) async {
-    await Future.delayed(Duration(seconds: 2));
     if (!context.mounted) return;
 
     final User? user = _auth.currentUser;
