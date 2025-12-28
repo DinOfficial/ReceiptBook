@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -23,21 +25,50 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController textEditingController = TextEditingController();
   final TextEditingController _invoiceDateController = TextEditingController();
-  final TextEditingController _dueDateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+
+  DateTime? selectedDate;
+
+  Future<void> _selectedDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2040),
+    );
+
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate;
+        _invoiceDateController.text = DateFormat('dd/MM/yyyy').format(selectedDate!);
+      });
+    }
+  }
+
+  TimeOfDay _selectedTime = TimeOfDay.now();
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(context: context, initialTime: _selectedTime);
+
+    if (picked != null && picked != _selectedTime) {
+      setState(() {
+        _selectedTime = picked;
+        _timeController.text = _selectedTime.format(context);
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _invoiceDateController.text = DateFormat('dd-MM-yyyy').format(DateTime.now());
-    _dueDateController.text = DateFormat(
-      'H:00',
-    ).format(DateTime.now());
+    _invoiceDateController.text = 'Select a date';
+    _timeController.text = 'Select Time';
   }
 
   @override
   void dispose() {
     _invoiceDateController.dispose();
-    _dueDateController.dispose();
+    _timeController.dispose();
     super.dispose();
   }
 
@@ -53,14 +84,17 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Bill To', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Bill To',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField2<String>(
                     isExpanded: true,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-            
+
                       prefixIcon: Padding(
                         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                         child: HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 24),
@@ -149,7 +183,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           onSaved: (value) {
                             selectedValue = value.toString();
                           },
-                          buttonStyleData: const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.only(right: 8),
+                          ),
                           iconStyleData: const IconStyleData(
                             icon: HugeIcon(
                               icon: HugeIcons.strokeRoundedSquareArrowDown01,
@@ -184,14 +220,14 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           ),
                           readOnly: true,
                           onTap: () async {
-
+                            _selectedDate();
                           },
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: TextFormField(
-                          controller: _dueDateController,
+                          controller: _timeController,
                           decoration: const InputDecoration(
                             labelText: 'Time',
                             prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedTimeQuarterPass),
@@ -199,19 +235,22 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           ),
                           readOnly: true,
                           onTap: () async {
-
+                            _selectTime(context);
                           },
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 24),
-            
+
                   // === পণ্য বা সেবার তালিকা সেকশন ===
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Items',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                       OutlinedButton.icon(
                         onPressed: () {
                           // ভবিষ্যতে এখানে নতুন আইটেম যোগ করার লজিক থাকবে
@@ -227,7 +266,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   const Divider(height: 24),
                   _buildItemRow('Logo Design', '2', '5000'),
                   const Divider(height: 24),
-            
+
                   // === মোট গণনার সেকশন ===
                   _buildCalculationRow('Subtotal', '৳60000'),
                   const SizedBox(height: 8),
@@ -236,7 +275,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   _buildCalculationRow('Tax (10%)', '+ ৳5700'),
                   const Divider(thickness: 1, height: 24),
                   _buildCalculationRow('Grand Total', '৳62700', isTotal: true),
-            
+
                   const SizedBox(height: 32),
                   SizedBox(
                     height: 50,
@@ -249,7 +288,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       ),
                     ),
                   ),
-                 SizedBox(height: 40,),
+                  SizedBox(height: 40),
                 ],
               ),
             ),
