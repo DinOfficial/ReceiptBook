@@ -27,12 +27,20 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     'Others',
   ];
 
+  final List _itemList = [];
+
   String? selectedValue;
 
   final _formKey = GlobalKey<FormState>();
+  final _itemFormKey = GlobalKey<FormState>();
   final TextEditingController textEditingController = TextEditingController();
   final TextEditingController _invoiceDateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
+
+  // item add TEC
+  final TextEditingController _itemTitleController = TextEditingController();
+  final TextEditingController _itemQuantityController = TextEditingController();
+  final TextEditingController _itemAmountController = TextEditingController();
 
   DateTime? selectedDate;
 
@@ -422,30 +430,73 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
             right: 12,
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          child: Column(
-            mainAxisAlignment: .center,
-            crossAxisAlignment: .start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const SizedBox(height: 12),
-              TextFormField(decoration: InputDecoration(label: Text('Item Title'))),
-              const SizedBox(height: 12),
-              TextFormField(decoration: InputDecoration(label: Text('Quantity'))),
-              const SizedBox(height: 12),
-              TextFormField(decoration: InputDecoration(label: Text('Amount'))),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: OutlinedButton(onPressed: () {}, child: Text('Save Item')),
-              ),
-              const SizedBox(height: 12),
-            ],
+          child: Form(
+            key: _itemFormKey,
+            child: Column(
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _itemTitleController,
+                  decoration: InputDecoration(label: Text('Item Title')),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Write item title';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _itemQuantityController,
+                  decoration: InputDecoration(label: Text('Quantity')),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Write item quantity';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _itemAmountController,
+                  decoration: InputDecoration(label: Text('Amount')),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Write item Amount';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton(onPressed: _addItemInList, child: Text('Save Item')),
+                ),
+                const SizedBox(height: 12),
+              ],
+            ),
           ),
         );
       },
     );
   }
+
+  void _addItemInList() {
+    if(!_itemFormKey.currentState!.validate()) return;
+    final itemTitle = _itemTitleController.text.trim();
+    final itemQuantity = _itemQuantityController.text.trim();
+    final itemAmount = _itemAmountController.text.trim();
+
+  }
+
+
+
+
+
 
   @override
   void dispose() {
@@ -453,4 +504,6 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     _timeController.dispose();
     super.dispose();
   }
+
+
 }
