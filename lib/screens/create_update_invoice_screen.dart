@@ -5,6 +5,7 @@ import 'package:hugeicons/styles/stroke_rounded.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/models/item_model.dart';
+import 'package:receipt_book/provider/customer_provider.dart';
 import 'package:receipt_book/provider/item_provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:receipt_book/screens/create_update_customer_screen.dart';
@@ -21,7 +22,6 @@ class CreateUpdateInvoiceScreen extends StatefulWidget {
 }
 
 class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
-  final List<String> genderItems = ['Adnan', 'Ripon', 'Mahedi', 'Din Islam', 'Kawsar'];
   final List<String> statusItems = ['Draft', 'Sent', 'Paid'];
   final List<String> paymentSystemItems = [
     'Bank Transfer',
@@ -31,6 +31,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     'Others',
   ];
 
+  String? selectedCustomerId;
   String? selectedValue;
 
   final _formKey = GlobalKey<FormState>();
@@ -91,6 +92,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeModeProvider>();
     final itemProvider = context.watch<ItemProvider>();
+    final customerProvider = context.watch<CustomerProvider>();
     return Scaffold(
       appBar: const MainAppBar(title: 'Create New Invoice'),
       body: SingleChildScrollView(
@@ -109,7 +111,6 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-
                         prefixIcon: Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 24),
@@ -117,11 +118,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                         prefixIconConstraints: const BoxConstraints(minHeight: 24, minWidth: 24),
                       ),
                       hint: const Text('Select customer', style: TextStyle(fontSize: 14)),
-                      items: genderItems
+                      items: customerProvider.customerList
                           .map(
-                            (item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(item, style: const TextStyle(fontSize: 14)),
+                            (customer) => DropdownMenuItem<String>(
+                              value: customer.id,
+                              child: Text(customer.name, style: const TextStyle(fontSize: 14)),
                             ),
                           )
                           .toList(),
@@ -131,9 +132,15 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                         }
                         return null;
                       },
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCustomerId = value;
+                        });
+                      },
                       onSaved: (value) {
-                        selectedValue = value.toString();
+                        setState(() {
+                          selectedCustomerId = value;
+                        });
                       },
                       buttonStyleData: const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
                       iconStyleData: const IconStyleData(
