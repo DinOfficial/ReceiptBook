@@ -26,7 +26,7 @@ class CustomerProvider extends ChangeNotifier {
       notifyListeners();
 
       final customer = CustomerModel(name: name, address: address, phone: phone);
-      await _db.collection('users').doc(uid).collection('customer').add(customer.toFirestore());
+      await _db.collection('users').doc(uid).collection('customers').add(customer.toFirestore());
       if (kDebugMode) {
         print('Customer data save successfully!');
       }
