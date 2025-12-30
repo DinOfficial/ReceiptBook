@@ -1,9 +1,11 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_book/models/customer_model.dart';
 import 'package:receipt_book/models/item_model.dart';
 import 'package:receipt_book/provider/customer_provider.dart';
 import 'package:receipt_book/provider/item_provider.dart';
@@ -93,6 +95,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     final themeProvider = context.watch<ThemeModeProvider>();
     final itemProvider = context.watch<ItemProvider>();
     final customerProvider = context.watch<CustomerProvider>();
+    final uid = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
       appBar: const MainAppBar(title: 'Create New Invoice'),
       body: SingleChildScrollView(
@@ -106,62 +109,77 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: DropdownButtonFormField2<String>(
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 24),
-                        ),
-                        prefixIconConstraints: const BoxConstraints(minHeight: 24, minWidth: 24),
-                      ),
-                      hint: const Text('Select customer', style: TextStyle(fontSize: 14)),
-                      items: customerProvider.customerList
-                          .map(
-                            (customer) => DropdownMenuItem<String>(
-                              value: customer.id,
-                              child: Text(customer.name, style: const TextStyle(fontSize: 14)),
+                    child: StreamBuilder<List<CustomerModel>>(
+                      stream: customerProvider.streamCustomers(uid),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) return CircularProgressIndicator();
+                        final customer = snapshot.data!;
+                        return DropdownButtonFormField2<String>(
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 24),
                             ),
-                          )
-                          .toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select customer.';
-                        }
-                        return null;
+                            prefixIconConstraints: const BoxConstraints(
+                              minHeight: 24,
+                              minWidth: 24,
+                            ),
+                          ),
+                          hint: const Text('Select customer', style: TextStyle(fontSize: 14)),
+                          items: customer
+                              .map(
+                                (customer) => DropdownMenuItem<String>(
+                                  value: customer.id,
+                                  child: Text(customer.name, style: const TextStyle(fontSize: 14)),
+                                ),
+                              )
+                              .toList(),
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select customer.';
+                            }
+                            return null;
+                          },
+                          value: customer.any((c) => c.id == selectedCustomerId)
+                              ? selectedCustomerId
+                              : null,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCustomerId = value;
+                            });
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              selectedCustomerId = value;
+                            });
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.only(right: 8),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            icon: HugeIcon(
+                              icon: HugeIcons.strokeRoundedSquareArrowDown01,
+                              color: AppThemeStyle.primaryColor,
+                            ),
+                            iconSize: 24,
+                          ),
+                          dropdownStyleData: DropdownStyleData(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(color: AppThemeStyle.primaryColor),
+                              color: themeProvider.themeMode == ThemeMode.dark
+                                  ? Colors.black
+                                  : Colors.white,
+                            ),
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                          ),
+                        );
                       },
-                      onChanged: (value) {
-                        setState(() {
-                          selectedCustomerId = value;
-                        });
-                      },
-                      onSaved: (value) {
-                        setState(() {
-                          selectedCustomerId = value;
-                        });
-                      },
-                      buttonStyleData: const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
-                      iconStyleData: const IconStyleData(
-                        icon: HugeIcon(
-                          icon: HugeIcons.strokeRoundedSquareArrowDown01,
-                          color: AppThemeStyle.primaryColor,
-                        ),
-                        iconSize: 24,
-                      ),
-                      dropdownStyleData: DropdownStyleData(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: AppThemeStyle.primaryColor),
-                          color: themeProvider.themeMode == ThemeMode.dark
-                              ? Colors.black
-                              : Colors.white,
-                        ),
-                      ),
-                      menuItemStyleData: const MenuItemStyleData(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                      ),
                     ),
                   ),
                   const SizedBox(width: 12),

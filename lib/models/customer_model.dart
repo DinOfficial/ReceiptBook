@@ -10,7 +10,7 @@ class CustomerModel {
 
   factory CustomerModel.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final data = snapshot.data();
-    return CustomerModel(name: data?['name'], address: data?['address'], phone: data?['phone']);
+    return CustomerModel(id: snapshot.id, name: data?['name'], address: data?['address'], phone: data?['phone']);
   }
 
   Map<String, dynamic> toFirestore() {
