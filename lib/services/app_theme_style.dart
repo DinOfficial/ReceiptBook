@@ -33,6 +33,9 @@ class AppThemeStyle {
         borderSide: BorderSide(color: primaryColor, width: 1.5),
       ),
     ),
+    datePickerTheme: DatePickerThemeData(backgroundColor: Colors.white),
+    timePickerTheme: TimePickerThemeData(backgroundColor: Colors.white),
+    canvasColor: Colors.white
   );
 
   /// ---------------- DARK THEME ---------------- ///
@@ -63,5 +66,8 @@ class AppThemeStyle {
         borderSide: BorderSide(color: primaryColor, width: 1.5),
       ),
     ),
+    datePickerTheme: DatePickerThemeData(backgroundColor: Colors.black87),
+    timePickerTheme: TimePickerThemeData(backgroundColor: Colors.black87),
+      canvasColor: Colors.black87
   );
 }

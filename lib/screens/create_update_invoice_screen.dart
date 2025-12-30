@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:receipt_book/screens/create_update_customer_screen.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
@@ -27,8 +29,6 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     'Others',
   ];
 
-  final List _itemList = [];
-
   String? selectedValue;
 
   final _formKey = GlobalKey<FormState>();
@@ -46,6 +46,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
 
   Future<void> _selectedDate() async {
     final DateTime? pickedDate = await showDatePicker(
+      barrierColor: AppThemeStyle.primaryColor.withOpacity(.3),
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
@@ -63,7 +64,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
   TimeOfDay _selectedTime = TimeOfDay.now();
 
   Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(context: context, initialTime: _selectedTime);
+    final TimeOfDay? picked = await showTimePicker(
+      barrierColor: AppThemeStyle.primaryColor.withOpacity(.3),
+      context: context,
+      initialTime: _selectedTime,
+    );
 
     if (picked != null && picked != _selectedTime) {
       setState(() {
@@ -82,6 +87,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeModeProvider>();
     return Scaffold(
       appBar: const MainAppBar(title: 'Create New Invoice'),
       body: SingleChildScrollView(
@@ -138,7 +144,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           border: Border.all(color: AppThemeStyle.primaryColor),
-                          color: Colors.white,
+                          color: themeProvider.themeMode == ThemeMode.dark
+                              ? Colors.black
+                              : Colors.white,
                         ),
                       ),
                       menuItemStyleData: const MenuItemStyleData(
@@ -149,7 +157,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   const SizedBox(width: 12),
                   Container(
                     width: 48,
-                    height: 56,
+                    height: 54,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: AppThemeStyle.primaryColor, width: 1.5),
@@ -202,11 +210,13 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           .toList(),
                       validator: (value) {
                         if (value == null) {
-                          return 'Please select gender.';
+                          return 'Please select type.';
                         }
                         return null;
                       },
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        selectedValue = value.toString();
+                      },
                       onSaved: (value) {
                         selectedValue = value.toString();
                       },
@@ -222,7 +232,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                           border: Border.all(color: AppThemeStyle.primaryColor),
-                          color: Colors.white,
+                          color: themeProvider.themeMode == ThemeMode.dark
+                              ? Colors.black
+                              : Colors.white,
                         ),
                       ),
                       menuItemStyleData: const MenuItemStyleData(
@@ -287,11 +299,13 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                     .toList(),
                 validator: (value) {
                   if (value == null) {
-                    return 'Please select gender.';
+                    return 'Please select payment.';
                   }
                   return null;
                 },
-                onChanged: (value) {},
+                onChanged: (value) {
+                  selectedValue = value.toString();
+                },
                 onSaved: (value) {
                   selectedValue = value.toString();
                 },
@@ -307,7 +321,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: AppThemeStyle.primaryColor),
-                    color: Colors.white,
+                    color: themeProvider.themeMode == ThemeMode.dark ? Colors.black : Colors.white,
                   ),
                 ),
                 menuItemStyleData: const MenuItemStyleData(
@@ -474,7 +488,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 SizedBox(
                   width: double.infinity,
                   height: 48,
-                  child: OutlinedButton(onPressed: _addItemInList, child: Text('Save Item')),
+                  child: OutlinedButton(onPressed: () {}, child: Text('Save Item')),
                 ),
                 const SizedBox(height: 12),
               ],
@@ -485,25 +499,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     );
   }
 
-  void _addItemInList() {
-    if(!_itemFormKey.currentState!.validate()) return;
-    final itemTitle = _itemTitleController.text.trim();
-    final itemQuantity = _itemQuantityController.text.trim();
-    final itemAmount = _itemAmountController.text.trim();
-
-  }
-
-
-
-
-
-
   @override
   void dispose() {
     _invoiceDateController.dispose();
     _timeController.dispose();
     super.dispose();
   }
-
-
 }
