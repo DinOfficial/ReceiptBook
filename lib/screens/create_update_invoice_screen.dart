@@ -4,6 +4,8 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_book/models/item_model.dart';
+import 'package:receipt_book/provider/item_provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:receipt_book/screens/create_update_customer_screen.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
@@ -88,6 +90,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeModeProvider>();
+    final itemProvider = context.watch<ItemProvider>();
     return Scaffold(
       appBar: const MainAppBar(title: 'Create New Invoice'),
       body: SingleChildScrollView(
@@ -345,20 +348,48 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 ],
               ),
               const SizedBox(height: 12),
-              // স্ট্যাটিক আইটেম লিস্ট
-              _buildItemRow('Website Design', '1', '50000'),
-              const Divider(height: 24),
-              _buildItemRow('Logo Design', '2', '5000'),
-              const Divider(height: 24),
+              Consumer<ItemProvider>(
+                builder: (context, itemProvider, _) {
+                  if (itemProvider.itemList.isEmpty) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24.0),
+                        child: Text('No items added yet.', style: TextStyle(color: Colors.grey)),
+                      ),
+                    );
+                  }
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: itemProvider.itemList.length,
+                    itemBuilder: (context, index) {
+                      return _buildItemRow(
+                        itemProvider.itemList[index].title,
+                        itemProvider.itemList[index].quantity,
+                        itemProvider.itemList[index].amount.toString(),
+                        index,
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const Divider(height: 12);
+                    },
+                  );
+                },
+              ),
+              const Divider(),
 
               // === মোট গণনার সেকশন ===
-              _buildCalculationRow('Subtotal', '৳60000'),
+              _buildCalculationRow('Subtotal', itemProvider.subtotal.toString()),
               const SizedBox(height: 8),
-              _buildCalculationRow('Discount (5%)', '- ৳3000'),
+              _buildCalculationRow('Discount (5%)', '- ${itemProvider.discount.toString()}'),
               const SizedBox(height: 8),
-              _buildCalculationRow('Tax (10%)', '+ ৳5700'),
+              _buildCalculationRow('Tax (10%)', '+ ৳ ${itemProvider.tax.toString()}'),
               const Divider(thickness: 1, height: 24),
-              _buildCalculationRow('Grand Total', '৳62700', isTotal: true),
+              _buildCalculationRow(
+                'Grand Total',
+                '৳ ${itemProvider.grandTotal.toString()}',
+                isTotal: true,
+              ),
 
               const SizedBox(height: 32),
               SizedBox(
@@ -381,7 +412,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
   }
 
   // একটি স্ট্যাটিক আইটেম রো তৈরি করার জন্য হেল্পার উইজেট
-  Widget _buildItemRow(String name, String qty, String price) {
+  Widget _buildItemRow(String name, String qty, String price, index) {
     return Row(
       children: [
         Expanded(
@@ -405,9 +436,15 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
         ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+        Consumer<ItemProvider>(
+          builder: (context, itemProvider, _) {
+            return IconButton(
+              onPressed: () {
+                itemProvider.removeItem(index);
+              },
+              icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+            );
+          },
         ),
       ],
     );
@@ -465,6 +502,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _itemQuantityController,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(label: Text('Quantity')),
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
@@ -485,10 +523,18 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   },
                 ),
                 const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: OutlinedButton(onPressed: () {}, child: Text('Save Item')),
+                Consumer<ItemProvider>(
+                  builder: (context, itemProvider, _) {
+                    return Visibility(
+                      visible: !itemProvider.inProgress,
+                      replacement: Center(child: CircularProgressIndicator()),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: OutlinedButton(onPressed: _onTapAddItem, child: Text('Save Item')),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 12),
               ],
@@ -497,6 +543,25 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
         );
       },
     );
+  }
+
+  void _onTapAddItem() {
+    if (!_itemFormKey.currentState!.validate()) return;
+    final items = ItemModel(
+      title: _itemTitleController.text.trim(),
+      quantity: _itemQuantityController.text.trim(),
+      amount: int.parse(_itemAmountController.text.trim()),
+    );
+    final itemProvider = context.read<ItemProvider>();
+    itemProvider.addItem(items);
+    clearData();
+    Navigator.pop(context);
+  }
+
+  void clearData() {
+    _itemTitleController.clear();
+    _itemQuantityController.clear();
+    _itemAmountController.clear();
   }
 
   @override
