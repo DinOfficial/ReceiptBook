@@ -521,6 +521,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _itemAmountController,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(label: Text('Amount')),
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
