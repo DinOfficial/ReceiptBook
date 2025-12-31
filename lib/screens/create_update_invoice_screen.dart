@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
@@ -114,6 +115,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) return CircularProgressIndicator();
                         final customer = snapshot.data!;
+                        if (kDebugMode) {
+                          print('all customer : $customer');
+                        }
                         return DropdownButtonFormField2<String>(
                           isExpanded: true,
                           decoration: InputDecoration(

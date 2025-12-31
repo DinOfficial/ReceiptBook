@@ -18,7 +18,7 @@ class InvoiceProvider extends ChangeNotifier {
       await _firestore
           .collection('users')
           .doc(uid)
-          .collection('customer')
+          .collection('customers')
           .doc(customerId)
           .collection('invoices')
           .doc(invoice.invoiceId)
