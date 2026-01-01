@@ -18,6 +18,15 @@ class AppThemeStyle {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        alignment: Alignment.center,
+        foregroundColor: primaryColor,
+        backgroundColor: Colors.white,
+        side: BorderSide(color: primaryColor),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       labelStyle: TextStyle(color: textColorLight),
       border: OutlineInputBorder(
@@ -35,7 +44,7 @@ class AppThemeStyle {
     ),
     datePickerTheme: DatePickerThemeData(backgroundColor: Colors.white),
     timePickerTheme: TimePickerThemeData(backgroundColor: Colors.white),
-    canvasColor: Colors.white
+    canvasColor: Colors.white,
   );
 
   /// ---------------- DARK THEME ---------------- ///
@@ -47,6 +56,15 @@ class AppThemeStyle {
       style: OutlinedButton.styleFrom(
         alignment: Alignment.center,
         foregroundColor: primaryColor,
+        side: BorderSide(color: primaryColor),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        alignment: Alignment.center,
+        foregroundColor: primaryColor,
+        backgroundColor: Colors.black87,
         side: BorderSide(color: primaryColor),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -68,6 +86,6 @@ class AppThemeStyle {
     ),
     datePickerTheme: DatePickerThemeData(backgroundColor: Colors.black87),
     timePickerTheme: TimePickerThemeData(backgroundColor: Colors.black87),
-      canvasColor: Colors.black87
+    canvasColor: Colors.black87,
   );
 }

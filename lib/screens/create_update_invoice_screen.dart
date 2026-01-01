@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -87,10 +89,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     }
   }
 
+
   @override
   void initState() {
     super.initState();
-    _invoiceNoController.text = 'INV-001';
+    _invoiceNoController.text = 'INV-${(Random().nextInt(900) + 100).toString()}';
     _invoiceDateController.text = 'Select a date';
     _timeController.text = 'Select Time';
   }
@@ -112,21 +115,21 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
               onPressed: invoiceProvider.isProcessing
                   ? null
                   : () {
-                      if (_formKey.currentState!.validate()) {
-                        invoiceProvider.createInvoice(
-                          context: context,
-                          uid: uid,
-                          customer: selectedCustomer!,
-                          invoiceNo: _invoiceNoController.text,
-                          status: selectedStatus!,
-                          date: selectedDate!,
-                          time: _timeController.text,
-                          paymentSystem: selectedPaymentSystem!,
-                          items: itemProvider.itemList,
-                          total: itemProvider.grandTotal,
-                        );
-                      }
-                    },
+                if (_formKey.currentState!.validate()) {
+                  invoiceProvider.createInvoice(
+                    context: context,
+                    uid: uid,
+                    customer: selectedCustomer!,
+                    invoiceNo: _invoiceNoController.text,
+                    status: selectedStatus!,
+                    date: selectedDate!,
+                    time: _timeController.text,
+                    paymentSystem: selectedPaymentSystem!,
+                    items: itemProvider.itemList,
+                    total: itemProvider.grandTotal,
+                  );
+                }
+              },
               child: invoiceProvider.isProcessing
                   ? CircularProgressIndicator()
                   : Text('Create Invoice'),
@@ -156,7 +159,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                         }
 
                         // Ensure selectedCustomer is valid
-                        final validSelectedCustomer = selectedCustomer != null && customers.contains(selectedCustomer)
+                        final validSelectedCustomer = selectedCustomer != null &&
+                            customers.contains(selectedCustomer)
                             ? selectedCustomer
                             : null;
 
@@ -177,11 +181,12 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           hint: const Text('Select customer', style: TextStyle(fontSize: 14)),
                           items: customers
                               .map(
-                                (customer) => DropdownMenuItem<CustomerModel>(
+                                (customer) =>
+                                DropdownMenuItem<CustomerModel>(
                                   value: customer,
                                   child: Text(customer.name, style: const TextStyle(fontSize: 14)),
                                 ),
-                              )
+                          )
                               .toList(),
                           validator: (value) {
                             if (value == null) {
@@ -269,11 +274,12 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       hint: const Text('Status', style: TextStyle(fontSize: 14)),
                       items: statusItems
                           .map(
-                            (item) => DropdownMenuItem<String>(
+                            (item) =>
+                            DropdownMenuItem<String>(
                               value: item,
                               child: Text(item, style: const TextStyle(fontSize: 14)),
                             ),
-                          )
+                      )
                           .toList(),
                       validator: (value) {
                         if (value == null) {
@@ -353,10 +359,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   style: TextStyle(fontSize: 14),
                 ),
                 items: paymentSystemItems
-                    .map((item) => DropdownMenuItem<String>(
-                          value: item,
-                          child: Text(item, style: const TextStyle(fontSize: 14)),
-                        ))
+                    .map((item) =>
+                    DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(item, style: const TextStyle(fontSize: 14)),
+                    ))
                     .toList(),
                 validator: (value) {
                   if (value == null) {
@@ -381,7 +388,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: AppThemeStyle.primaryColor),
                     color:
-                        themeProvider.themeMode == ThemeMode.dark ? Colors.black : Colors.white,
+                    themeProvider.themeMode == ThemeMode.dark ? Colors.black : Colors.white,
                   ),
                 ),
                 menuItemStyleData: const MenuItemStyleData(

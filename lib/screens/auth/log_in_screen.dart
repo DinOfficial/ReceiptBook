@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           : () => loginProvider.singInWithGoogle(context),
                       icon: loginProvider.getGoogleUserLoading
                           ? CircularProgressIndicator()
-                          : Image.asset('assets/images/google.png', height: 24, width: 24),
+                          : Image.asset('assets/images/g_logo.png', height: 24, width: 24),
                       label: const Text('Sign in with Google'),
                     ),
                   ),

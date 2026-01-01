@@ -25,8 +25,7 @@ class _InternetAccessScreenState extends State<InternetAccessScreen> {
         InternetConnection().onStatusChange.listen((InternetStatus status) {
       if (status == InternetStatus.connected) {
         if (mounted) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, SplashScreen.name, (p) => false);
+          Navigator.pushNamedAndRemoveUntil(context, SplashScreen.name, (p) => false);
         }
       }
     });

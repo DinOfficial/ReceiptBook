@@ -158,7 +158,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           : () => loginProvider.singInWithGoogle(context),
                       icon: loginProvider.getGoogleUserLoading
                           ? CircularProgressIndicator()
-                          : Image.asset('assets/images/google.png', height: 24, width: 24),
+                          : Image.asset('assets/images/g_logo.png', height: 24, width: 24),
                       label: const Text('Sign up with Google'),
                     ),
                   ),
@@ -170,6 +170,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                   ),
+                  const SizedBox(height: 24,)
                 ],
               ),
             );
