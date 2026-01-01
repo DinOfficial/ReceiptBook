@@ -3,6 +3,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:receipt_book/models/invoice_model.dart';
 
+import 'invoice_view.dart';
+
 class TransectionListTile extends StatelessWidget {
   const TransectionListTile({
     super.key,
@@ -13,6 +15,17 @@ class TransectionListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void onTapInvoice() {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (_) => Padding(
+          padding: const EdgeInsets.only(top: 30),
+          child: SingleChildScrollView(child: const InvoiceView()),
+        ),
+      );
+    }
     return Slidable(
       groupTag: 'my-list',
       startActionPane: ActionPane(
@@ -56,7 +69,7 @@ class TransectionListTile extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        onTap: () {},
+        onTap: onTapInvoice,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(color: Color(0xff2692ce), width: 1.5),
@@ -88,5 +101,6 @@ class TransectionListTile extends StatelessWidget {
         ),
       ),
     );
+
   }
 }

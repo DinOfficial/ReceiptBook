@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/models/invoice_model.dart';
+import 'package:receipt_book/provider/auth_check_provider.dart';
 import 'package:receipt_book/provider/invoice_provider.dart';
 import '../widgets/header_home.dart';
 import '../widgets/transection_list_tile.dart';
@@ -20,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) {
-      // Handle user not logged in case
+      AuthCheckProvider().authCheckAndRedirection(context);
       return Scaffold(
         body: Center(
           child: Text("User not logged in"),

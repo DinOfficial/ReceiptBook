@@ -13,7 +13,6 @@ import '../screens/internet_access_screen.dart';
 
 class InvoiceProvider extends ChangeNotifier {
   bool _isProcessing = false;
-
   bool get isProcessing => _isProcessing;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
