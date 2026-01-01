@@ -3,7 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/login_provider.dart';
-import 'package:receipt_book/screens/auth/confirm_email_verification.dart';
 
 import '../../widgets/welcome_app_bar.dart';
 
@@ -57,15 +56,14 @@ class _ForgotEmailScreenState extends State<ForgotEmailScreen> {
                     height: 50,
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: () {
-                        logiProvider.resetPassword(_emailController.text.trim());
-                        Navigator.pushNamed(
-                          context,
-                          ConfirmEmailVerification.name,
-                          arguments: _emailController.text.trim(),
-                        );
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          await logiProvider.resetPassword(context, _emailController.text.trim());
+                        }
                       },
-                      child: Text('Send reset link ', style: TextStyle(fontSize: 20)),
+                      child: logiProvider.getResetPasswordIsLoading
+                          ? CircularProgressIndicator()
+                          : Text('Send reset link ', style: TextStyle(fontSize: 20)),
                     ),
                   ),
                   SizedBox(height: 24),

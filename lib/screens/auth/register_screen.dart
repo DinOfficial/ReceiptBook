@@ -30,8 +30,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       appBar: WelcomeAppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
-        child: Consumer<PasswordTogglerProvider>(
-          builder: (context, passwordToggleProvider, _) {
+        child: Consumer2<PasswordTogglerProvider, LoginProvider>(
+          builder: (context, passwordToggleProvider, loginProvider, _) {
             return Form(
               key: _formKey,
               child: Column(
@@ -79,7 +79,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordTEController,
-                    obscureText: passwordToggleProvider.isVisible,
+                    obscureText: !passwordToggleProvider.isVisible,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
                       label: Text('Password'),
@@ -103,7 +103,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _confirmPasswordTEController,
-                    obscureText: passwordToggleProvider.isConfirmVisible,
+                    obscureText: !passwordToggleProvider.isConfirmVisible,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
                       label: Text('Confirm Password'),
@@ -131,8 +131,35 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     height: 50,
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: _onTapSignUp,
-                      child: Text('Register ', style: TextStyle(fontSize: 20)),
+                      onPressed: loginProvider.getEmailRegisterIsLoading ? null : _onTapSignUp,
+                      child: loginProvider.getEmailRegisterIsLoading
+                          ? CircularProgressIndicator()
+                          : Text('Register ', style: TextStyle(fontSize: 20)),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Row(
+                    children: [
+                      Expanded(child: Divider()),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Text('OR'),
+                      ),
+                      Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: loginProvider.getGoogleUserLoading
+                          ? null
+                          : () => loginProvider.singInWithGoogle(context),
+                      icon: loginProvider.getGoogleUserLoading
+                          ? CircularProgressIndicator()
+                          : Image.asset('assets/images/google.png', height: 24, width: 24),
+                      label: const Text('Sign up with Google'),
                     ),
                   ),
                   SizedBox(height: 24),
@@ -157,6 +184,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       signUp();
     }
   }
+
   Future<void> signUp() async {
     final name = _nameTEController.text.trim();
     final email = _emailTEController.text.trim();

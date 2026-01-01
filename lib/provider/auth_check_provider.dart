@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:receipt_book/screens/internet_access_screen.dart';
+import 'package:receipt_book/utils/network_checker.dart';
 import '../screens/app_main_layout.dart';
 import '../screens/company_setup_screen.dart';
 import '../screens/welcome_screen.dart';
@@ -11,25 +14,31 @@ class AuthCheckProvider extends ChangeNotifier {
 
   Future<void> authCheckAndRedirection(BuildContext context) async {
     if (!context.mounted) return;
-
-    final User? user = _auth.currentUser;
-
-    if (user == null) {
-      Navigator.of(context).pushNamedAndRemoveUntil(WelcomeScreen.name, (p) => false);
-      return;
-    }
-    try {
-      final uid = user.uid;
-      final hasCompany = await _fireStore.collection('users').doc(uid).collection('company').get();
-      if (!context.mounted) return;
-      if (hasCompany.docs.isEmpty) {
-        Navigator.of(context).pushNamedAndRemoveUntil(CompanySetupScreen.name, (p) => false);
-      } else {
-        Navigator.of(context).pushNamedAndRemoveUntil(AppMainLayout.name, (p) => false);
-      }
-    } catch (e) {
-      if (context.mounted) {
+    if (!await NetworkChecker.hasInternet) {
+      Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
+    } else {
+      final User? user = _auth.currentUser;
+      if (user == null) {
         Navigator.of(context).pushNamedAndRemoveUntil(WelcomeScreen.name, (p) => false);
+        return;
+      }
+      try {
+        final uid = user.uid;
+        final hasCompany = await _fireStore
+            .collection('users')
+            .doc(uid)
+            .collection('company')
+            .get();
+        if (!context.mounted) return;
+        if (hasCompany.docs.isEmpty) {
+          Navigator.of(context).pushNamedAndRemoveUntil(CompanySetupScreen.name, (p) => false);
+        } else {
+          Navigator.of(context).pushNamedAndRemoveUntil(AppMainLayout.name, (p) => false);
+        }
+      } catch (e) {
+        if (context.mounted) {
+          Navigator.of(context).pushNamedAndRemoveUntil(WelcomeScreen.name, (p) => false);
+        }
       }
     }
   }

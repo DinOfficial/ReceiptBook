@@ -5,8 +5,8 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/common_provider.dart';
 import 'package:receipt_book/provider/login_provider.dart';
+import 'package:receipt_book/screens/auth/forgot_email_screen.dart';
 import 'package:receipt_book/screens/auth/register_screen.dart';
-import 'package:receipt_book/screens/company_setup_screen.dart';
 import 'package:receipt_book/widgets/welcome_app_bar.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,8 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: WelcomeAppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
-        child: Consumer<PasswordTogglerProvider>(
-          builder: (context, passwordToggleProvider, _) {
+        child: Consumer2<PasswordTogglerProvider, LoginProvider>(
+          builder: (context, passwordToggleProvider, loginProvider, _) {
             return Form(
               key: _formKey,
               child: Column(
@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextFormField(
                     controller: _passwordController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    obscureText: passwordToggleProvider.isVisible,
+                    obscureText: !passwordToggleProvider.isVisible,
                     decoration: InputDecoration(
                       label: Text('Password'),
                       suffixIcon: IconButton(
@@ -87,13 +87,52 @@ class _LoginScreenState extends State<LoginScreen> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 24),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, ForgotEmailScreen.name);
+                      },
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12),
                   SizedBox(
                     height: 50,
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: _onTapLogin,
-                      child: Text('Log in ', style: TextStyle(fontSize: 20)),
+                      onPressed: loginProvider.getEmailLoginIsLoading ? null : _onTapLogin,
+                      child: loginProvider.getEmailLoginIsLoading
+                          ? CircularProgressIndicator()
+                          : Text('Log in ', style: TextStyle(fontSize: 20)),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Row(
+                    children: [
+                      Expanded(child: Divider()),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Text('OR'),
+                      ),
+                      Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: loginProvider.getGoogleUserLoading
+                          ? null
+                          : () => loginProvider.singInWithGoogle(context),
+                      icon: loginProvider.getGoogleUserLoading
+                          ? CircularProgressIndicator()
+                          : Image.asset('assets/images/google.png', height: 24, width: 24),
+                      label: const Text('Sign in with Google'),
                     ),
                   ),
                   SizedBox(height: 24),

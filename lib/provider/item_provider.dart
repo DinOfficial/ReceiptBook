@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:receipt_book/models/item_model.dart';
 
 class ItemProvider extends ChangeNotifier {
-  final bool _inProgress = false;
   final List<ItemModel> _itemList = [];
   double _subtotal = 0.0;
   double _discount = 0.0;
@@ -10,8 +9,6 @@ class ItemProvider extends ChangeNotifier {
   double _grandTotal = 0.0;
 
   List<ItemModel> get itemList => _itemList;
-
-  bool get inProgress => _inProgress;
 
   double get subtotal => _subtotal;
 
@@ -23,31 +20,32 @@ class ItemProvider extends ChangeNotifier {
 
   void addItem(ItemModel items) {
     _itemList.add(items);
-    calculateTotals(_itemList);
+    _calculateTotals();
     notifyListeners();
   }
 
   void removeItem(int index) {
     _itemList.removeAt(index);
-    calculateTotals(_itemList);
+    _calculateTotals();
     notifyListeners();
   }
 
-  void calculateTotals(List<ItemModel> items) {
-    _subtotal = items.fold(0.0, (sum, currntItem) => sum + currntItem.amount);
+  void _calculateTotals() {
+    _subtotal = _itemList.fold(0.0, (sum, currntItem) => sum + currntItem.amount);
     double discountValue = (_subtotal * _discount) / 100;
     double taxValue = ((_subtotal - discountValue) * _tax) / 100;
     _grandTotal = (_subtotal - discountValue) + taxValue;
-    notifyListeners();
   }
 
   void updateDiscount(String value) {
     _discount = double.tryParse(value) ?? 0.0;
+    _calculateTotals();
     notifyListeners();
   }
 
   void updateTax(String value) {
     _tax = double.tryParse(value) ?? 0.0;
+    _calculateTotals();
     notifyListeners();
   }
 }

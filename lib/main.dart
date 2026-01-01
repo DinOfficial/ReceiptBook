@@ -6,6 +6,7 @@ import 'package:receipt_book/provider/auth_check_provider.dart';
 import 'package:receipt_book/provider/common_provider.dart';
 import 'package:receipt_book/provider/company_provider.dart';
 import 'package:receipt_book/provider/customer_provider.dart';
+import 'package:receipt_book/provider/invoice_provider.dart';
 import 'package:receipt_book/provider/item_provider.dart';
 import 'package:receipt_book/provider/log_out_provider.dart';
 import 'package:receipt_book/provider/login_provider.dart';
@@ -22,12 +23,13 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => LogOutProvider()),
         ChangeNotifierProvider(create: (_) => AuthCheckProvider()),
-        ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => PasswordTogglerProvider()),
         ChangeNotifierProvider(create: (_) => CompanyProvider()),
         ChangeNotifierProvider(create: (_) => ThemeModeProvider()),
         ChangeNotifierProvider(create: (_) => CustomerProvider()),
         ChangeNotifierProvider(create: (_) => ItemProvider()),
+        ChangeNotifierProvider(create: (_) => InvoiceProvider()),
+
       ],
       child: ReceiptBookApp(),
     ),

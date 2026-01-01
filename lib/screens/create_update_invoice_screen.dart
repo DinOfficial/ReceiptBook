@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:receipt_book/models/customer_model.dart';
 import 'package:receipt_book/models/item_model.dart';
 import 'package:receipt_book/provider/customer_provider.dart';
+import 'package:receipt_book/provider/invoice_provider.dart';
 import 'package:receipt_book/provider/item_provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:receipt_book/screens/create_update_customer_screen.dart';
@@ -20,7 +22,8 @@ class CreateUpdateInvoiceScreen extends StatefulWidget {
   static const String name = 'create-update-invoice';
 
   @override
-  State<CreateUpdateInvoiceScreen> createState() => _CreateUpdateInvoiceScreenState();
+  State<CreateUpdateInvoiceScreen> createState() =>
+      _CreateUpdateInvoiceScreenState();
 }
 
 class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
@@ -33,12 +36,13 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     'Others',
   ];
 
-  String? selectedCustomerId;
-  String? selectedValue;
+  CustomerModel? selectedCustomer;
+  String? selectedStatus;
+  String? selectedPaymentSystem;
 
   final _formKey = GlobalKey<FormState>();
   final _itemFormKey = GlobalKey<FormState>();
-  final TextEditingController textEditingController = TextEditingController();
+  final TextEditingController _invoiceNoController = TextEditingController();
   final TextEditingController _invoiceDateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
 
@@ -86,6 +90,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
   @override
   void initState() {
     super.initState();
+    _invoiceNoController.text = 'INV-001';
     _invoiceDateController.text = 'Select a date';
     _timeController.text = 'Select Time';
   }
@@ -95,12 +100,44 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     final themeProvider = context.watch<ThemeModeProvider>();
     final itemProvider = context.watch<ItemProvider>();
     final customerProvider = context.watch<CustomerProvider>();
+    final invoiceProvider = context.watch<InvoiceProvider>();
     final uid = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
       appBar: const MainAppBar(title: 'Create New Invoice'),
+      bottomNavigationBar: BottomAppBar(
+        child: SizedBox(
+          height: 60,
+          child: Center(
+            child: ElevatedButton(
+              onPressed: invoiceProvider.isProcessing
+                  ? null
+                  : () {
+                      if (_formKey.currentState!.validate()) {
+                        invoiceProvider.createInvoice(
+                          context: context,
+                          uid: uid,
+                          customer: selectedCustomer!,
+                          invoiceNo: _invoiceNoController.text,
+                          status: selectedStatus!,
+                          date: selectedDate!,
+                          time: _timeController.text,
+                          paymentSystem: selectedPaymentSystem!,
+                          items: itemProvider.itemList,
+                          total: itemProvider.grandTotal,
+                        );
+                      }
+                    },
+              child: invoiceProvider.isProcessing
+                  ? CircularProgressIndicator()
+                  : Text('Create Invoice'),
+            ),
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -113,8 +150,17 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       stream: customerProvider.streamCustomers(uid),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) return CircularProgressIndicator();
-                        final customer = snapshot.data!;
-                        return DropdownButtonFormField2<String>(
+                        final customers = snapshot.data!;
+                        if (kDebugMode) {
+                          print('all customer : $customers');
+                        }
+
+                        // Ensure selectedCustomer is valid
+                        final validSelectedCustomer = selectedCustomer != null && customers.contains(selectedCustomer)
+                            ? selectedCustomer
+                            : null;
+
+                        return DropdownButtonFormField2<CustomerModel>(
                           isExpanded: true,
                           decoration: InputDecoration(
                             contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
@@ -129,10 +175,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                             ),
                           ),
                           hint: const Text('Select customer', style: TextStyle(fontSize: 14)),
-                          items: customer
+                          items: customers
                               .map(
-                                (customer) => DropdownMenuItem<String>(
-                                  value: customer.id,
+                                (customer) => DropdownMenuItem<CustomerModel>(
+                                  value: customer,
                                   child: Text(customer.name, style: const TextStyle(fontSize: 14)),
                                 ),
                               )
@@ -143,17 +189,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                             }
                             return null;
                           },
-                          value: customer.any((c) => c.id == selectedCustomerId)
-                              ? selectedCustomerId
-                              : null,
+                          value: validSelectedCustomer,
                           onChanged: (value) {
                             setState(() {
-                              selectedCustomerId = value;
-                            });
-                          },
-                          onSaved: (value) {
-                            setState(() {
-                              selectedCustomerId = value;
+                              selectedCustomer = value;
                             });
                           },
                           buttonStyleData: const ButtonStyleData(
@@ -207,12 +246,12 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      controller: _invoiceNoController,
                       decoration: const InputDecoration(
                         labelText: 'Invoice No.',
                         prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedFile02),
                         prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
                       ),
-                      initialValue: 'INV-001',
                       readOnly: true,
                     ),
                   ),
@@ -227,7 +266,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                         prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
                       ),
                       barrierDismissible: true,
-                      hint: const Text('Type', style: TextStyle(fontSize: 14)),
+                      hint: const Text('Status', style: TextStyle(fontSize: 14)),
                       items: statusItems
                           .map(
                             (item) => DropdownMenuItem<String>(
@@ -238,16 +277,14 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           .toList(),
                       validator: (value) {
                         if (value == null) {
-                          return 'Please select type.';
+                          return 'Please select status.';
                         }
                         return null;
                       },
                       onChanged: (value) {
-                        selectedValue = value.toString();
+                        selectedStatus = value.toString();
                       },
-                      onSaved: (value) {
-                        selectedValue = value.toString();
-                      },
+                      value: selectedStatus,
                       buttonStyleData: const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
                       iconStyleData: const IconStyleData(
                         icon: HugeIcon(
@@ -278,30 +315,26 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   Expanded(
                     child: TextFormField(
                       controller: _invoiceDateController,
+                      readOnly: true,
+                      onTap: _selectedDate,
                       decoration: const InputDecoration(
-                        labelText: 'Invoice Date',
+                        labelText: 'Date',
                         prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedCalendar01),
                         prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
                       ),
-                      readOnly: true,
-                      onTap: () async {
-                        _selectedDate();
-                      },
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: TextFormField(
                       controller: _timeController,
-                      decoration: const InputDecoration(
-                        labelText: 'Time',
-                        prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedTimeQuarterPass),
-                        prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
-                      ),
                       readOnly: true,
-                      onTap: () async {
-                        _selectTime(context);
-                      },
+                      onTap: () => _selectTime(context),
+                      decoration: InputDecoration(
+                        labelText: 'Time',
+                        prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedStopWatch),
+                        prefixIconConstraints: const BoxConstraints(minHeight: 24, minWidth: 34),
+                      ),
                     ),
                   ),
                 ],
@@ -312,31 +345,29 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(vertical: 16),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-                  prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedDocumentAttachment),
-                  prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 48),
+                  prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedCreditCard),
+                  prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
                 ),
-                barrierDismissible: true,
-                hint: const Text('Select payment system', style: TextStyle(fontSize: 14)),
+                hint: const Text(
+                  'Payment System',
+                  style: TextStyle(fontSize: 14),
+                ),
                 items: paymentSystemItems
-                    .map(
-                      (item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(item, style: const TextStyle(fontSize: 14)),
-                      ),
-                    )
+                    .map((item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(item, style: const TextStyle(fontSize: 14)),
+                        ))
                     .toList(),
                 validator: (value) {
                   if (value == null) {
-                    return 'Please select payment.';
+                    return 'Please select payment system.';
                   }
                   return null;
                 },
                 onChanged: (value) {
-                  selectedValue = value.toString();
+                  selectedPaymentSystem = value.toString();
                 },
-                onSaved: (value) {
-                  selectedValue = value.toString();
-                },
+                value: selectedPaymentSystem,
                 buttonStyleData: const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
                 iconStyleData: const IconStyleData(
                   icon: HugeIcon(
@@ -349,7 +380,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: AppThemeStyle.primaryColor),
-                    color: themeProvider.themeMode == ThemeMode.dark ? Colors.black : Colors.white,
+                    color:
+                        themeProvider.themeMode == ThemeMode.dark ? Colors.black : Colors.white,
                   ),
                 ),
                 menuItemStyleData: const MenuItemStyleData(
@@ -357,78 +389,93 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-
-              // === পণ্য বা সেবার তালিকা সেকশন ===
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      _addInvoiceItem();
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('Add Item'),
-                  ),
-                ],
-              ),
+              const Text('Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
-              Consumer<ItemProvider>(
-                builder: (context, itemProvider, _) {
-                  if (itemProvider.itemList.isEmpty) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 24.0),
-                        child: Text('No items added yet.', style: TextStyle(color: Colors.grey)),
-                      ),
-                    );
-                  }
-                  return ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: itemProvider.itemList.length,
-                    itemBuilder: (context, index) {
-                      return _buildItemRow(
-                        itemProvider.itemList[index].title,
-                        itemProvider.itemList[index].quantity,
-                        itemProvider.itemList[index].amount.toString(),
-                        index,
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const Divider(height: 12);
-                    },
+              ListView.separated(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: itemProvider.itemList.length,
+                separatorBuilder: (context, index) => const SizedBox(height: 8),
+                itemBuilder: (context, index) {
+                  final item = itemProvider.itemList[index];
+                  return ListTile(
+                    title: Text(item.title),
+                    subtitle: Text('Quantity: ${item.quantity}'),
+                    trailing: Text('\$${item.amount.toStringAsFixed(2)}'),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: AppThemeStyle.primaryColor, width: .5),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   );
                 },
               ),
-              const Divider(),
-
-              // === মোট গণনার সেকশন ===
-              _buildCalculationRow('Subtotal', itemProvider.subtotal.toString()),
-              const SizedBox(height: 8),
-              _buildCalculationRow('Discount (5%)', '- ${itemProvider.discount.toString()}'),
-              const SizedBox(height: 8),
-              _buildCalculationRow('Tax (10%)', '+ ৳ ${itemProvider.tax.toString()}'),
-              const Divider(thickness: 1, height: 24),
-              _buildCalculationRow(
-                'Grand Total',
-                '৳ ${itemProvider.grandTotal.toString()}',
-                isTotal: true,
-              ),
-
-              const SizedBox(height: 32),
+              const SizedBox(height: 12),
               SizedBox(
-                height: 50,
                 width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Save Invoice',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    _showAddItemDialog(context, itemProvider);
+                  },
+                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedAddCircle),
+                  label: const Text('Add Item'),
                 ),
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 24),
+              const Text('Payment Details',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Subtotal'),
+                  Text('\$${itemProvider.subtotal.toStringAsFixed(2)}'),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Discount'),
+                  SizedBox(
+                    width: 100,
+                    child: TextFormField(
+                      textAlign: TextAlign.end,
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) => itemProvider.updateDiscount(value),
+                      decoration: const InputDecoration(
+                        hintText: '0%',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Tax'),
+                  SizedBox(
+                    width: 100,
+                    child: TextFormField(
+                      textAlign: TextAlign.end,
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) => itemProvider.updateTax(value),
+                      decoration: const InputDecoration(
+                        hintText: '0%',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Grand Total', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('\$${itemProvider.grandTotal.toStringAsFixed(2)}',
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
             ],
           ),
         ),
@@ -436,164 +483,79 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     );
   }
 
-  // একটি স্ট্যাটিক আইটেম রো তৈরি করার জন্য হেল্পার উইজেট
-  Widget _buildItemRow(String name, String qty, String price, index) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 4,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(
-                'Qty: $qty',
-                style: TextStyle(color: Theme.of(context).inputDecorationTheme.labelStyle?.color),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Text(
-            '৳$price',
-            textAlign: TextAlign.right,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-        ),
-        Consumer<ItemProvider>(
-          builder: (context, itemProvider, _) {
-            return IconButton(
-              onPressed: () {
-                itemProvider.removeItem(index);
-              },
-              icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  // গণনার জন্য হেল্পার উইজেট
-  Widget _buildCalculationRow(String title, String amount, {bool isTotal = false}) {
-    final style = TextStyle(
-      fontSize: isTotal ? 18 : 16,
-      fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-    );
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title, style: style),
-        Text(amount, style: style),
-      ],
-    );
-  }
-
-  void _addInvoiceItem() {
-    showModalBottomSheet<void>(
-      backgroundColor: Colors.white,
-      isDismissible: true,
-      showDragHandle: true,
-      isScrollControlled: true,
+  void _showAddItemDialog(BuildContext context, ItemProvider itemProvider) {
+    showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return Container(
-          width: double.infinity,
-          padding: EdgeInsets.only(
-            top: 12,
-            left: 12,
-            right: 12,
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Form(
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Add Item'),
+          content: Form(
             key: _itemFormKey,
             child: Column(
-              mainAxisAlignment: .center,
-              crossAxisAlignment: .start,
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(height: 12),
+              children: [
                 TextFormField(
                   controller: _itemTitleController,
-                  decoration: InputDecoration(label: Text('Item Title')),
-                  validator: (String? value) {
+                  decoration: const InputDecoration(labelText: 'Item Title'),
+                  validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Write item title';
+                      return 'Please enter item title.';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 12),
                 TextFormField(
                   controller: _itemQuantityController,
+                  decoration: const InputDecoration(labelText: 'Quantity'),
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(label: Text('Quantity')),
-                  validator: (String? value) {
+                  validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Write item quantity';
+                      return 'Please enter quantity.';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 12),
                 TextFormField(
                   controller: _itemAmountController,
+                  decoration: const InputDecoration(labelText: 'Amount'),
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(label: Text('Amount')),
-                  validator: (String? value) {
+                  validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Write item Amount';
+                      return 'Please enter amount.';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 24),
-                Consumer<ItemProvider>(
-                  builder: (context, itemProvider, _) {
-                    return Visibility(
-                      visible: !itemProvider.inProgress,
-                      replacement: Center(child: CircularProgressIndicator()),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 48,
-                        child: OutlinedButton(onPressed: _onTapAddItem, child: Text('Save Item')),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 12),
               ],
             ),
           ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_itemFormKey.currentState!.validate()) {
+                  final item = ItemModel(
+                    title: _itemTitleController.text,
+                    quantity: int.parse(_itemQuantityController.text),
+                    amount: double.parse(_itemAmountController.text),
+                  );
+                  itemProvider.addItem(item);
+                  _itemTitleController.clear();
+                  _itemQuantityController.clear();
+                  _itemAmountController.clear();
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Add'),
+            ),
+          ],
         );
       },
     );
-  }
-
-  void _onTapAddItem() {
-    if (!_itemFormKey.currentState!.validate()) return;
-    final items = ItemModel(
-      title: _itemTitleController.text.trim(),
-      quantity: _itemQuantityController.text.trim(),
-      amount: int.parse(_itemAmountController.text.trim()),
-    );
-    final itemProvider = context.read<ItemProvider>();
-    itemProvider.addItem(items);
-    clearData();
-    Navigator.pop(context);
-  }
-
-  void clearData() {
-    _itemTitleController.clear();
-    _itemQuantityController.clear();
-    _itemAmountController.clear();
-  }
-
-  @override
-  void dispose() {
-    _invoiceDateController.dispose();
-    _timeController.dispose();
-    super.dispose();
   }
 }

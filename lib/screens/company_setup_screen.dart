@@ -184,7 +184,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
     final XFile photo = _image!;
 
     final CompanyProvider companyProvider = context.read<CompanyProvider>();
-    await companyProvider.addCompany(name, email, address, phone, photo);
+    await companyProvider.addCompany(context, name, email, address, phone, photo);
     if (mounted) {
       clearData();
       ScaffoldMessenger.of(

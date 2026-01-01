@@ -7,7 +7,13 @@ class LogOutProvider extends ChangeNotifier {
   final GoogleSignIn googleAuth = GoogleSignIn();
 
   Future<void> logOut() async {
-    auth.signOut();
-    googleAuth.signOut();
+    try {
+      await auth.signOut();
+      await googleAuth.signOut();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error during logout: $e');
+      }
+    }
   }
 }

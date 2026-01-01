@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/screens/auth/confirm_email_verification.dart';
+import 'package:receipt_book/utils/network_checker.dart';
 
+import '../screens/internet_access_screen.dart';
 import 'auth_check_provider.dart';
 
 class LoginProvider extends ChangeNotifier {
@@ -23,172 +25,193 @@ class LoginProvider extends ChangeNotifier {
   bool get getResetPasswordIsLoading => _isResetPasswordIsLoading;
 
   Future<void> singInWithGoogle(BuildContext context) async {
-    _isGoogleUserLoading = true;
-    notifyListeners();
-    try {
-      final GoogleSignInAccount? googleSignIn = await GoogleSignIn().signIn();
+    if (!await NetworkChecker.hasInternet) {
+      if (!context.mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
+    } else {
+      _isGoogleUserLoading = true;
+      notifyListeners();
+      try {
+        final GoogleSignInAccount? googleSignIn = await GoogleSignIn().signIn();
 
-      if (googleSignIn == null) {
-        _isGoogleUserLoading = false;
-        return;
-      }
+        if (googleSignIn == null) {
+          _isGoogleUserLoading = false;
+          notifyListeners();
+          return;
+        }
 
-      final GoogleSignInAuthentication auth = await googleSignIn.authentication;
+        final GoogleSignInAuthentication auth = await googleSignIn.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: auth.accessToken,
-        idToken: auth.idToken,
-      );
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: auth.accessToken,
+          idToken: auth.idToken,
+        );
 
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(
-        credential,
-      );
+        final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(
+          credential,
+        );
 
-      if (userCredential.user != null) {
-        await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-          'email': userCredential.user!.email,
-          'name': userCredential.user!.displayName,
-          'createdAt': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
-        context.read<AuthCheckProvider>().authCheckAndRedirection(context);
+        if (userCredential.user != null) {
+          await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+            'email': userCredential.user!.email,
+            'name': userCredential.user!.displayName,
+            'createdAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true));
+          if (!context.mounted) return;
+          context.read<AuthCheckProvider>().authCheckAndRedirection(context);
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('User login successfully')));
+        }
+      } catch (error) {
+        if (kDebugMode) {
+          print('errrrror: $error');
+        }
+        if (!context.mounted) return;
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('User login successfully')));
+        ).showSnackBar(SnackBar(content: Text('User login failed'), backgroundColor: Colors.red));
+      } finally {
+        _isGoogleUserLoading = false;
+        notifyListeners();
       }
-    } catch (error) {
-      print('errrrror: $error');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('User login failed'), backgroundColor: Colors.red));
-    } finally {
-      _isGoogleUserLoading = false;
-      notifyListeners();
     }
   }
 
   Future<void> emailSignUp(BuildContext context, String email, String password, String name) async {
-    try {
+    if (!await NetworkChecker.hasInternet) {
+      if (!context.mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
+    } else {
       _isEmailRegisterIsLoading = true;
       notifyListeners();
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      if (credential.user != null) {
-        await credential.user!.sendEmailVerification();
-        await FirebaseFirestore.instance.collection('users').doc(credential.user!.uid).set({
-          'email': credential.user!.email,
-          'name': credential.user!.displayName,
-          'createdAt': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Verification email has been sent please check !")));
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          ConfirmEmailVerification.name,
-          (p) => false,
-          arguments: credential.user!.email,
+      try {
+        final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
         );
-      }
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('User registration failed'), backgroundColor: Colors.red),
-      );
-      if (e.code == 'weak-password') {
-        if (kDebugMode) {
-          print('The password provided is too weak.');
+        if (credential.user != null) {
+          await credential.user!.sendEmailVerification();
+          await FirebaseFirestore.instance.collection('users').doc(credential.user!.uid).set({
+            'email': credential.user!.email,
+            'name': name, // Use the name from the parameter
+            'createdAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true));
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Verification email has been sent please check !")),
+          );
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            ConfirmEmailVerification.name,
+            (p) => false,
+            arguments: credential.user!.email,
+          );
         }
-      } else if (e.code == 'email-already-in-use') {
+      } on FirebaseAuthException catch (e) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'User registration failed'), backgroundColor: Colors.red),
+        );
         if (kDebugMode) {
-          print('The account already exists for that email.');
+          print(e.code);
         }
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      } finally {
+        _isEmailRegisterIsLoading = false;
+        notifyListeners();
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    } finally {
-      _isEmailRegisterIsLoading = false;
-      notifyListeners();
     }
   }
 
   Future<void> emailLogIn(BuildContext context, String email, String password) async {
-    try {
+    if (!await NetworkChecker.hasInternet) {
+      if (!context.mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
+    } else {
       _isEmailLoginIsLoading = true;
       notifyListeners();
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      final user = credential.user;
-      if (user != null && !user.emailVerified) {
-        await credential.user!.sendEmailVerification();
-        await FirebaseFirestore.instance.collection('users').doc(credential.user!.uid).set({
-          'email': credential.user!.email,
-          'name': credential.user!.displayName,
-          'createdAt': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Verification email has been sent please check !")));
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          ConfirmEmailVerification.name,
-          (p) => false,
-          arguments: credential.user!.email,
+      try {
+        final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
         );
-      } else {
-        context.read<AuthCheckProvider>().authCheckAndRedirection(context);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('User login successfully')));
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
+        final user = credential.user;
+        if (user != null && !user.emailVerified) {
+          await credential.user!.sendEmailVerification();
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Verification email has been sent please check !")),
+          );
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            ConfirmEmailVerification.name,
+            (p) => false,
+            arguments: credential.user!.email,
+          );
+        } else if (user != null) {
+          if (!context.mounted) return;
+          context.read<AuthCheckProvider>().authCheckAndRedirection(context);
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('User login successfully')));
+        }
+      } on FirebaseAuthException catch (e) {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('No user found for that email.'), backgroundColor: Colors.red),
+          SnackBar(content: Text(e.message ?? 'Login failed.'), backgroundColor: Colors.red),
         );
         if (kDebugMode) {
-          print('No user found for that email.');
+          print(e.code);
         }
-      } else if (e.code == 'wrong-password') {
+      } catch (e) {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Wrong password provided for that user.'),
-            backgroundColor: Colors.red,
-          ),
+          const SnackBar(content: Text('Something went wrong'), backgroundColor: Colors.red),
         );
         if (kDebugMode) {
-          print('Wrong password provided for that user.');
+          print(e);
         }
+      } finally {
+        _isEmailLoginIsLoading = false;
+        notifyListeners();
       }
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Something went wrong'), backgroundColor: Colors.red));
-    } finally {
-      _isEmailLoginIsLoading = false;
-      notifyListeners();
     }
   }
 
-  Future<void> resetPassword(String email) async {
+  Future<void> resetPassword(BuildContext context, String email) async {
+    if (!await NetworkChecker.hasInternet) {
+      if (!context.mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
+      return;
+    }
+    _isResetPasswordIsLoading = true;
+    notifyListeners();
     try {
-      _isEmailLoginIsLoading = true;
-      notifyListeners();
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password reset email sent. Please check your inbox.')),
+      );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        if (kDebugMode) {
-          print('No user found for that email.');
-        }
-      } else if (e.code == 'wrong-password') {
-        if (kDebugMode) {
-          print('Wrong password provided for that user.');
-        }
+      if (kDebugMode) {
+        print(e.code);
       }
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? 'Failed to send reset email.'), backgroundColor: Colors.red),
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An unexpected error occurred.'), backgroundColor: Colors.red),
+      );
     } finally {
-      _isEmailLoginIsLoading = false;
+      _isResetPasswordIsLoading = false;
       notifyListeners();
     }
   }
