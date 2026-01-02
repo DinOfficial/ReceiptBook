@@ -52,6 +52,9 @@ class InvoiceProvider extends ChangeNotifier {
     required String paymentSystem,
     required List<ItemModel> items,
     required double total,
+    required double subtotal,
+    required double discount,
+    required double tax,
   }) async {
     if (!await NetworkChecker.hasInternet) {
       if (!context.mounted) return;
@@ -82,6 +85,9 @@ class InvoiceProvider extends ChangeNotifier {
         paymentSystem: paymentSystem,
         total: total,
         items: items,
+        subtotal: subtotal,
+        discount: discount,
+        tax: tax,
       );
 
       await newInvoiceRef.set(invoice.toMap());

@@ -24,8 +24,7 @@ class CreateUpdateInvoiceScreen extends StatefulWidget {
   static const String name = 'create-update-invoice';
 
   @override
-  State<CreateUpdateInvoiceScreen> createState() =>
-      _CreateUpdateInvoiceScreenState();
+  State<CreateUpdateInvoiceScreen> createState() => _CreateUpdateInvoiceScreenState();
 }
 
 class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
@@ -89,7 +88,6 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -115,21 +113,24 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
               onPressed: invoiceProvider.isProcessing
                   ? null
                   : () {
-                if (_formKey.currentState!.validate()) {
-                  invoiceProvider.createInvoice(
-                    context: context,
-                    uid: uid,
-                    customer: selectedCustomer!,
-                    invoiceNo: _invoiceNoController.text,
-                    status: selectedStatus!,
-                    date: selectedDate!,
-                    time: _timeController.text,
-                    paymentSystem: selectedPaymentSystem!,
-                    items: itemProvider.itemList,
-                    total: itemProvider.grandTotal,
-                  );
-                }
-              },
+                      if (_formKey.currentState!.validate()) {
+                        invoiceProvider.createInvoice(
+                          context: context,
+                          uid: uid,
+                          customer: selectedCustomer!,
+                          invoiceNo: _invoiceNoController.text,
+                          status: selectedStatus!,
+                          date: selectedDate!,
+                          time: _timeController.text,
+                          paymentSystem: selectedPaymentSystem!,
+                          items: itemProvider.itemList,
+                          total: itemProvider.grandTotal,
+                          subtotal: itemProvider.subtotal,
+                          discount: itemProvider.discount,
+                          tax: itemProvider.tax,
+                        );
+                      }
+                    },
               child: invoiceProvider.isProcessing
                   ? CircularProgressIndicator()
                   : Text('Create Invoice'),
@@ -159,8 +160,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                         }
 
                         // Ensure selectedCustomer is valid
-                        final validSelectedCustomer = selectedCustomer != null &&
-                            customers.contains(selectedCustomer)
+                        final validSelectedCustomer =
+                            selectedCustomer != null && customers.contains(selectedCustomer)
                             ? selectedCustomer
                             : null;
 
@@ -181,12 +182,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           hint: const Text('Select customer', style: TextStyle(fontSize: 14)),
                           items: customers
                               .map(
-                                (customer) =>
-                                DropdownMenuItem<CustomerModel>(
+                                (customer) => DropdownMenuItem<CustomerModel>(
                                   value: customer,
                                   child: Text(customer.name, style: const TextStyle(fontSize: 14)),
                                 ),
-                          )
+                              )
                               .toList(),
                           validator: (value) {
                             if (value == null) {
@@ -274,12 +274,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       hint: const Text('Status', style: TextStyle(fontSize: 14)),
                       items: statusItems
                           .map(
-                            (item) =>
-                            DropdownMenuItem<String>(
+                            (item) => DropdownMenuItem<String>(
                               value: item,
                               child: Text(item, style: const TextStyle(fontSize: 14)),
                             ),
-                      )
+                          )
                           .toList(),
                       validator: (value) {
                         if (value == null) {
@@ -354,16 +353,14 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedCreditCard),
                   prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
                 ),
-                hint: const Text(
-                  'Payment System',
-                  style: TextStyle(fontSize: 14),
-                ),
+                hint: const Text('Payment System', style: TextStyle(fontSize: 14)),
                 items: paymentSystemItems
-                    .map((item) =>
-                    DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(item, style: const TextStyle(fontSize: 14)),
-                    ))
+                    .map(
+                      (item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(item, style: const TextStyle(fontSize: 14)),
+                      ),
+                    )
                     .toList(),
                 validator: (value) {
                   if (value == null) {
@@ -387,8 +384,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: AppThemeStyle.primaryColor),
-                    color:
-                    themeProvider.themeMode == ThemeMode.dark ? Colors.black : Colors.white,
+                    color: themeProvider.themeMode == ThemeMode.dark ? Colors.black : Colors.white,
                   ),
                 ),
                 menuItemStyleData: const MenuItemStyleData(
@@ -428,8 +424,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text('Payment Details',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text(
+                'Payment Details',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -449,9 +447,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       textAlign: TextAlign.end,
                       keyboardType: TextInputType.number,
                       onChanged: (value) => itemProvider.updateDiscount(value),
-                      decoration: const InputDecoration(
-                        hintText: '0%',
-                      ),
+                      decoration: const InputDecoration(hintText: '0%'),
                     ),
                   ),
                 ],
@@ -467,9 +463,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       textAlign: TextAlign.end,
                       keyboardType: TextInputType.number,
                       onChanged: (value) => itemProvider.updateTax(value),
-                      decoration: const InputDecoration(
-                        hintText: '0%',
-                      ),
+                      decoration: const InputDecoration(hintText: '0%'),
                     ),
                   ),
                 ],
@@ -479,8 +473,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text('Grand Total', style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('\$${itemProvider.grandTotal.toStringAsFixed(2)}',
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    '\$${itemProvider.grandTotal.toStringAsFixed(2)}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             ],

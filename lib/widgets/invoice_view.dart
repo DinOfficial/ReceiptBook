@@ -1,107 +1,131 @@
 import 'package:flutter/material.dart';
+import 'package:receipt_book/models/company_model.dart';
+import 'package:receipt_book/models/invoice_model.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
+import 'package:receipt_book/services/invoice_action_controller.dart';
 
-class InvoiceView extends StatelessWidget {
-  const InvoiceView({super.key});
+class InvoiceView extends StatefulWidget {
+  const InvoiceView({super.key, required this.invoice});
+
+  final InvoiceModel invoice;
+
+  @override
+  State<InvoiceView> createState() => _InvoiceViewState();
+}
+
+class _InvoiceViewState extends State<InvoiceView> {
+  late final InvoiceActionsController _actionsController;
+
+  @override
+  void initState() {
+    super.initState();
+    _actionsController = InvoiceActionsController(widget.invoice);
+  }
+
+  final GlobalKey _invoiceKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     const accentColor = Color(0xFF2C3E50);
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// ===== HEADER =====
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "INVOICE",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: accentColor,
-                  letterSpacing: 2,
+    return RepaintBoundary(
+      key: _invoiceKey,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// ===== HEADER =====
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "INVOICE",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: accentColor,
+                    letterSpacing: 2,
+                  ),
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: const [
-                  Text("ReceiptBook", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Text("Dhaka, Bangladesh"),
-                  Text("Phone: +8801700000000"),
-                ],
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 25),
-
-          /// ===== BILLING INFO =====
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [_billTo(), _invoiceInfo()],
-          ),
-
-          const SizedBox(height: 20),
-
-          /// ===== ITEMS TABLE =====
-          const _invoiceTable(),
-
-          const SizedBox(height: 10),
-
-          /// ===== TOTAL =====
-          Align(
-            alignment: Alignment.centerRight,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: const [
-                _priceRow(title: "Subtotal", value: "৳ 3,000.00"),
-                _priceRow(title: "VAT (5%)", value: "৳ 150.00"),
-                Divider(thickness: 1),
-                _priceRow(title: "Grand Total", value: "৳ 3,150.00", isBold: true),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: const [
+                    Text(
+                      "ReceiptBook",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text("Dhaka, Bangladesh"),
+                    Text("Phone: +8801700000000"),
+                  ],
+                ),
               ],
             ),
-          ),
 
-          const SizedBox(height: 30),
+            const SizedBox(height: 25),
 
-          /// ===== FOOTER TEXT =====
-          Align(
-            alignment: Alignment.center,
-            child: Text(
-              "Thank you for your business!",
-              style: TextStyle(color: accentColor, fontWeight: FontWeight.w600, fontSize: 16),
+            /// ===== BILLING INFO =====
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [_billTo(), _invoiceInfo()],
             ),
-          ),
 
-          const SizedBox(height: 25),
+            const SizedBox(height: 20),
 
-          /// ===== ACTION BUTTONS =====
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _invoiceButton(Icons.print, "Print", () {
-              }),
-              _invoiceButton(Icons.picture_as_pdf, "Save PDF", () {
-                // TODO: pdf function
-                // _saveInvoicePdf();
-              }),
-              _invoiceButton(Icons.share, "Share", () {
-                // TODO: share function
-                // _shareInvoice();
-              }),
-              _invoiceButton(Icons.download, "Download", () {
-                // TODO: image export
-                // _downloadAsImage();
-              }),
-            ],
-          ),
-          const SizedBox(height: 24,)
-        ],
+            /// ===== ITEMS TABLE =====
+            const _invoiceTable(),
+
+            const SizedBox(height: 10),
+
+            /// ===== TOTAL =====
+            Align(
+              alignment: Alignment.centerRight,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: const [
+                  _priceRow(title: "Subtotal", value: "৳ 3,000.00"),
+                  _priceRow(title: "VAT (5%)", value: "৳ 150.00"),
+                  Divider(thickness: 1),
+                  _priceRow(title: "Grand Total", value: "৳ 3,150.00", isBold: true),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            /// ===== FOOTER TEXT =====
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                "Thank you for your business!",
+                style: TextStyle(color: accentColor, fontWeight: FontWeight.w600, fontSize: 16),
+              ),
+            ),
+
+            const SizedBox(height: 25),
+
+            /// ===== ACTION BUTTONS =====
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _invoiceButton(Icons.print, "Print", () {
+                  _actionsController.printInvoice();
+                }),
+                _invoiceButton(Icons.picture_as_pdf, "Save PDF", () {
+                  _actionsController.savePdfLocally();
+                }),
+                _invoiceButton(Icons.share, "Share", () {
+                  _actionsController.shareInvoicePdf();
+                }),
+                _invoiceButton(Icons.download, "Download", () {
+                  _actionsController.downloadAsImage(_invoiceKey);
+                }),
+              ],
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
     );
   }

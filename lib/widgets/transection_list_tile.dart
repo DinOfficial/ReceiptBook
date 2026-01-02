@@ -6,10 +6,7 @@ import 'package:receipt_book/models/invoice_model.dart';
 import 'invoice_view.dart';
 
 class TransectionListTile extends StatelessWidget {
-  const TransectionListTile({
-    super.key,
-    required this.invoice,
-  });
+  const TransectionListTile({super.key, required this.invoice});
 
   final InvoiceModel invoice;
 
@@ -22,11 +19,13 @@ class TransectionListTile extends StatelessWidget {
         backgroundColor: Colors.transparent,
         builder: (_) => Padding(
           padding: const EdgeInsets.only(top: 30),
-          child: SingleChildScrollView(child: const InvoiceView()),
+          child: SingleChildScrollView(child: InvoiceView(invoice: invoice,)),
         ),
       );
     }
+
     return Slidable(
+      key: ValueKey(invoice.invoiceId),
       groupTag: 'my-list',
       startActionPane: ActionPane(
         motion: DrawerMotion(),
@@ -74,7 +73,9 @@ class TransectionListTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(color: Color(0xff2692ce), width: 1.5),
         ),
-        leading: CircleAvatar(child: Text(invoice.customerName.isNotEmpty ? invoice.customerName[0] : 'N')),
+        leading: CircleAvatar(
+          child: Text(invoice.customerName.isNotEmpty ? invoice.customerName[0] : 'N'),
+        ),
         title: Text(invoice.customerName),
         subtitle: Text(DateFormat('dd-MMM-yyyy').format(invoice.date)),
         trailing: Container(
@@ -90,17 +91,12 @@ class TransectionListTile extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              NumberFormat.currency(symbol: '', decimalDigits: 2).format(invoice.total) + ' BDT',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
+              NumberFormat.currency(symbol: '', decimalDigits: 2).format(invoice.total),
+              style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
             ),
           ),
         ),
       ),
     );
-
   }
 }
