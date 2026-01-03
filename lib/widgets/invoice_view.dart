@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:receipt_book/models/company_model.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:receipt_book/models/customer_model.dart';
 import 'package:receipt_book/models/invoice_model.dart';
+import 'package:receipt_book/provider/customer_provider.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
 import 'package:receipt_book/services/invoice_action_controller.dart';
 import 'package:receipt_book/widgets/invoice_image_screen.dart';
@@ -35,9 +39,9 @@ class _InvoiceViewState extends State<InvoiceView> {
   @override
   Widget build(BuildContext context) {
     const accentColor = Color(0xFF2C3E50);
+    final uid = FirebaseAuth.instance.currentUser!.uid;
 
     return Container(
-      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
       child: Column(
         children: [
@@ -46,7 +50,7 @@ class _InvoiceViewState extends State<InvoiceView> {
             child: RepaintBoundary(
               key: _invoiceKey,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -79,17 +83,133 @@ class _InvoiceViewState extends State<InvoiceView> {
 
                     const SizedBox(height: 25),
 
-                    /// ===== BILLING INFO =====
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [_billTo(), _invoiceInfo()],
+                    StreamBuilder<List<CustomerModel>>(
+                      stream: context.watch<CustomerProvider>().streamCustomers(uid),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Text('Customer Loading');
+                        }
+                        final customers = snapshot.data;
+                        final customer = customers?.firstWhere(
+                          (c) => c.id == widget.invoice.customerId,
+                        );
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Bill To:", style: TextStyle(fontWeight: FontWeight.bold)),
+                            SizedBox(height: 4),
+                            Text(customer!.name.isNotEmpty ? customer.name : 'Unknown Customer'),
+                            Text(customer.address),
+                            Text(customer.phone),
+                            Text('Invoice No: ${widget.invoice.invoiceNo}'),
+                            Text('Date: ${DateFormat('dd-MMM-yy').format(widget.invoice.date)}'),
+                          ],
+                        );
+                      },
                     ),
-
                     const SizedBox(height: 20),
 
                     /// ===== ITEMS TABLE =====
-                    const _invoiceTable(),
+                    Row(
+                      children: [
+                        _cell('Description', flex: 3, isHeader: true),
+                        _cell('Qty', flex: 1, isHeader: true),
+                        _cell('Amount', flex: 2, isHeader: true),
+                      ],
+                    ),
+                    ...widget.invoice.items.map((item) {
+                      return Row(
+                        children: [
+                          _cell(item.title, flex: 3),
+                          _cell(item.quantity.toString(), flex: 1),
+                          _cell("৳ ${item.amount.toStringAsFixed(2)}", flex: 2),
+                        ],
+                      );
+                    }),
 
+                    // Table(
+                    //   border: TableBorder(
+                    //     top: BorderSide(color: Colors.grey.shade300),
+                    //     right: BorderSide(color: Colors.grey.shade300),
+                    //     bottom: BorderSide(color: Colors.grey.shade300),
+                    //     left: BorderSide(color: Colors.grey.shade300),
+                    //     verticalInside: BorderSide(color: Colors.grey.shade300),
+                    //     horizontalInside: BorderSide(color: Colors.grey.shade300),
+                    //   ),
+                    //   columnWidths: const {
+                    //     0: FlexColumnWidth(3),
+                    //     1: FlexColumnWidth(1),
+                    //     2: FlexColumnWidth(2),
+                    //   },
+                    //   children: [
+                    //     TableRow(
+                    //       children: [
+                    //         TableCell(
+                    //           verticalAlignment: TableCellVerticalAlignment.middle,
+                    //           child: Padding(
+                    //             padding: const EdgeInsets.all(10),
+                    //             child: Text(
+                    //               'Description',
+                    //               style: TextStyle(fontWeight: FontWeight.bold),
+                    //               textAlign: TextAlign.center,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         TableCell(
+                    //           verticalAlignment: TableCellVerticalAlignment.middle,
+                    //           child: Padding(
+                    //             padding: const EdgeInsets.all(10),
+                    //             child: Text(
+                    //               'Qty',
+                    //               style: TextStyle(fontWeight: FontWeight.bold),
+                    //               textAlign: TextAlign.center,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //         TableCell(
+                    //           verticalAlignment: TableCellVerticalAlignment.middle,
+                    //           child: Padding(
+                    //             padding: const EdgeInsets.all(10),
+                    //             child: Text(
+                    //               'Amount',
+                    //               style: TextStyle(fontWeight: FontWeight.bold),
+                    //               textAlign: TextAlign.center,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //     ...widget.invoice.items.map(
+                    //       (item) => TableRow(
+                    //         children: [
+                    //           TableCell(
+                    //             verticalAlignment: TableCellVerticalAlignment.middle,
+                    //             child: Padding(
+                    //               padding: const EdgeInsets.all(4),
+                    //               child: Center(child: Text(item.title)),
+                    //             ),
+                    //           ),
+                    //           TableCell(
+                    //             verticalAlignment: TableCellVerticalAlignment.middle,
+                    //             child: Padding(
+                    //               padding: const EdgeInsets.all(4),
+                    //               child: Center(child: Text(item.quantity.toString())),
+                    //             ),
+                    //           ),
+                    //           TableCell(
+                    //             verticalAlignment: TableCellVerticalAlignment.middle,
+                    //             child: Padding(
+                    //               padding: const EdgeInsets.all(4),
+                    //               child: Center(
+                    //                 child: Text("৳  ${item.amount.toStringAsFixed(2)}"),
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     const SizedBox(height: 10),
 
                     /// ===== TOTAL =====
@@ -97,12 +217,25 @@ class _InvoiceViewState extends State<InvoiceView> {
                       alignment: Alignment.centerRight,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        children: const [
-                          _priceRow(title: "Subtotal", value: "৳ 3,000.00"),
-                          _priceRow(title: "Discount (5%)", value: "৳ 150.00"),
-                          _priceRow(title: "VAT (5%)", value: "৳ 150.00"),
+                        children: [
+                          _priceRow(
+                            title: "Subtotal",
+                            value: "৳ ${widget.invoice.subtotal.toStringAsFixed(2)}",
+                          ),
+                          _priceRow(
+                            title: "Discount (5%)",
+                            value: "৳ ${widget.invoice.discount.toStringAsFixed(2)}",
+                          ),
+                          _priceRow(
+                            title: "TAX (5%)",
+                            value: "৳ ${widget.invoice.tax.toStringAsFixed(2)}",
+                          ),
                           Divider(thickness: 1),
-                          _priceRow(title: "Grand Total", value: "৳ 3,150.00", isBold: true),
+                          _priceRow(
+                            title: "Grand Total",
+                            value: "৳ ${widget.invoice.total.toStringAsFixed(2)}",
+                            isBold: true,
+                          ),
                         ],
                       ),
                     ),
@@ -183,77 +316,6 @@ Widget _invoiceButton(IconData icon, String title, VoidCallback onTap) {
   );
 }
 
-Widget _billTo() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: const [
-      Text("Bill To:", style: TextStyle(fontWeight: FontWeight.bold)),
-      SizedBox(height: 4),
-      Text("Mohammad Abdullah"),
-      Text("Mirpur, Dhaka"),
-      Text("Phone: +8801XXXXXXXXX"),
-    ],
-  );
-}
-
-Widget _invoiceInfo() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: const [Text("Invoice No: RB-1023"), Text("Invoice Date: 28 Dec 2025")],
-  );
-}
-
-class _invoiceTable extends StatelessWidget {
-  const _invoiceTable();
-
-  @override
-  Widget build(BuildContext context) {
-    return Table(
-      border: TableBorder.all(color: Colors.grey.shade300),
-      columnWidths: const {0: FlexColumnWidth(3), 1: FlexColumnWidth(1), 2: FlexColumnWidth(2)},
-      children: [
-        _tableHeader(),
-        _tableRow("Item 01", "2", "৳ 1,200.00"),
-        _tableRow("Item 02", "1", "৳ 600.00"),
-      ],
-    );
-  }
-}
-
-class _tableHeader extends TableRow {
-  _tableHeader()
-    : super(
-        children: [
-          _cell("Description", isHeader: true),
-          _cell("Qty", isHeader: true),
-          _cell("Amount", isHeader: true),
-        ],
-      );
-}
-
-class _tableRow extends TableRow {
-  _tableRow(String title, String qty, String amount)
-    : super(children: [_cell(title), _cell(qty), _cell(amount)]);
-}
-
-class _cell extends StatelessWidget {
-  final String text;
-  final bool isHeader;
-
-  const _cell(this.text, {this.isHeader = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Text(
-        text,
-        style: TextStyle(fontWeight: isHeader ? FontWeight.bold : FontWeight.normal),
-      ),
-    );
-  }
-}
-
 class _priceRow extends StatelessWidget {
   final String title, value;
   final bool isBold;
@@ -274,4 +336,19 @@ class _priceRow extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _cell(String text, {required int flex, bool isHeader = false}) {
+  return Expanded(
+    flex: flex,
+    child: Container(
+      padding: const EdgeInsets.all(8),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300)),
+      child: Text(
+        text,
+        style: TextStyle(fontWeight: isHeader ? FontWeight.bold : FontWeight.normal),
+      ),
+    ),
+  );
 }
