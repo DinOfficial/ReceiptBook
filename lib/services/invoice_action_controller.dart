@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
@@ -21,14 +20,6 @@ class InvoiceActionsController {
     await Printing.layoutPdf(onLayout: (_) => pdf);
   }
 
-  /// ======================= SAVE PDF ======================
-  Future<void> savePdfLocally() async {
-    final pdf = await _generatePdf();
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/${invoice.invoiceNo}.pdf');
-    await file.writeAsBytes(pdf);
-  }
-
   /// ======================= SHARE PDF =====================
   Future<void> shareInvoicePdf() async {
     final pdf = await _generatePdf();
@@ -39,18 +30,13 @@ class InvoiceActionsController {
   }
 
   /// ======================= DOWNLOAD IMAGE ================
-  Future<void> downloadAsImage(GlobalKey invoiceKey) async {
-    final Uint8List? image = await screenshotController.captureFromWidget(
-      RepaintBoundary(
-        key: invoiceKey,
-        child: _InvoiceExportView(invoice: invoice),
-      ),
-    );
-
-    if (image != null) {
-      final dir = await getApplicationDocumentsDirectory();
-      final file = File('${dir.path}/${invoice.invoiceNo}.png');
-      await file.writeAsBytes(image);
+  Future<Uint8List?> captureInvoiceImage(ScreenshotController screenshotController) async {
+    try {
+      final image = await screenshotController.capture(delay: const Duration(milliseconds: 500));
+      return image;
+    } catch (e) {
+      debugPrint('Screenshot error: $e');
+      return null;
     }
   }
 
@@ -195,23 +181,155 @@ class InvoiceActionsController {
 }
 
 /// view for image export
-class _InvoiceExportView extends StatelessWidget {
-  final InvoiceModel invoice;
-
-  const _InvoiceExportView({required this.invoice});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          Text("Invoice: ${invoice.invoiceNo}", style: const TextStyle(fontSize: 20)),
-          Text("Customer: ${invoice.customerName}"),
-          Text("Total: ৳ ${invoice.total}"),
-        ],
-      ),
-    );
-  }
-}
+// class _InvoiceExportView extends StatelessWidget {
+//   final InvoiceModel invoice;
+//
+//   const _InvoiceExportView({required this.invoice});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       color: Colors.white,
+//       padding: const EdgeInsets.all(20),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Text(
+//                 "INVOICE",
+//                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, letterSpacing: 2),
+//               ),
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.end,
+//                 children: [
+//                   Text("ReceiptBook", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+//                   Text("Dhaka, Bangladesh"),
+//                   Text("Phone: +8801700000000"),
+//                 ],
+//               ),
+//             ],
+//           ),
+//           SizedBox(height: 25),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text("Bill To:", style: TextStyle(fontWeight: FontWeight.bold)),
+//                   SizedBox(height: 4),
+//                   Text("Mohammad Abdullah"),
+//                   Text("Mirpur, Dhaka"),
+//                   Text("Phone: +8801XXXXXXXXX"),
+//                 ],
+//               ),
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [Text("Invoice No: RB-1023"), Text("Invoice Date: 28 Dec 2025")],
+//               ),
+//             ],
+//           ),
+//           SizedBox(height: 20),
+//           Table(
+//             border: TableBorder.all(color: Colors.grey.shade300),
+//             columnWidths: const {
+//               0: FlexColumnWidth(3),
+//               1: FlexColumnWidth(1),
+//               2: FlexColumnWidth(2),
+//             },
+//             children: [
+//               TableRow(
+//                 children: [
+//                   Padding(
+//                     padding: const EdgeInsets.all(10),
+//                     child: Text('Description', style: TextStyle(fontWeight: FontWeight.bold)),
+//                   ),
+//                   Padding(
+//                     padding: const EdgeInsets.all(10),
+//                     child: Text('Qty', style: TextStyle(fontWeight: FontWeight.bold)),
+//                   ),
+//                   Padding(
+//                     padding: const EdgeInsets.all(10),
+//                     child: Text('Amount', style: TextStyle(fontWeight: FontWeight.bold)),
+//                   ),
+//                 ],
+//               ),
+//               ...invoice.items.map(
+//                 (item) => TableRow(
+//                   children: [
+//                     Center(child: Text(item.title)),
+//                     Center(child: Text(item.quantity.toString())),
+//                     Center(child: Text("BDT ${item.amount}")),
+//                   ],
+//                 ),
+//               ),
+//             ],
+//           ),
+//
+//           SizedBox(height: 10),
+//           Align(
+//             alignment: Alignment.centerRight,
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.end,
+//               children: [
+//                 Padding(
+//                   padding: EdgeInsets.symmetric(vertical: 2),
+//                   child: Row(
+//                     mainAxisSize: MainAxisSize.min,
+//                     children: [
+//                       Text('SubTotal', style: TextStyle(fontWeight: FontWeight.normal)),
+//                       SizedBox(width: 12),
+//                       Text(
+//                         invoice.subtotal.toString(),
+//                         style: TextStyle(fontWeight: FontWeight.normal),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//                 Padding(
+//                   padding: EdgeInsets.symmetric(vertical: 2),
+//                   child: Row(
+//                     mainAxisSize: MainAxisSize.min,
+//                     children: [
+//                       Text('SubTotal', style: TextStyle(fontWeight: FontWeight.normal)),
+//                       SizedBox(width: 12),
+//                       Text(
+//                         invoice.discount.toString(),
+//                         style: TextStyle(fontWeight: FontWeight.normal),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//                 Padding(
+//                   padding: EdgeInsets.symmetric(vertical: 2),
+//                   child: Row(
+//                     mainAxisSize: MainAxisSize.min,
+//                     children: [
+//                       Text('SubTotal', style: TextStyle(fontWeight: FontWeight.normal)),
+//                       SizedBox(width: 12),
+//                       Text(invoice.tax.toString(), style: TextStyle(fontWeight: FontWeight.normal)),
+//                     ],
+//                   ),
+//                 ),
+//                 Divider(thickness: 1),
+//                 Padding(
+//                   padding: EdgeInsets.symmetric(vertical: 2),
+//                   child: Row(
+//                     mainAxisSize: MainAxisSize.min,
+//                     children: [
+//                       Text('SubTotal', style: TextStyle(fontWeight: FontWeight.bold)),
+//                       SizedBox(width: 12),
+//                       Text(invoice.total.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

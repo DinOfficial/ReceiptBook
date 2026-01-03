@@ -34,6 +34,8 @@ dependencies:
   internet_connection_checker_plus: ^2.9.1+2
   screenshot: ^3.0.0
   share_plus: ^12.0.1
+  image_gallery_saver: ^2.0.3
+  permission_handler: ^11.3.0
 
 
 dev_dependencies:

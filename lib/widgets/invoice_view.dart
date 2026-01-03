@@ -3,6 +3,8 @@ import 'package:receipt_book/models/company_model.dart';
 import 'package:receipt_book/models/invoice_model.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
 import 'package:receipt_book/services/invoice_action_controller.dart';
+import 'package:receipt_book/widgets/invoice_image_screen.dart';
+import 'package:screenshot/screenshot.dart';
 
 class InvoiceView extends StatefulWidget {
   const InvoiceView({super.key, required this.invoice});
@@ -15,6 +17,7 @@ class InvoiceView extends StatefulWidget {
 
 class _InvoiceViewState extends State<InvoiceView> {
   late final InvoiceActionsController _actionsController;
+  ScreenshotController screenshotController = ScreenshotController();
 
   @override
   void initState() {
@@ -25,107 +28,139 @@ class _InvoiceViewState extends State<InvoiceView> {
   final GlobalKey _invoiceKey = GlobalKey();
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     const accentColor = Color(0xFF2C3E50);
 
-    return RepaintBoundary(
-      key: _invoiceKey,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// ===== HEADER =====
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "INVOICE",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: accentColor,
-                    letterSpacing: 2,
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: const [
-                    Text(
-                      "ReceiptBook",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
+      child: Column(
+        children: [
+          Screenshot(
+            controller: screenshotController,
+            child: RepaintBoundary(
+              key: _invoiceKey,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// ===== HEADER =====
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "INVOICE",
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: accentColor,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: const [
+                            Text(
+                              "ReceiptBook",
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            Text("Dhaka, Bangladesh"),
+                            Text("Phone: +8801700000000"),
+                          ],
+                        ),
+                      ],
                     ),
-                    Text("Dhaka, Bangladesh"),
-                    Text("Phone: +8801700000000"),
+
+                    const SizedBox(height: 25),
+
+                    /// ===== BILLING INFO =====
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [_billTo(), _invoiceInfo()],
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    /// ===== ITEMS TABLE =====
+                    const _invoiceTable(),
+
+                    const SizedBox(height: 10),
+
+                    /// ===== TOTAL =====
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: const [
+                          _priceRow(title: "Subtotal", value: "৳ 3,000.00"),
+                          _priceRow(title: "Discount (5%)", value: "৳ 150.00"),
+                          _priceRow(title: "VAT (5%)", value: "৳ 150.00"),
+                          Divider(thickness: 1),
+                          _priceRow(title: "Grand Total", value: "৳ 3,150.00", isBold: true),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    /// ===== FOOTER TEXT =====
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Thank you for your business!",
+                        style: TextStyle(
+                          color: accentColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 25),
                   ],
                 ),
-              ],
-            ),
-
-            const SizedBox(height: 25),
-
-            /// ===== BILLING INFO =====
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [_billTo(), _invoiceInfo()],
-            ),
-
-            const SizedBox(height: 20),
-
-            /// ===== ITEMS TABLE =====
-            const _invoiceTable(),
-
-            const SizedBox(height: 10),
-
-            /// ===== TOTAL =====
-            Align(
-              alignment: Alignment.centerRight,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: const [
-                  _priceRow(title: "Subtotal", value: "৳ 3,000.00"),
-                  _priceRow(title: "VAT (5%)", value: "৳ 150.00"),
-                  Divider(thickness: 1),
-                  _priceRow(title: "Grand Total", value: "৳ 3,150.00", isBold: true),
-                ],
               ),
             ),
+          ),
 
-            const SizedBox(height: 30),
+          /// ===== ACTION BUTTONS =====
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _invoiceButton(Icons.print, "Print", () {
+                _actionsController.printInvoice();
+              }),
+              _invoiceButton(Icons.share, "Share", () {
+                _actionsController.shareInvoicePdf();
+              }),
+              _invoiceButton(Icons.download, "Image", _onImagePressed),
+            ],
+          ),
+          const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
 
-            /// ===== FOOTER TEXT =====
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Thank you for your business!",
-                style: TextStyle(color: accentColor, fontWeight: FontWeight.w600, fontSize: 16),
-              ),
-            ),
+  void _onImagePressed() async {
+    final image = await _actionsController.captureInvoiceImage(screenshotController);
 
-            const SizedBox(height: 25),
+    if (image == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Image capture failed')));
+      return;
+    }
 
-            /// ===== ACTION BUTTONS =====
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _invoiceButton(Icons.print, "Print", () {
-                  _actionsController.printInvoice();
-                }),
-                _invoiceButton(Icons.picture_as_pdf, "Save PDF", () {
-                  _actionsController.savePdfLocally();
-                }),
-                _invoiceButton(Icons.share, "Share", () {
-                  _actionsController.shareInvoicePdf();
-                }),
-                _invoiceButton(Icons.download, "Download", () {
-                  _actionsController.downloadAsImage(_invoiceKey);
-                }),
-              ],
-            ),
-            const SizedBox(height: 24),
-          ],
-        ),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => InvoiceImageSave(imageBytes: image, fileName: widget.invoice.invoiceNo),
       ),
     );
   }
