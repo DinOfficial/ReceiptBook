@@ -43,14 +43,14 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
 
   final _formKey = GlobalKey<FormState>();
   final _itemFormKey = GlobalKey<FormState>();
-  final TextEditingController _invoiceNoController = TextEditingController();
-  final TextEditingController _invoiceDateController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _invoiceNoController = .new();
+  final TextEditingController _invoiceDateController = .new();
+  final TextEditingController _timeController = .new();
 
   // item add TEC
-  final TextEditingController _itemTitleController = TextEditingController();
-  final TextEditingController _itemQuantityController = TextEditingController();
-  final TextEditingController _itemAmountController = TextEditingController();
+  final TextEditingController _itemTitleController = .new();
+  final TextEditingController _itemQuantityController = .new();
+  final TextEditingController _itemAmountController = .new();
 
   DateTime? selectedDate;
 
@@ -113,22 +113,28 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
               onPressed: invoiceProvider.isProcessing
                   ? null
                   : () {
-                      if (_formKey.currentState!.validate()) {
-                        invoiceProvider.createInvoice(
-                          context: context,
-                          uid: uid,
-                          customer: selectedCustomer!,
-                          invoiceNo: _invoiceNoController.text,
-                          status: selectedStatus!,
-                          date: selectedDate!,
-                          time: _timeController.text,
-                          paymentSystem: selectedPaymentSystem!,
-                          items: itemProvider.itemList,
-                          total: itemProvider.grandTotal,
-                          subtotal: itemProvider.subtotal,
-                          discount: itemProvider.discount,
-                          tax: itemProvider.tax,
+                      if (itemProvider.itemList.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(backgroundColor: Colors.red, content: Text('Please add items')),
                         );
+                      } else {
+                        if (_formKey.currentState!.validate()) {
+                          invoiceProvider.createInvoice(
+                            context: context,
+                            uid: uid,
+                            customer: selectedCustomer!,
+                            invoiceNo: _invoiceNoController.text,
+                            status: selectedStatus!,
+                            date: selectedDate!,
+                            time: _timeController.text,
+                            paymentSystem: selectedPaymentSystem!,
+                            items: itemProvider.itemList,
+                            total: itemProvider.grandTotal,
+                            subtotal: itemProvider.subtotal,
+                            discount: itemProvider.discount,
+                            tax: itemProvider.tax,
+                          );
+                        }
                       }
                     },
               child: invoiceProvider.isProcessing
@@ -404,7 +410,17 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   return ListTile(
                     title: Text(item.title),
                     subtitle: Text('Quantity: ${item.quantity}'),
-                    trailing: Text('\$${item.amount.toStringAsFixed(2)}'),
+                    trailing: Row(
+                      children: [
+                        Text('৳ ${item.amount.toStringAsFixed(2)}'),
+                        IconButton(
+                          onPressed: () {
+                            itemProvider.removeItem(index);
+                          },
+                          icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                        ),
+                      ],
+                    ),
                     shape: RoundedRectangleBorder(
                       side: BorderSide(color: AppThemeStyle.primaryColor, width: .5),
                       borderRadius: BorderRadius.circular(12),
@@ -433,7 +449,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text('Subtotal'),
-                  Text('\$${itemProvider.subtotal.toStringAsFixed(2)}'),
+                  Text('৳ ${itemProvider.subtotal.toStringAsFixed(2)}'),
                 ],
               ),
               const SizedBox(height: 8),
@@ -447,7 +463,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       textAlign: TextAlign.end,
                       keyboardType: TextInputType.number,
                       onChanged: (value) => itemProvider.updateDiscount(value),
-                      decoration: const InputDecoration(hintText: '0%'),
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.all(4),
+                        hintText: '0%',
+                      ),
                     ),
                   ),
                 ],
@@ -463,7 +482,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       textAlign: TextAlign.end,
                       keyboardType: TextInputType.number,
                       onChanged: (value) => itemProvider.updateTax(value),
-                      decoration: const InputDecoration(hintText: '0%'),
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.all(4),
+                        hintText: '0%',
+                      ),
                     ),
                   ),
                 ],
@@ -474,7 +496,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 children: [
                   const Text('Grand Total', style: TextStyle(fontWeight: FontWeight.bold)),
                   Text(
-                    '\$${itemProvider.grandTotal.toStringAsFixed(2)}',
+                    '৳ ${itemProvider.grandTotal.toStringAsFixed(2)}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -492,44 +514,48 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Add Item'),
-          content: Form(
-            key: _itemFormKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: _itemTitleController,
-                  decoration: const InputDecoration(labelText: 'Item Title'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter item title.';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _itemQuantityController,
-                  decoration: const InputDecoration(labelText: 'Quantity'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter quantity.';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _itemAmountController,
-                  decoration: const InputDecoration(labelText: 'Amount'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter amount.';
-                    }
-                    return null;
-                  },
-                ),
-              ],
+          content: SingleChildScrollView(
+            child: Form(
+              key: _itemFormKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: _itemTitleController,
+                    decoration: const InputDecoration(labelText: 'Item Title'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter item title.';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _itemQuantityController,
+                    decoration: const InputDecoration(labelText: 'Quantity'),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter quantity.';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: _itemAmountController,
+                    decoration: const InputDecoration(labelText: 'Amount'),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter amount.';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
@@ -547,11 +573,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                     quantity: int.parse(_itemQuantityController.text),
                     amount: double.parse(_itemAmountController.text),
                   );
+                  Navigator.pop(context);
                   itemProvider.addItem(item);
                   _itemTitleController.clear();
                   _itemQuantityController.clear();
                   _itemAmountController.clear();
-                  Navigator.pop(context);
                 }
               },
               child: const Text('Add'),
@@ -561,4 +587,93 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
       },
     );
   }
+
+  // void _showAddItemDialog(BuildContext context, ItemProvider itemProvider) {
+  //   showModalBottomSheet<void>(
+  //     backgroundColor: Colors.white,
+  //     isDismissible: true,
+  //     showDragHandle: true,
+  //     isScrollControlled: true,
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Container(
+  //         width: double.infinity,
+  //         padding: EdgeInsets.only(
+  //           top: 12,
+  //           left: 12,
+  //           right: 12,
+  //           bottom: MediaQuery.of(context).viewInsets.bottom,
+  //         ),
+  //         child: Form(
+  //           key: _itemFormKey,
+  //           child: Column(
+  //             mainAxisAlignment: .center,
+  //             crossAxisAlignment: .start,
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: <Widget>[
+  //               const SizedBox(height: 12),
+  //               TextFormField(
+  //                 controller: _itemTitleController,
+  //                 decoration: InputDecoration(label: Text('Item Title')),
+  //                 validator: (String? value) {
+  //                   if (value == null || value.isEmpty) {
+  //                     return 'Please enter item name';
+  //                   }
+  //                   return null;
+  //                 },
+  //               ),
+  //               const SizedBox(height: 12),
+  //               TextFormField(
+  //                 controller: _itemQuantityController,
+  //                 keyboardType: TextInputType.number,
+  //                 decoration: InputDecoration(label: Text('Quantity')),
+  //                 validator: (String? value) {
+  //                   if (value == null || value.isEmpty) {
+  //                     return 'Please enter item quantity';
+  //                   }
+  //                   return null;
+  //                 },
+  //               ),
+  //               const SizedBox(height: 12),
+  //               TextFormField(
+  //                 controller: _itemAmountController,
+  //                 keyboardType: TextInputType.number,
+  //                 decoration: InputDecoration(label: Text('Amount')),
+  //                 validator: (String? value) {
+  //                   if (value == null || value.isEmpty) {
+  //                     return 'Please enter item amount';
+  //                   }
+  //                   return null;
+  //                 },
+  //               ),
+  //               const SizedBox(height: 24),
+  //               SizedBox(
+  //                 width: double.infinity,
+  //                 height: 48,
+  //                 child: OutlinedButton(
+  //                   onPressed: () {
+  //                     if (_itemFormKey.currentState!.validate()) {
+  //                       final item = ItemModel(
+  //                         title: _itemTitleController.text,
+  //                         quantity: int.parse(_itemQuantityController.text),
+  //                         amount: double.parse(_itemAmountController.text),
+  //                       );
+  //                       itemProvider.addItem(item);
+  //                       _itemTitleController.clear();
+  //                       _itemQuantityController.clear();
+  //                       _itemAmountController.clear();
+  //                     }
+  //                     Navigator.pop(context);
+  //                   },
+  //                   child: Text('Save Item'),
+  //                 ),
+  //               ),
+  //               const SizedBox(height: 12),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }
