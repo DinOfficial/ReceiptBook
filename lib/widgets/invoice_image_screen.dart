@@ -10,35 +10,26 @@ class InvoiceImageSave extends StatelessWidget {
   final Uint8List imageBytes;
   final String fileName;
 
-  const InvoiceImageSave({
-    super.key,
-    required this.imageBytes,
-    required this.fileName,
-  });
+  const InvoiceImageSave({super.key, required this.imageBytes, required this.fileName});
 
   Future<void> _saveImage(BuildContext context) async {
     // Permission
     final status = await Permission.photos.request();
     if (!status.isGranted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Permission denied')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Permission denied')));
       return;
     }
 
-    final result = await ImageGallerySaverPlus.saveImage(
-      imageBytes,
-      quality: 100,
-      name: fileName,
-    );
+    final result = await ImageGallerySaverPlus.saveImage(imageBytes, quality: 100, name: fileName);
 
     if (result['isSuccess']) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Image saved to Gallery')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Image saved to Gallery')));
     }
   }
-
 
   Future<void> _shareImage(BuildContext context) async {
     final temp = await getTemporaryDirectory();
@@ -55,11 +46,7 @@ class InvoiceImageSave extends StatelessWidget {
         title: const Text('Invoice Preview', style: TextStyle(color: Colors.white)),
       ),
       body: Center(
-        child: InteractiveViewer(
-          minScale: 0.5,
-          maxScale: 4,
-          child: Image.memory(imageBytes),
-        ),
+        child: InteractiveViewer(minScale: 0.5, maxScale: 4, child: Image.memory(imageBytes)),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(

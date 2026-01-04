@@ -411,6 +411,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                     title: Text(item.title),
                     subtitle: Text('Quantity: ${item.quantity}'),
                     trailing: Row(
+                      mainAxisSize: .min,
                       children: [
                         Text('৳ ${item.amount.toStringAsFixed(2)}'),
                         IconButton(
@@ -508,172 +509,172 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     );
   }
 
-  void _showAddItemDialog(BuildContext context, ItemProvider itemProvider) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Add Item'),
-          content: SingleChildScrollView(
-            child: Form(
-              key: _itemFormKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    controller: _itemTitleController,
-                    decoration: const InputDecoration(labelText: 'Item Title'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter item title.';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: _itemQuantityController,
-                    decoration: const InputDecoration(labelText: 'Quantity'),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter quantity.';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: _itemAmountController,
-                    decoration: const InputDecoration(labelText: 'Amount'),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter amount.';
-                      }
-                      return null;
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (_itemFormKey.currentState!.validate()) {
-                  final item = ItemModel(
-                    title: _itemTitleController.text,
-                    quantity: int.parse(_itemQuantityController.text),
-                    amount: double.parse(_itemAmountController.text),
-                  );
-                  Navigator.pop(context);
-                  itemProvider.addItem(item);
-                  _itemTitleController.clear();
-                  _itemQuantityController.clear();
-                  _itemAmountController.clear();
-                }
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   // void _showAddItemDialog(BuildContext context, ItemProvider itemProvider) {
-  //   showModalBottomSheet<void>(
-  //     backgroundColor: Colors.white,
-  //     isDismissible: true,
-  //     showDragHandle: true,
-  //     isScrollControlled: true,
+  //   showDialog(
   //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Container(
-  //         width: double.infinity,
-  //         padding: EdgeInsets.only(
-  //           top: 12,
-  //           left: 12,
-  //           right: 12,
-  //           bottom: MediaQuery.of(context).viewInsets.bottom,
-  //         ),
-  //         child: Form(
-  //           key: _itemFormKey,
-  //           child: Column(
-  //             mainAxisAlignment: .center,
-  //             crossAxisAlignment: .start,
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: <Widget>[
-  //               const SizedBox(height: 12),
-  //               TextFormField(
-  //                 controller: _itemTitleController,
-  //                 decoration: InputDecoration(label: Text('Item Title')),
-  //                 validator: (String? value) {
-  //                   if (value == null || value.isEmpty) {
-  //                     return 'Please enter item name';
-  //                   }
-  //                   return null;
-  //                 },
-  //               ),
-  //               const SizedBox(height: 12),
-  //               TextFormField(
-  //                 controller: _itemQuantityController,
-  //                 keyboardType: TextInputType.number,
-  //                 decoration: InputDecoration(label: Text('Quantity')),
-  //                 validator: (String? value) {
-  //                   if (value == null || value.isEmpty) {
-  //                     return 'Please enter item quantity';
-  //                   }
-  //                   return null;
-  //                 },
-  //               ),
-  //               const SizedBox(height: 12),
-  //               TextFormField(
-  //                 controller: _itemAmountController,
-  //                 keyboardType: TextInputType.number,
-  //                 decoration: InputDecoration(label: Text('Amount')),
-  //                 validator: (String? value) {
-  //                   if (value == null || value.isEmpty) {
-  //                     return 'Please enter item amount';
-  //                   }
-  //                   return null;
-  //                 },
-  //               ),
-  //               const SizedBox(height: 24),
-  //               SizedBox(
-  //                 width: double.infinity,
-  //                 height: 48,
-  //                 child: OutlinedButton(
-  //                   onPressed: () {
-  //                     if (_itemFormKey.currentState!.validate()) {
-  //                       final item = ItemModel(
-  //                         title: _itemTitleController.text,
-  //                         quantity: int.parse(_itemQuantityController.text),
-  //                         amount: double.parse(_itemAmountController.text),
-  //                       );
-  //                       itemProvider.addItem(item);
-  //                       _itemTitleController.clear();
-  //                       _itemQuantityController.clear();
-  //                       _itemAmountController.clear();
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: const Text('Add Item'),
+  //         content: SingleChildScrollView(
+  //           child: Form(
+  //             key: _itemFormKey,
+  //             child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 TextFormField(
+  //                   controller: _itemTitleController,
+  //                   decoration: const InputDecoration(labelText: 'Item Title'),
+  //                   validator: (value) {
+  //                     if (value == null || value.isEmpty) {
+  //                       return 'Please enter item title.';
   //                     }
-  //                     Navigator.pop(context);
+  //                     return null;
   //                   },
-  //                   child: Text('Save Item'),
   //                 ),
-  //               ),
-  //               const SizedBox(height: 12),
-  //             ],
+  //                 const SizedBox(height: 12),
+  //                 TextFormField(
+  //                   controller: _itemQuantityController,
+  //                   decoration: const InputDecoration(labelText: 'Quantity'),
+  //                   keyboardType: TextInputType.number,
+  //                   validator: (value) {
+  //                     if (value == null || value.isEmpty) {
+  //                       return 'Please enter quantity.';
+  //                     }
+  //                     return null;
+  //                   },
+  //                 ),
+  //                 const SizedBox(height: 12),
+  //                 TextFormField(
+  //                   controller: _itemAmountController,
+  //                   decoration: const InputDecoration(labelText: 'Amount'),
+  //                   keyboardType: TextInputType.number,
+  //                   validator: (value) {
+  //                     if (value == null || value.isEmpty) {
+  //                       return 'Please enter amount.';
+  //                     }
+  //                     return null;
+  //                   },
+  //                 ),
+  //               ],
+  //             ),
   //           ),
   //         ),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //             },
+  //             child: const Text('Cancel'),
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: () {
+  //               if (_itemFormKey.currentState!.validate()) {
+  //                 final item = ItemModel(
+  //                   title: _itemTitleController.text,
+  //                   quantity: int.parse(_itemQuantityController.text),
+  //                   amount: double.parse(_itemAmountController.text),
+  //                 );
+  //                 Navigator.pop(context);
+  //                 itemProvider.addItem(item);
+  //                 _itemTitleController.clear();
+  //                 _itemQuantityController.clear();
+  //                 _itemAmountController.clear();
+  //               }
+  //             },
+  //             child: const Text('Add'),
+  //           ),
+  //         ],
   //       );
   //     },
   //   );
   // }
+
+  void _showAddItemDialog(BuildContext context, ItemProvider itemProvider) {
+    showModalBottomSheet<void>(
+      backgroundColor: Colors.white,
+      isDismissible: true,
+      showDragHandle: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          width: double.infinity,
+          padding: EdgeInsets.only(
+            top: 12,
+            left: 12,
+            right: 12,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Form(
+            key: _itemFormKey,
+            child: Column(
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _itemTitleController,
+                  decoration: InputDecoration(label: Text('Item Title')),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter item name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _itemQuantityController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(label: Text('Quantity')),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter item quantity';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _itemAmountController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(label: Text('Amount')),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter item amount';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      if (_itemFormKey.currentState!.validate()) {
+                        final item = ItemModel(
+                          title: _itemTitleController.text,
+                          quantity: int.parse(_itemQuantityController.text),
+                          amount: double.parse(_itemAmountController.text),
+                        );
+                        itemProvider.addItem(item);
+                        _itemTitleController.clear();
+                        _itemQuantityController.clear();
+                        _itemAmountController.clear();
+                      }
+                      Navigator.pop(context);
+                    },
+                    child: Text('Save Item'),
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
