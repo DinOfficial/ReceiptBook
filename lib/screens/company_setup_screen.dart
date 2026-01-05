@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/company_provider.dart';
 import 'package:receipt_book/screens/app_main_layout.dart';
+import 'package:receipt_book/utils/toast_helper.dart';
 
 class CompanySetupScreen extends StatefulWidget {
   const CompanySetupScreen({super.key});
@@ -49,7 +50,10 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                 ],
                 child: Text(
                   'Setup your company details',
-                  style: GoogleFonts.akayaKanadaka(fontSize: 24, fontWeight: FontWeight.w400),
+                  style: GoogleFonts.akayaKanadaka(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -80,12 +84,17 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                         child: Center(
                           child: Text(
                             'Logo',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Expanded(child: Text(_image?.name ?? 'Select your company logo')),
+                      Expanded(
+                        child: Text(_image?.name ?? 'Select your company logo'),
+                      ),
                     ],
                   ),
                 ),
@@ -149,7 +158,10 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                       width: double.infinity,
                       child: OutlinedButton(
                         onPressed: _onTapSubmit,
-                        child: HugeIcon(icon: HugeIcons.strokeRoundedCircleArrowRight01, size: 28),
+                        child: HugeIcon(
+                          icon: HugeIcons.strokeRoundedCircleArrowRight01,
+                          size: 28,
+                        ),
                       ),
                     ),
                   );
@@ -166,9 +178,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
   void _onTapSubmit() {
     final isFormValid = _formKey.currentState!.validate();
     if (_image == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select company logo'), backgroundColor: Colors.red),
-      );
+      ToastHelper.showError(context, 'Please select company logo');
       return;
     }
     if (isFormValid) {
@@ -184,13 +194,20 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
     final XFile photo = _image!;
 
     final CompanyProvider companyProvider = context.read<CompanyProvider>();
-    await companyProvider.addCompany(context, name, email, address, phone, photo);
+    await companyProvider.addCompany(
+      context,
+      name,
+      email,
+      address,
+      phone,
+      photo,
+    );
     if (mounted) {
       clearData();
-      ScaffoldMessenger.of(
+      ToastHelper.showSuccess(context, 'Company setup completed');
+      Navigator.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Company setup completed')));
-      Navigator.of(context).pushNamedAndRemoveUntil(AppMainLayout.name, (p) => false);
+      ).pushNamedAndRemoveUntil(AppMainLayout.name, (p) => false);
     }
   }
 

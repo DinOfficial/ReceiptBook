@@ -10,6 +10,8 @@ import 'package:receipt_book/screens/company_setup_screen.dart';
 import 'package:receipt_book/screens/create_update_customer_screen.dart';
 import 'package:receipt_book/screens/create_update_invoice_screen.dart';
 import 'package:receipt_book/screens/internet_access_screen.dart';
+import 'package:receipt_book/screens/invoice_settings_screen.dart';
+import 'package:receipt_book/screens/app_and_security_screen.dart';
 import 'package:receipt_book/screens/splash_screen.dart';
 import 'package:receipt_book/screens/welcome_screen.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
@@ -42,6 +44,8 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
         CreateUpdateCustomerScreen.name: (_) => CreateUpdateCustomerScreen(),
         CreateUpdateInvoiceScreen.name: (_) => CreateUpdateInvoiceScreen(),
         InternetAccessScreen.name: (_) => InternetAccessScreen(),
+        InvoiceSettingsScreen.name: (_) => InvoiceSettingsScreen(),
+        AppAndSecurityScreen.name: (_) => AppAndSecurityScreen(),
       },
     );
   }

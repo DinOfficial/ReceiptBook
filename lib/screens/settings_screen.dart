@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
+import 'package:receipt_book/screens/company_setup_screen.dart';
+import 'package:receipt_book/screens/invoice_settings_screen.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
+import 'package:receipt_book/screens/app_and_security_screen.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -15,14 +18,13 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final WidgetStateProperty<Icon?> thumbIcon = WidgetStateProperty.resolveWith<Icon?>((
-    Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.selected)) {
-      return const Icon(Icons.nights_stay, color: Colors.black87);
-    }
-    return const Icon(Icons.wb_sunny, color: Colors.orange);
-  });
+  final WidgetStateProperty<Icon?> thumbIcon =
+      WidgetStateProperty.resolveWith<Icon?>((Set<WidgetState> states) {
+        if (states.contains(WidgetState.selected)) {
+          return const Icon(Icons.nights_stay, color: Colors.black87);
+        }
+        return const Icon(Icons.wb_sunny, color: Colors.orange);
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +53,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 20),
           ListTile(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, CompanySetupScreen.name);
+            },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
-            leading: HugeIcon(icon: HugeIcons.strokeRoundedBriefcase06, size: 32),
+            leading: HugeIcon(
+              icon: HugeIcons.strokeRoundedBriefcase06,
+              size: 32,
+            ),
             title: Text('Business Information', style: TextStyle(fontSize: 20)),
             subtitle: Text('Update | complete your company information'),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
@@ -64,7 +71,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 20),
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, InvoiceSettingsScreen.name);
+            },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
@@ -75,13 +84,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
           ),
           const SizedBox(height: 20),
+
+          // Biometric option moved to App & Security
+          const SizedBox(height: 20),
           ListTile(
-            onTap: () {},
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            onTap: () {
+              Navigator.pushNamed(context, AppAndSecurityScreen.name);
+            },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
-            leading: HugeIcon(icon: HugeIcons.strokeRoundedShieldUser, size: 32),
+            leading: HugeIcon(
+              icon: HugeIcons.strokeRoundedShieldUser,
+              size: 32,
+            ),
             title: Text('App & Security', style: TextStyle(fontSize: 20)),
             subtitle: Text('Know your terms and condition and data security'),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
@@ -94,7 +112,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
-            leading: HugeIcon(icon: HugeIcons.strokeRoundedCustomerService02, size: 32),
+            leading: HugeIcon(
+              icon: HugeIcons.strokeRoundedCustomerService02,
+              size: 32,
+            ),
             title: Text('Get support', style: TextStyle(fontSize: 20)),
             subtitle: Text('Let us know what you\'r in trouble'),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
@@ -107,7 +128,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
-            leading: HugeIcon(icon: HugeIcons.strokeRoundedInformationDiamond, size: 32),
+            leading: HugeIcon(
+              icon: HugeIcons.strokeRoundedInformationDiamond,
+              size: 32,
+            ),
             title: Text('Who we are', style: TextStyle(fontSize: 20)),
             subtitle: Text('Know about our developer'),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
@@ -127,7 +151,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 50),
           Center(
-            child: Text('App Version: 1.1.1', style: TextStyle(color: Colors.grey, fontSize: 16)),
+            child: Text(
+              'App Version: 1.1.1',
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+            ),
           ),
         ],
       ),

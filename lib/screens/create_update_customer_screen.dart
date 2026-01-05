@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/customer_provider.dart';
+import 'package:receipt_book/utils/toast_helper.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
 
 class CreateUpdateCustomerScreen extends StatefulWidget {
@@ -10,14 +11,17 @@ class CreateUpdateCustomerScreen extends StatefulWidget {
   static final name = 'create-update-customer';
 
   @override
-  State<CreateUpdateCustomerScreen> createState() => _CreateUpdateCustomerScreenState();
+  State<CreateUpdateCustomerScreen> createState() =>
+      _CreateUpdateCustomerScreenState();
 }
 
-class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen> {
+class _CreateUpdateCustomerScreenState
+    extends State<CreateUpdateCustomerScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,10 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
               SizedBox(height: 32),
               Text(
                 'Add customer to create invoice',
-                style: GoogleFonts.akayaKanadaka(fontSize: 24, fontWeight: FontWeight.w400),
+                style: GoogleFonts.akayaKanadaka(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w400,
+                ),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 48),
@@ -44,8 +51,18 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
                 decoration: InputDecoration(label: Text('Customer name')),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Company name required !';
+                    return 'Customer name required !';
                   }
+                  return null;
+                },
+              ),
+              SizedBox(height: 12),
+              TextFormField(
+                controller: _emailController,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                decoration: InputDecoration(label: Text('Email')),
+                validator: (String? value) {
+                  // Optional email, or valid email check?
                   return null;
                 },
               ),
@@ -108,16 +125,19 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
     final name = _nameController.text.trim();
     final address = _addressController.text.trim();
     final phone = _phoneController.text.trim();
-    context.read<CustomerProvider>().addCustomer(context, name, address, phone);
+    final email = _emailController.text.trim();
+    context.read<CustomerProvider>().addCustomer(
+      context,
+      name,
+      address,
+      phone,
+      email,
+    );
     if (mounted) {
       clearData();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Customer data save successfully!'), backgroundColor: Colors.green),
-      );
+      ToastHelper.showSuccess(context, 'Customer data save successfully!');
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving customer data'), backgroundColor: Colors.red),
-      );
+      ToastHelper.showError(context, 'Error saving customer data');
     }
   }
 
@@ -125,6 +145,7 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
     _nameController.clear();
     _addressController.clear();
     _phoneController.clear();
+    _emailController.clear();
   }
 
   @override
@@ -132,6 +153,7 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
     _nameController.dispose();
     _addressController.dispose();
     _phoneController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 }

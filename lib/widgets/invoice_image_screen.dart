@@ -5,6 +5,7 @@ import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:receipt_book/utils/toast_helper.dart';
 
 class InvoiceImageSave extends StatelessWidget {
   final Uint8List imageBytes;
@@ -20,9 +21,7 @@ class InvoiceImageSave extends StatelessWidget {
     // Permission
     final status = await Permission.photos.request();
     if (!status.isGranted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Permission denied')),
-      );
+      ToastHelper.showError(context, 'Permission denied');
       return;
     }
 
@@ -33,12 +32,9 @@ class InvoiceImageSave extends StatelessWidget {
     );
 
     if (result['isSuccess']) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Image saved to Gallery')),
-      );
+      ToastHelper.showSuccess(context, 'Image saved to Gallery');
     }
   }
-
 
   Future<void> _shareImage(BuildContext context) async {
     final temp = await getTemporaryDirectory();
@@ -52,7 +48,10 @@ class InvoiceImageSave extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text('Invoice Preview', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Invoice Preview',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Center(
         child: InteractiveViewer(
