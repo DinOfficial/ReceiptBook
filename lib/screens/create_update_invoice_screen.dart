@@ -139,9 +139,17 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
     // Handle Customer Selection for Edit Mode
-    if (widget.invoice != null && selectedCustomer == null) {
-      // Ideally we should find the customer from the provider list, but we are inside build.
-      // We can iterate the snapshot data later.
+    if (widget.invoice != null &&
+        selectedCustomer == null &&
+        customerProvider.customerList.isNotEmpty) {
+      try {
+        final existingCustomer = customerProvider.customerList.firstWhere(
+          (c) => c.id == widget.invoice!.customerId,
+        );
+        selectedCustomer = existingCustomer;
+      } catch (e) {
+        // Customer might handle been deleted or not loaded yet
+      }
     }
 
     return Scaffold(

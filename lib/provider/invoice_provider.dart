@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,23 +25,37 @@ class InvoiceProvider extends ChangeNotifier {
         .doc(uid)
         .collection('customers')
         .snapshots()
-        .asyncMap((customerSnapshot) async {
-          List<InvoiceModel> allInvoices = [];
-          for (var customerDoc in customerSnapshot.docs) {
-            final invoiceSnapshot = await customerDoc.reference
-                .collection('invoices')
-                .get();
-            for (var invoiceDoc in invoiceSnapshot.docs) {
-              try {
-                allInvoices.add(InvoiceModel.fromMap(invoiceDoc.data()));
-              } catch (e) {
-                if (kDebugMode) {
-                  print('Failed to parse invoice: ${invoiceDoc.id}, error: $e');
-                }
-              }
-            }
+        .switchMap((customerSnapshot) {
+          if (customerSnapshot.docs.isEmpty) {
+            return Stream.value(<InvoiceModel>[]);
           }
-          return allInvoices;
+
+          final invoiceStreams = customerSnapshot.docs.map((customerDoc) {
+            return customerDoc.reference.collection('invoices').snapshots().map(
+              (invoiceSnapshot) {
+                return invoiceSnapshot.docs
+                    .map((doc) {
+                      try {
+                        return InvoiceModel.fromMap(doc.data());
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print(
+                            'Failed to parse invoice: ${doc.id}, error: $e',
+                          );
+                        }
+                        return null;
+                      }
+                    })
+                    .where((invoice) => invoice != null)
+                    .cast<InvoiceModel>()
+                    .toList();
+              },
+            );
+          }).toList();
+
+          return CombineLatestStream.list(invoiceStreams).map((listOfLists) {
+            return listOfLists.expand((x) => x).toList();
+          });
         });
   }
 

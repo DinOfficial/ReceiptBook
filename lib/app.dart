@@ -16,6 +16,10 @@ import 'package:receipt_book/screens/splash_screen.dart';
 import 'package:receipt_book/screens/welcome_screen.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
 
+import 'package:receipt_book/screens/terms_of_service_screen.dart';
+import 'package:receipt_book/screens/data_privacy_screen.dart';
+import 'package:receipt_book/screens/share_app_screen.dart';
+
 class ReceiptBookApp extends StatefulWidget {
   const ReceiptBookApp({super.key});
 
@@ -46,6 +50,9 @@ class _ReceiptBookAppState extends State<ReceiptBookApp> {
         InternetAccessScreen.name: (_) => InternetAccessScreen(),
         InvoiceSettingsScreen.name: (_) => InvoiceSettingsScreen(),
         AppAndSecurityScreen.name: (_) => AppAndSecurityScreen(),
+        TermsOfServiceScreen.name: (_) => TermsOfServiceScreen(),
+        DataPrivacyScreen.name: (_) => DataPrivacyScreen(),
+        ShareAppScreen.name: (_) => ShareAppScreen(),
       },
     );
   }

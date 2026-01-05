@@ -141,7 +141,14 @@ class TransectionListTile extends StatelessWidget {
           ),
         ),
         title: Text(invoice.customerName),
-        subtitle: Text(DateFormat('dd-MMM-yyyy').format(invoice.date)),
+        subtitle: Text(
+          DateFormat('dd-MMM-yyyy').format(invoice.date),
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.grey.shade400
+                : Colors.grey.shade700,
+          ),
+        ),
         trailing: Container(
           height: 48,
           width: 120,

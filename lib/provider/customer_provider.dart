@@ -17,7 +17,65 @@ class CustomerProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  List<CustomerModel> _customerList = [];
+  List<CustomerModel> get customerList => _customerList;
+
   String? get uid => _auth.currentUser?.uid;
+
+  Future<void> updateCustomer(
+    BuildContext context,
+    String customerId,
+    String name,
+    String address,
+    String phone,
+    String email,
+  ) async {
+    if (!await NetworkChecker.hasInternet) {
+      if (!context.mounted) return;
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        InternetAccessScreen.name,
+        (p) => false,
+      );
+      return;
+    }
+
+    if (uid == null) return;
+
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      final customer = CustomerModel(
+        id: customerId,
+        name: name,
+        address: address,
+        phone: phone,
+        email: email,
+      );
+
+      await _db
+          .collection('users')
+          .doc(uid)
+          .collection('customers')
+          .doc(customerId)
+          .update(customer.toFirestore());
+
+      if (!context.mounted) return;
+      ToastHelper.showSuccess(context, 'Customer updated successfully!');
+      Navigator.pop(context);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error updating customer: $e');
+      }
+      if (context.mounted) {
+        ToastHelper.showError(context, 'Error updating customer: $e');
+      }
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   Future<void> addCustomer(
     BuildContext context,
@@ -74,11 +132,13 @@ class CustomerProvider extends ChangeNotifier {
         .doc(uid)
         .collection('customers')
         .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
+        .map((snapshot) {
+          final customers = snapshot.docs
               .map((doc) => CustomerModel.fromFirestore(doc))
-              .toList(),
-        );
+              .toList();
+          _customerList = customers;
+          return customers;
+        });
   }
 
   Future<void> deleteCustomer(
