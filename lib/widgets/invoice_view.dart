@@ -76,16 +76,16 @@ class _InvoiceViewState extends State<InvoiceView> {
                   backgroundColor: Colors.transparent, // Important for modal
                   appBar: AppBar(
                     title: const Text('Invoice Preview'),
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: AppThemeStyle.primaryColor,
                     elevation: 0,
-                    iconTheme: IconThemeData(color: Colors.black),
-                    titleTextStyle: TextStyle(
-                      color: Colors.black,
+                    iconTheme: const IconThemeData(color: Colors.white),
+                    titleTextStyle: const TextStyle(
+                      color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                     leading: IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),

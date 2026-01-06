@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_book/models/customer_model.dart';
 import 'package:receipt_book/provider/customer_provider.dart';
 import 'package:receipt_book/utils/toast_helper.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
 
 class CreateUpdateCustomerScreen extends StatefulWidget {
-  const CreateUpdateCustomerScreen({super.key});
+  const CreateUpdateCustomerScreen({super.key, this.customer});
+
+  final CustomerModel? customer;
 
   static final name = 'create-update-customer';
 
@@ -24,9 +27,22 @@ class _CreateUpdateCustomerScreenState
   final TextEditingController _emailController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.customer != null) {
+      _nameController.text = widget.customer!.name;
+      _addressController.text = widget.customer!.address;
+      _phoneController.text = widget.customer!.phone;
+      _emailController.text = widget.customer!.email;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(title: 'Create customer'),
+      appBar: MainAppBar(
+        title: widget.customer == null ? 'Create customer' : 'Edit Customer',
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Form(
@@ -37,7 +53,9 @@ class _CreateUpdateCustomerScreenState
             children: [
               SizedBox(height: 32),
               Text(
-                'Add customer to create invoice',
+                widget.customer == null
+                    ? 'Add customer to create invoice'
+                    : 'Update customer details',
                 style: GoogleFonts.akayaKanadaka(
                   fontSize: 24,
                   fontWeight: FontWeight.w400,
@@ -101,7 +119,10 @@ class _CreateUpdateCustomerScreenState
                       width: double.infinity,
                       child: OutlinedButton(
                         onPressed: _addCustomer,
-                        child: Text('Add', style: TextStyle(fontSize: 20)),
+                        child: Text(
+                          widget.customer == null ? 'Add' : 'Update',
+                          style: TextStyle(fontSize: 20),
+                        ),
                       ),
                     ),
                   );
@@ -126,18 +147,31 @@ class _CreateUpdateCustomerScreenState
     final address = _addressController.text.trim();
     final phone = _phoneController.text.trim();
     final email = _emailController.text.trim();
-    context.read<CustomerProvider>().addCustomer(
-      context,
-      name,
-      address,
-      phone,
-      email,
-    );
-    if (mounted) {
-      clearData();
-      ToastHelper.showSuccess(context, 'Customer data save successfully!');
+
+    if (widget.customer != null) {
+      await context.read<CustomerProvider>().updateCustomer(
+        context,
+        widget.customer!.id!,
+        name,
+        address,
+        phone,
+        email,
+      );
+      // Navigation handled in provider
     } else {
-      ToastHelper.showError(context, 'Error saving customer data');
+      context.read<CustomerProvider>().addCustomer(
+        context,
+        name,
+        address,
+        phone,
+        email,
+      );
+      if (mounted) {
+        clearData();
+        ToastHelper.showSuccess(context, 'Customer data save successfully!');
+      } else {
+        ToastHelper.showError(context, 'Error saving customer data');
+      }
     }
   }
 

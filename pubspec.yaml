@@ -39,6 +39,7 @@ dependencies:
   shared_preferences: ^2.2.2
   local_auth: ^2.1.6
   toastification: ^3.0.3
+  rxdart: ^0.28.0
 
 
 dev_dependencies:

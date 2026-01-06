@@ -32,8 +32,7 @@ class CreateUpdateInvoiceScreen extends StatefulWidget {
   static const String name = 'create-update-invoice';
 
   @override
-  State<CreateUpdateInvoiceScreen> createState() =>
-      _CreateUpdateInvoiceScreenState();
+  State<CreateUpdateInvoiceScreen> createState() => _CreateUpdateInvoiceScreenState();
 }
 
 class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
@@ -48,19 +47,15 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
   final TextEditingController _invoiceDateController = TextEditingController();
   DateTime? selectedDate;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _customerSearchController =
-      TextEditingController();
+  final TextEditingController _customerSearchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     // Initialize defaults
-    _invoiceNoController.text =
-        'INV${Random().nextInt(999999).toString().padLeft(6, '0')}';
+    _invoiceNoController.text = 'INV${Random().nextInt(999999).toString().padLeft(6, '0')}';
     selectedDate = DateTime.now();
-    _invoiceDateController.text = DateFormat(
-      'dd-MMM-yyyy',
-    ).format(selectedDate!);
+    _invoiceDateController.text = DateFormat('dd-MMM-yyyy').format(selectedDate!);
     _selectTime(context); // This sets default time to now
     selectedStatus = statusItems[0];
 
@@ -69,9 +64,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
       final inv = widget.invoice!;
       _invoiceNoController.text = inv.invoiceNo;
       selectedDate = inv.date;
-      _invoiceDateController.text = DateFormat(
-        'dd-MMM-yyyy',
-      ).format(selectedDate!);
+      _invoiceDateController.text = DateFormat('dd-MMM-yyyy').format(selectedDate!);
       _timeController.text = inv.time;
       selectedStatus = inv.status;
       selectedPaymentSystem = inv.paymentSystem;
@@ -100,18 +93,13 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     if (pickedDate != null && pickedDate != selectedDate) {
       setState(() {
         selectedDate = pickedDate;
-        _invoiceDateController.text = DateFormat(
-          'dd-MMM-yyyy',
-        ).format(selectedDate!);
+        _invoiceDateController.text = DateFormat('dd-MMM-yyyy').format(selectedDate!);
       });
     }
   }
 
   Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
+    final TimeOfDay? picked = await showTimePicker(context: context, initialTime: TimeOfDay.now());
     if (picked != null) {
       setState(() {
         _timeController.text = picked.format(context);
@@ -131,14 +119,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     final paymentSystemItems = settingsProvider.paymentMethods;
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
-    // Handle Customer Selection for Edit Mode
-    if (widget.invoice != null && selectedCustomer == null) {
-    }
-
     return Scaffold(
-      appBar: MainAppBar(
-        title: widget.invoice == null ? 'Create New Invoice' : 'Edit Invoice',
-      ),
+      appBar: MainAppBar(title: widget.invoice == null ? 'Create New Invoice' : 'Edit Invoice'),
       bottomNavigationBar: BottomAppBar(
         child: SizedBox(
           height: 60,
@@ -152,40 +134,34 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       } else {
                         if (_formKey.currentState!.validate()) {
                           if (selectedCustomer == null) {
-                            ToastHelper.showError(
-                              context,
-                              'Please select a customer',
-                            );
+                            ToastHelper.showError(context, 'Please select a customer');
                             return;
                           }
 
                           if (widget.invoice == null) {
                             // Create
-                            final newInvoice = await invoiceProvider
-                                .createInvoice(
-                                  context: context,
-                                  uid: uid,
-                                  customer: selectedCustomer!,
-                                  invoiceNo: _invoiceNoController.text,
-                                  status: selectedStatus!,
-                                  date: selectedDate!,
-                                  time: _timeController.text,
-                                  paymentSystem:
-                                      selectedPaymentSystem ??
-                                      'Cash', // Default
-                                  items: itemProvider.itemList,
-                                  total: itemProvider.grandTotal,
-                                  subtotal: itemProvider.subtotal,
-                                  discount: itemProvider.discount,
-                                  tax: itemProvider.tax,
-                                );
+                            final newInvoice = await invoiceProvider.createInvoice(
+                              context: context,
+                              uid: uid,
+                              customer: selectedCustomer!,
+                              invoiceNo: _invoiceNoController.text,
+                              status: selectedStatus!,
+                              date: selectedDate!,
+                              time: _timeController.text,
+                              paymentSystem: selectedPaymentSystem ?? 'Cash',
+                              // Default
+                              items: itemProvider.itemList,
+                              total: itemProvider.grandTotal,
+                              subtotal: itemProvider.subtotal,
+                              discount: itemProvider.discount,
+                              tax: itemProvider.tax,
+                            );
 
                             if (newInvoice != null && context.mounted) {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      InvoiceView(invoice: newInvoice),
+                                  builder: (context) => InvoiceView(invoice: newInvoice),
                                 ),
                               );
                             }
@@ -217,8 +193,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      InvoiceView(invoice: updatedInvoice),
+                                  builder: (context) => InvoiceView(invoice: updatedInvoice),
                                 ),
                               );
                             }
@@ -228,11 +203,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                     },
               child: invoiceProvider.isProcessing
                   ? CircularProgressIndicator()
-                  : Text(
-                      widget.invoice == null
-                          ? 'Create Invoice'
-                          : 'Update Invoice',
-                    ),
+                  : Text(widget.invoice == null ? 'Create Invoice' : 'Update Invoice'),
             ),
           ),
         ),
@@ -244,10 +215,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Bill To',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+              const Text('Bill To', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
               Row(
                 children: [
@@ -255,56 +223,49 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                     child: StreamBuilder<List<CustomerModel>>(
                       stream: customerProvider.streamCustomers(uid),
                       builder: (context, snapshot) {
-                        if (!snapshot.hasData)
-                          return CircularProgressIndicator();
+                        if (!snapshot.hasData) return CircularProgressIndicator();
                         final customers = snapshot.data!;
                         if (kDebugMode) {
                           print('all customer : $customers');
                         }
 
+                        // Handle Customer Selection for Edit Mode
+                        if (widget.invoice != null && selectedCustomer == null) {
+                          try {
+                            selectedCustomer = customers.firstWhere(
+                              (c) => c.id == widget.invoice?.customerId,
+                            );
+                          } catch (e) {
+                            selectedCustomer = null;
+                          }
+                        }
+
                         // Ensure selectedCustomer is valid
                         final validSelectedCustomer =
-                            selectedCustomer != null &&
-                                customers.contains(selectedCustomer)
+                            selectedCustomer != null && customers.contains(selectedCustomer)
                             ? selectedCustomer
                             : null;
 
                         return DropdownButtonFormField2<CustomerModel>(
                           isExpanded: true,
                           decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.fromLTRB(
-                              16,
-                              16,
-                              16,
-                              16,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
+                            contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                             prefixIcon: Padding(
                               padding: const EdgeInsets.only(left: 8),
-                              child: HugeIcon(
-                                icon: HugeIcons.strokeRoundedUser,
-                                size: 24,
-                              ),
+                              child: HugeIcon(icon: HugeIcons.strokeRoundedUser, size: 24),
                             ),
                             prefixIconConstraints: const BoxConstraints(
                               minHeight: 24,
                               minWidth: 24,
                             ),
                           ),
-                          hint: const Text(
-                            'Select customer',
-                            style: TextStyle(fontSize: 14),
-                          ),
+                          hint: const Text('Select customer', style: TextStyle(fontSize: 14)),
                           items: customers
                               .map(
                                 (customer) => DropdownMenuItem<CustomerModel>(
                                   value: customer,
-                                  child: Text(
-                                    customer.name,
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
+                                  child: Text(customer.name, style: const TextStyle(fontSize: 14)),
                                 ),
                               )
                               .toList(),
@@ -313,12 +274,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                             searchInnerWidgetHeight: 50,
                             searchInnerWidget: Container(
                               height: 50,
-                              padding: const EdgeInsets.only(
-                                top: 8,
-                                bottom: 4,
-                                right: 8,
-                                left: 8,
-                              ),
+                              padding: const EdgeInsets.only(top: 8, bottom: 4, right: 8, left: 8),
                               child: TextFormField(
                                 controller: _customerSearchController,
                                 decoration: InputDecoration(
@@ -336,9 +292,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                               ),
                             ),
                             searchMatchFn: (item, searchValue) {
-                              return (item.value as CustomerModel).name
-                                  .toLowerCase()
-                                  .contains(searchValue.toLowerCase());
+                              return (item.value as CustomerModel).name.toLowerCase().contains(
+                                searchValue.toLowerCase(),
+                              );
                             },
                           ),
                           validator: (value) {
@@ -366,9 +322,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           dropdownStyleData: DropdownStyleData(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: AppThemeStyle.primaryColor,
-                              ),
+                              border: Border.all(color: AppThemeStyle.primaryColor),
                               color: themeProvider.themeMode == ThemeMode.dark
                                   ? Colors.black
                                   : Colors.white,
@@ -387,17 +341,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                     height: 54,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: AppThemeStyle.primaryColor,
-                        width: 1.5,
-                      ),
+                      border: Border.all(color: AppThemeStyle.primaryColor, width: 1.5),
                     ),
                     child: IconButton(
                       onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          CreateUpdateCustomerScreen.name,
-                        );
+                        Navigator.pushNamed(context, CreateUpdateCustomerScreen.name);
                       },
                       icon: HugeIcon(
                         icon: HugeIcons.strokeRoundedAddCircle,
@@ -415,13 +363,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       controller: _invoiceNoController,
                       decoration: const InputDecoration(
                         labelText: 'Invoice No.',
-                        prefixIcon: HugeIcon(
-                          icon: HugeIcons.strokeRoundedFile02,
-                        ),
-                        prefixIconConstraints: BoxConstraints(
-                          minHeight: 24,
-                          minWidth: 34,
-                        ),
+                        prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedFile02),
+                        prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
                       ),
                       readOnly: true,
                     ),
@@ -431,33 +374,18 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                     child: DropdownButtonFormField2<String>(
                       isExpanded: true,
                       decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        prefixIcon: HugeIcon(
-                          icon: HugeIcons.strokeRoundedDocumentAttachment,
-                        ),
-                        prefixIconConstraints: BoxConstraints(
-                          minHeight: 24,
-                          minWidth: 34,
-                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                        prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedDocumentAttachment),
+                        prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
                       ),
                       barrierDismissible: true,
-                      hint: const Text(
-                        'Status',
-                        style: TextStyle(fontSize: 14),
-                      ),
+                      hint: const Text('Status', style: TextStyle(fontSize: 14)),
                       items: statusItems
                           .map(
                             (item) => DropdownMenuItem<String>(
                               value: item,
-                              child: Text(
-                                item,
-                                style: const TextStyle(fontSize: 14),
-                              ),
+                              child: Text(item, style: const TextStyle(fontSize: 14)),
                             ),
                           )
                           .toList(),
@@ -471,9 +399,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                         selectedStatus = value.toString();
                       },
                       value: selectedStatus,
-                      buttonStyleData: const ButtonStyleData(
-                        padding: EdgeInsets.only(right: 8),
-                      ),
+                      buttonStyleData: const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
                       iconStyleData: const IconStyleData(
                         icon: HugeIcon(
                           icon: HugeIcons.strokeRoundedSquareArrowDown01,
@@ -507,13 +433,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       onTap: _selectedDate,
                       decoration: const InputDecoration(
                         labelText: 'Date',
-                        prefixIcon: HugeIcon(
-                          icon: HugeIcons.strokeRoundedCalendar01,
-                        ),
-                        prefixIconConstraints: BoxConstraints(
-                          minHeight: 24,
-                          minWidth: 34,
-                        ),
+                        prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedCalendar01),
+                        prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
                       ),
                     ),
                   ),
@@ -525,13 +446,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       onTap: () => _selectTime(context),
                       decoration: InputDecoration(
                         labelText: 'Time',
-                        prefixIcon: HugeIcon(
-                          icon: HugeIcons.strokeRoundedStopWatch,
-                        ),
-                        prefixIconConstraints: const BoxConstraints(
-                          minHeight: 24,
-                          minWidth: 34,
-                        ),
+                        prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedStopWatch),
+                        prefixIconConstraints: const BoxConstraints(minHeight: 24, minWidth: 34),
                       ),
                     ),
                   ),
@@ -542,19 +458,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 isExpanded: true,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                   prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedCreditCard),
-                  prefixIconConstraints: BoxConstraints(
-                    minHeight: 24,
-                    minWidth: 34,
-                  ),
+                  prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
                 ),
-                hint: const Text(
-                  'Payment System',
-                  style: TextStyle(fontSize: 14),
-                ),
+                hint: const Text('Payment System', style: TextStyle(fontSize: 14)),
                 items: paymentSystemItems
                     .map(
                       (item) => DropdownMenuItem<String>(
@@ -573,9 +481,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   selectedPaymentSystem = value.toString();
                 },
                 value: selectedPaymentSystem,
-                buttonStyleData: const ButtonStyleData(
-                  padding: EdgeInsets.only(right: 8),
-                ),
+                buttonStyleData: const ButtonStyleData(padding: EdgeInsets.only(right: 8)),
                 iconStyleData: const IconStyleData(
                   icon: HugeIcon(
                     icon: HugeIcons.strokeRoundedSquareArrowDown01,
@@ -587,9 +493,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: AppThemeStyle.primaryColor),
-                    color: themeProvider.themeMode == ThemeMode.dark
-                        ? Colors.black
-                        : Colors.white,
+                    color: themeProvider.themeMode == ThemeMode.dark ? Colors.black : Colors.white,
                   ),
                 ),
                 menuItemStyleData: const MenuItemStyleData(
@@ -597,10 +501,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Items',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+              const Text('Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
               ListView.separated(
                 shrinkWrap: true,
@@ -610,12 +511,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 itemBuilder: (context, index) {
                   final item = itemProvider.itemList[index];
                   return ListTile(
-                    onTap: () => _openItemDialog(
-                      context,
-                      itemProvider,
-                      item: item,
-                      index: index,
-                    ),
+                    onTap: () => _openItemDialog(context, itemProvider, item: item, index: index),
                     title: Text(item.title),
                     subtitle: Text('Quantity: ${item.quantity}'),
                     trailing: Row(
@@ -626,18 +522,12 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           onPressed: () {
                             itemProvider.removeItem(index);
                           },
-                          icon: const Icon(
-                            Icons.delete_outline,
-                            color: Colors.redAccent,
-                          ),
+                          icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
                         ),
                       ],
                     ),
                     shape: RoundedRectangleBorder(
-                      side: const BorderSide(
-                        color: AppThemeStyle.primaryColor,
-                        width: .5,
-                      ),
+                      side: const BorderSide(color: AppThemeStyle.primaryColor, width: .5),
                       borderRadius: BorderRadius.circular(12),
                     ),
                   );
@@ -678,9 +568,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       textAlign: TextAlign.end,
                       keyboardType: TextInputType.number,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d+\.?\d{0,2}'),
-                        ),
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                       ],
                       onChanged: (value) => itemProvider.updateDiscount(value),
                       decoration: const InputDecoration(
@@ -702,9 +590,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       textAlign: TextAlign.end,
                       keyboardType: TextInputType.number,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d+\.?\d{0,2}'),
-                        ),
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                       ],
                       onChanged: (value) => itemProvider.updateTax(value),
                       decoration: const InputDecoration(
@@ -719,10 +605,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Grand Total',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  const Text('Grand Total', style: TextStyle(fontWeight: FontWeight.bold)),
                   Text(
                     '৳ ${itemProvider.grandTotal.toStringAsFixed(2)}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
