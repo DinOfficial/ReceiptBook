@@ -139,8 +139,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                             tax: itemProvider.tax,
                           );
                         }
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> InvoiceView(invoice: widget.invoice)));
-                        itemProvider.itemList.clear();
+                        // Navigator.push(context, MaterialPageRoute(builder: (context)=> InvoiceView(invoice: widget.invoice)));
+                        // itemProvider.itemList.clear();
                       }
                     },
               child: invoiceProvider.isProcessing
