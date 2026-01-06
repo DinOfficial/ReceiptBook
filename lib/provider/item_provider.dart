@@ -53,6 +53,14 @@ class ItemProvider extends ChangeNotifier {
     _calculateTotals();
     notifyListeners();
   }
+  double discountAmount(){
+    return (_subtotal * _discount) / 100;
+  }
+
+  double taxAmount(){
+    return ((_subtotal - discountAmount()) * _tax) / 100;
+  }
+
 
   void updateTax(String value) {
     _tax = double.tryParse(value) ?? 0.0;

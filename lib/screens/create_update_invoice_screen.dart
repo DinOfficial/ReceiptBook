@@ -561,7 +561,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Discount'),
+                  Text('Discount: ${itemProvider.discountAmount().toStringAsFixed(2)}'),
                   SizedBox(
                     width: 100,
                     child: TextFormField(
@@ -583,7 +583,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Tax'),
+                  Text('Tax: ${itemProvider.taxAmount().toStringAsFixed(2)}'),
                   SizedBox(
                     width: 100,
                     child: TextFormField(
