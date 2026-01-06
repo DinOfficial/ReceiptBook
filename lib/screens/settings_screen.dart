@@ -45,7 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
             leading: HugeIcon(icon: HugeIcons.strokeRoundedSun02, size: 32),
-            title: Text('Change apps mode', style: TextStyle(fontSize: 20)),
+            title: Text('Change apps mode', style: TextStyle(fontSize: 16)),
             trailing: Switch(
               value: themeProvider.themeMode == ThemeMode.dark,
               thumbIcon: thumbIcon,
@@ -67,11 +67,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               icon: HugeIcons.strokeRoundedBriefcase06,
               size: 32,
             ),
-            title: Text('Business Information', style: TextStyle(fontSize: 20)),
+            title: Text('Business Information', style: TextStyle(fontSize: 16)),
             subtitle: Text('Update | complete your company information'),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             onTap: () {

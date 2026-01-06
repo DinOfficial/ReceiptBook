@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
+import 'package:hugeicons/styles/stroke_rounded.dart';
 import 'package:toastification/toastification.dart';
 
 class ToastHelper {
@@ -9,19 +11,16 @@ class ToastHelper {
       style: ToastificationStyle.flatColored,
       title: const Text('Success'),
       description: Text(message),
-      alignment: Alignment.topRight,
-      autoCloseDuration: const Duration(seconds: 4),
+      alignment: Alignment.bottomCenter,
+      autoCloseDuration: const Duration(seconds: 2),
       borderRadius: BorderRadius.circular(12.0),
       boxShadow: const [
-        BoxShadow(
-          color: Color(0x07000000),
-          blurRadius: 16,
-          offset: Offset(0, 16),
-          spreadRadius: 0,
-        ),
+        BoxShadow(color: Color(0x07000000), blurRadius: 16, offset: Offset(0, 16), spreadRadius: 0),
       ],
       showProgressBar: true,
       dragToClose: true,
+      applyBlurEffect: true,
+      icon: HugeIcon(icon: HugeIconsStrokeRounded.checkmarkCircle01, color: Colors.green, size: 32),
     );
   }
 
@@ -32,19 +31,16 @@ class ToastHelper {
       style: ToastificationStyle.flatColored,
       title: const Text('Error'),
       description: Text(message),
-      alignment: Alignment.topRight,
-      autoCloseDuration: const Duration(seconds: 4),
+      alignment: Alignment.bottomCenter,
+      autoCloseDuration: const Duration(seconds: 2),
       borderRadius: BorderRadius.circular(12.0),
       boxShadow: const [
-        BoxShadow(
-          color: Color(0x07000000),
-          blurRadius: 16,
-          offset: Offset(0, 16),
-          spreadRadius: 0,
-        ),
+        BoxShadow(color: Color(0x07000000), blurRadius: 16, offset: Offset(0, 16), spreadRadius: 0),
       ],
       showProgressBar: true,
       dragToClose: true,
+      applyBlurEffect: true,
+      icon: HugeIcon(icon: HugeIcons.strokeRoundedCancelCircle, color: Colors.red, size: 32),
     );
   }
 
@@ -59,12 +55,7 @@ class ToastHelper {
       autoCloseDuration: const Duration(seconds: 4),
       borderRadius: BorderRadius.circular(12.0),
       boxShadow: const [
-        BoxShadow(
-          color: Color(0x07000000),
-          blurRadius: 16,
-          offset: Offset(0, 16),
-          spreadRadius: 0,
-        ),
+        BoxShadow(color: Color(0x07000000), blurRadius: 16, offset: Offset(0, 16), spreadRadius: 0),
       ],
       showProgressBar: true,
       dragToClose: true,

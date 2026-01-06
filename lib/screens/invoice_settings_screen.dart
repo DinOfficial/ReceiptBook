@@ -166,7 +166,7 @@ class InvoiceSettingsScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Add Payment Method'),
+          title: const Text('Add Payment Method', style: TextStyle(fontSize: 12),),
           content: TextField(
             controller: controller,
             decoration: const InputDecoration(
