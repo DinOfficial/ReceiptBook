@@ -18,10 +18,13 @@ import 'package:receipt_book/screens/create_update_customer_screen.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
 
+import '../models/invoice_model.dart';
+
 class CreateUpdateInvoiceScreen extends StatefulWidget {
-  const CreateUpdateInvoiceScreen({super.key});
+  const CreateUpdateInvoiceScreen({super.key, this.invoice});
 
   static const String name = 'create-update-invoice';
+  final InvoiceModel? invoice;
 
   @override
   State<CreateUpdateInvoiceScreen> createState() => _CreateUpdateInvoiceScreenState();

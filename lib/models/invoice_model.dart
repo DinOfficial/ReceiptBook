@@ -32,6 +32,38 @@ class InvoiceModel {
     required this.tax,
   });
 
+  InvoiceModel copyWith({
+    String? invoiceId,
+    String? invoiceNo,
+    String? customerId,
+    String? customerName,
+    String? status,
+    DateTime? date,
+    String? time,
+    String? paymentSystem,
+    double? subtotal,
+    double? discount,
+    double? tax,
+    double? total,
+    List<ItemModel>? items,
+  }) {
+    return InvoiceModel(
+      invoiceId: invoiceId ?? this.invoiceId,
+      invoiceNo: invoiceNo ?? this.invoiceNo,
+      customerId: customerId ?? this.customerId,
+      customerName: customerName ?? this.customerName,
+      status: status ?? this.status,
+      date: date ?? this.date,
+      time: time ?? this.time,
+      paymentSystem: paymentSystem ?? this.paymentSystem,
+      subtotal: subtotal ?? this.subtotal,
+      discount: discount ?? this.discount,
+      tax: tax ?? this.tax,
+      total: total ?? this.total,
+      items: items ?? this.items,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'invoiceId': invoiceId,
@@ -39,7 +71,7 @@ class InvoiceModel {
       'customerId': customerId,
       'customerName': customerName,
       'status': status,
-      'date': date, // Store as DateTime, Firestore will convert to Timestamp
+      'date': date,
       'time': time,
       'paymentSystem': paymentSystem,
       'tax': tax,

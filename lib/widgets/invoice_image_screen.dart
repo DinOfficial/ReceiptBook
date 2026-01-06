@@ -5,29 +5,34 @@ import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:receipt_book/utils/toast_helper.dart';
 
 class InvoiceImageSave extends StatelessWidget {
   final Uint8List imageBytes;
   final String fileName;
 
-  const InvoiceImageSave({super.key, required this.imageBytes, required this.fileName});
+  const InvoiceImageSave({
+    super.key,
+    required this.imageBytes,
+    required this.fileName,
+  });
 
   Future<void> _saveImage(BuildContext context) async {
     // Permission
     final status = await Permission.photos.request();
     if (!status.isGranted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Permission denied')));
+      ToastHelper.showError(context, 'Permission denied');
       return;
     }
 
-    final result = await ImageGallerySaverPlus.saveImage(imageBytes, quality: 100, name: fileName);
+    final result = await ImageGallerySaverPlus.saveImage(
+      imageBytes,
+      quality: 100,
+      name: fileName,
+    );
 
     if (result['isSuccess']) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Image saved to Gallery')));
+      ToastHelper.showSuccess(context, 'Image saved to Gallery');
     }
   }
 
@@ -43,10 +48,17 @@ class InvoiceImageSave extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text('Invoice Preview', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Invoice Preview',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Center(
-        child: InteractiveViewer(minScale: 0.5, maxScale: 4, child: Image.memory(imageBytes)),
+        child: InteractiveViewer(
+          minScale: 0.5,
+          maxScale: 4,
+          child: Image.memory(imageBytes),
+        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(

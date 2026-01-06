@@ -9,6 +9,7 @@ import 'package:receipt_book/screens/internet_access_screen.dart';
 import 'package:receipt_book/utils/network_checker.dart';
 
 import '../services/imgbb_controller.dart';
+import '../utils/toast_helper.dart';
 
 class CompanyProvider extends ChangeNotifier {
   bool _isLoading = false;
@@ -21,6 +22,19 @@ class CompanyProvider extends ChangeNotifier {
 
   final _imgbb = ImgbbController();
 
+  Stream<List<CompanyModel>> streamCompany(String uid) {
+    return _db
+        .collection('users')
+        .doc(uid)
+        .collection('companies')
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => CompanyModel.fromFirestore(doc, null))
+              .toList(),
+        );
+  }
+
   Future<void> addCompany(
     BuildContext context,
     String name,
@@ -31,7 +45,11 @@ class CompanyProvider extends ChangeNotifier {
   ) async {
     if (!await NetworkChecker.hasInternet) {
       if (!context.mounted) return;
-      Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        InternetAccessScreen.name,
+        (p) => false,
+      );
       return;
     }
 
@@ -40,9 +58,7 @@ class CompanyProvider extends ChangeNotifier {
         print('User not logged in');
       }
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('You must be logged in to add a company.'), backgroundColor: Colors.red),
-      );
+      ToastHelper.showError(context, 'You must be logged in to add a company.');
       return;
     }
 
@@ -64,20 +80,20 @@ class CompanyProvider extends ChangeNotifier {
         photo: photoUrl,
       );
 
-      await _db.collection('users').doc(uid).collection('companies').add(company.toFirestore());
+      await _db
+          .collection('users')
+          .doc(uid)
+          .collection('companies')
+          .add(company.toFirestore());
 
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Company data saved successfully!')),
-      );
+      ToastHelper.showSuccess(context, 'Company data saved successfully!');
     } catch (e) {
       if (kDebugMode) {
         print('Error saving company data : $e');
       }
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving company data: $e'), backgroundColor: Colors.red),
-      );
+      ToastHelper.showError(context, 'Error saving company data: $e');
     } finally {
       _isLoading = false;
       notifyListeners();

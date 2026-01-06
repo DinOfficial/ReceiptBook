@@ -5,12 +5,14 @@ class CustomerModel {
   final String name;
   final String address;
   final String phone;
+  final String email;
 
   CustomerModel({
     this.id,
     required this.name,
     required this.address,
     required this.phone,
+    this.email = '',
   });
 
   factory CustomerModel.fromFirestore(DocumentSnapshot doc) {
@@ -20,15 +22,12 @@ class CustomerModel {
       name: data['name'] ?? '',
       address: data['address'] ?? '',
       phone: data['phone'] ?? '',
+      email: data['email'] ?? '',
     );
   }
 
   Map<String, dynamic> toFirestore() {
-    return {
-      'name': name,
-      'address': address,
-      'phone': phone,
-    };
+    return {'name': name, 'address': address, 'phone': phone, 'email': email};
   }
 
   @override
@@ -43,6 +42,6 @@ class CustomerModel {
 
   @override
   String toString() {
-    return 'CustomerModel{id: $id, name: $name}';
+    return 'CustomerModel{id: $id, name: $name, email: $email}';
   }
 }
