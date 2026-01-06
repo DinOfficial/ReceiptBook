@@ -71,7 +71,7 @@ class InvoiceModel {
       'customerId': customerId,
       'customerName': customerName,
       'status': status,
-      'date': date, // Store as DateTime, Firestore will convert to Timestamp
+      'date': date,
       'time': time,
       'paymentSystem': paymentSystem,
       'tax': tax,
