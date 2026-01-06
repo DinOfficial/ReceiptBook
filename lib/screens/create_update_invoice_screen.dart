@@ -16,6 +16,7 @@ import 'package:receipt_book/provider/item_provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:receipt_book/screens/create_update_customer_screen.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
+import 'package:receipt_book/widgets/invoice_view.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
 
 import '../models/invoice_model.dart';
@@ -138,6 +139,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                             tax: itemProvider.tax,
                           );
                         }
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> InvoiceView(invoice: widget.invoice)));
+                        itemProvider.itemList.clear();
                       }
                     },
               child: invoiceProvider.isProcessing
