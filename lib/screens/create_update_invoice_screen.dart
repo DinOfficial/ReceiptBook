@@ -43,7 +43,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
   String? selectedPaymentSystem;
 
   final TextEditingController _invoiceNoController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
+   TextEditingController _timeController = TextEditingController();
   final TextEditingController _invoiceDateController = TextEditingController();
   DateTime? selectedDate;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -56,7 +56,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     _invoiceNoController.text = 'INV${Random().nextInt(999999).toString().padLeft(6, '0')}';
     selectedDate = DateTime.now();
     _invoiceDateController.text = DateFormat('dd-MMM-yyyy').format(selectedDate!);
-    _selectTime(context); // This sets default time to now
+    _timeController.text = DateFormat('HH:mm a').format(DateTime.now()); // This sets default time to now
     selectedStatus = statusItems[0];
 
     // Check if editing
@@ -153,8 +153,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                               items: itemProvider.itemList,
                               total: itemProvider.grandTotal,
                               subtotal: itemProvider.subtotal,
-                              discount: itemProvider.discount,
-                              tax: itemProvider.tax,
+                              discount: itemProvider.discountAmount(),
+                              tax: itemProvider.taxAmount(),
                             );
 
                             if (newInvoice != null && context.mounted) {
@@ -178,8 +178,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                               items: itemProvider.itemList,
                               total: itemProvider.grandTotal,
                               subtotal: itemProvider.subtotal,
-                              discount: itemProvider.discount,
-                              tax: itemProvider.tax,
+                              discount: itemProvider.discountAmount(),
+                              tax: itemProvider.taxAmount(),
                             );
 
                             final success = await invoiceProvider.saveInvoice(
@@ -501,49 +501,73 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text('Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Row(
+                mainAxisAlignment: .spaceBetween,
+                crossAxisAlignment: .center,
+                children: [
+                  Text('Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  SizedBox(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        _openItemDialog(context, itemProvider);
+                      },
+                      icon: const HugeIcon(icon: HugeIcons.strokeRoundedAddCircle),
+                      label: const Text('Add Item'),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 12),
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: itemProvider.itemList.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 8),
-                itemBuilder: (context, index) {
-                  final item = itemProvider.itemList[index];
-                  return ListTile(
-                    onTap: () => _openItemDialog(context, itemProvider, item: item, index: index),
-                    title: Text(item.title),
-                    subtitle: Text('Quantity: ${item.quantity}'),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('৳ ${item.amount.toStringAsFixed(2)}'),
-                        IconButton(
-                          onPressed: () {
-                            itemProvider.removeItem(index);
-                          },
-                          icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+              itemProvider.itemList.isEmpty
+                  ? SizedBox(
+                      height: 140,
+                      child: Center(
+                        child: Column(
+                          children: [
+                            HugeIcon(
+                              icon: HugeIcons.strokeRoundedCheckList,
+                              color: Colors.black38,
+                              size: 92,
+                            ),
+                            Text(
+                              'No item added',
+                              style: TextStyle(fontSize: 20, color: Colors.black38),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                    )
+                  : ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: itemProvider.itemList.length,
+                      separatorBuilder: (context, index) => const SizedBox(height: 12),
+                      itemBuilder: (context, index) {
+                        final item = itemProvider.itemList[index];
+                        return ListTile(
+                          onTap: () =>
+                              _openItemDialog(context, itemProvider, item: item, index: index),
+                          title: Text(item.title),
+                          subtitle: Text('Quantity: ${item.quantity}'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('৳ ${item.amount.toStringAsFixed(2)}'),
+                              IconButton(
+                                onPressed: () {
+                                  itemProvider.removeItem(index);
+                                },
+                                icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                              ),
+                            ],
+                          ),
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(color: AppThemeStyle.primaryColor, width: .5),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        );
+                      },
                     ),
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(color: AppThemeStyle.primaryColor, width: .5),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    _openItemDialog(context, itemProvider);
-                  },
-                  icon: const HugeIcon(icon: HugeIcons.strokeRoundedAddCircle),
-                  label: const Text('Add Item'),
-                ),
-              ),
               const SizedBox(height: 24),
               const Text(
                 'Payment Details',
