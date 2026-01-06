@@ -75,15 +75,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
       _timeController.text = inv.time;
       selectedStatus = inv.status;
       selectedPaymentSystem = inv.paymentSystem;
-
-      // Post frame callback to set provider data
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.read<ItemProvider>().setItems(inv.items, inv.discount, inv.tax);
-        // We need to set the customer. Since we only have customerId/Name in invoice, we try to match it.
-        // The StreamBuilder in build will load customers. We can try to set selectedCustomer there or here if we have access to the list.
-        // Since we don't have the list here, we rely on the ID matching in the UI or we can fetch it.
-        // For simplicity, we will set it in build if we find a match, BUT selectedCustomer state needs to be consistent.
-        // Better approach: Let the UI find the customer by ID.
       });
     }
   }
@@ -140,8 +133,6 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
 
     // Handle Customer Selection for Edit Mode
     if (widget.invoice != null && selectedCustomer == null) {
-      // Ideally we should find the customer from the provider list, but we are inside build.
-      // We can iterate the snapshot data later.
     }
 
     return Scaffold(
