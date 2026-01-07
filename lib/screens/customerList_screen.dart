@@ -10,16 +10,16 @@ import 'package:receipt_book/screens/create_update_customer_screen.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
 import 'package:receipt_book/widgets/search_delegates.dart';
 
-class PersonsScreen extends StatefulWidget {
-  const PersonsScreen({super.key, required this.title});
+class CustomerListScreen extends StatefulWidget {
+  const CustomerListScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<PersonsScreen> createState() => _PersonsScreenState();
+  State<CustomerListScreen> createState() => _CustomerListScreenState();
 }
 
-class _PersonsScreenState extends State<PersonsScreen> {
+class _CustomerListScreenState extends State<CustomerListScreen> {
   @override
   Widget build(BuildContext context) {
     final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -42,10 +42,7 @@ class _PersonsScreenState extends State<PersonsScreen> {
               return IconButton(
                 icon: Icon(Icons.search, color: Colors.white, size: 28),
                 onPressed: () {
-                  showSearch(
-                    context: context,
-                    delegate: CustomerSearchDelegate(snapshot.data!),
-                  );
+                  showSearch(context: context, delegate: CustomerSearchDelegate(snapshot.data!));
                 },
               );
             },
@@ -70,10 +67,7 @@ class _PersonsScreenState extends State<PersonsScreen> {
                 children: [
                   Icon(Icons.person_off, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
-                  Text(
-                    'No customers yet',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
+                  Text('No customers yet', style: TextStyle(fontSize: 18, color: Colors.grey)),
                   SizedBox(height: 8),
                   Text(
                     'Add your first customer using the + button',
@@ -115,19 +109,14 @@ class _PersonsScreenState extends State<PersonsScreen> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  context
-                                      .read<CustomerProvider>()
-                                      .deleteCustomer(
-                                        context,
-                                        customer.id!,
-                                        context.read<InvoiceProvider>(),
-                                      );
+                                  context.read<CustomerProvider>().deleteCustomer(
+                                    context,
+                                    customer.id!,
+                                    context.read<InvoiceProvider>(),
+                                  );
                                   Navigator.pop(context);
                                 },
-                                child: Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.red),
-                                ),
+                                child: Text('Delete', style: TextStyle(color: Colors.red)),
                               ),
                             ],
                           ),
@@ -174,18 +163,13 @@ class _PersonsScreenState extends State<PersonsScreen> {
                               TextButton(
                                 onPressed: () {
                                   Navigator.pop(context); // Close dialog
-                                  context
-                                      .read<CustomerProvider>()
-                                      .deleteCustomer(
-                                        context,
-                                        customer.id!,
-                                        context.read<InvoiceProvider>(),
-                                      );
+                                  context.read<CustomerProvider>().deleteCustomer(
+                                    context,
+                                    customer.id!,
+                                    context.read<InvoiceProvider>(),
+                                  );
                                 },
-                                child: Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.red),
-                                ),
+                                child: Text('Delete', style: TextStyle(color: Colors.red)),
                               ),
                             ],
                           ),
@@ -212,25 +196,133 @@ class _PersonsScreenState extends State<PersonsScreen> {
                   ],
                 ),
                 child: ListTile(
-                  onTap: () {
-                    // TODO: Show customer details
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (context) => AlertDialog(
+                        title: Row(
+                          children: [
+                            HugeIcon(icon: HugeIcons.strokeRoundedUser),
+                            const SizedBox(width: 12),
+                            Text(customer.name),
+                          ],
+                        ),
+                        content: Column(
+                          mainAxisSize: .min,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  HugeIcon(icon: HugeIcons.strokeRoundedMail01),
+                                  const SizedBox(width: 12),
+                                  Text(customer.email),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  HugeIcon(icon: HugeIcons.strokeRoundedNavigation03),
+                                  const SizedBox(width: 12),
+                                  Text(customer.address),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  HugeIcon(icon: HugeIcons.strokeRoundedPhoneCheck),
+                                  const SizedBox(width: 12),
+                                  Text(customer.phone),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('Cancel'),
+                          ),
+                        ],
+                      ),
+                    );
                   },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                     side: BorderSide(color: Color(0xff2692ce), width: 1.5),
                   ),
                   leading: CircleAvatar(
-                    child: Text(
-                      customer.name.isNotEmpty
-                          ? customer.name[0].toUpperCase()
-                          : 'C',
-                    ),
+                    child: Text(customer.name.isNotEmpty ? customer.name[0].toUpperCase() : 'C'),
                   ),
-                  title: Text(customer.name),
-                  subtitle: Text(
-                    '${customer.email}\n${customer.phone}\n${customer.address}',
+                  title: Text(customer.name, style: TextStyle(fontSize: 20)),
+                  trailing: IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (context) => AlertDialog(
+                          title: Row(
+                            children: [
+                              HugeIcon(icon: HugeIcons.strokeRoundedUser),
+                              const SizedBox(width: 12),
+                              Text(customer.name),
+                            ],
+                          ),
+                          content: Column(
+                            mainAxisSize: .min,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  children: [
+                                    HugeIcon(icon: HugeIcons.strokeRoundedMail01),
+                                    const SizedBox(width: 12),
+                                    Text(customer.email),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  children: [
+                                    HugeIcon(icon: HugeIcons.strokeRoundedNavigation03),
+                                    const SizedBox(width: 12),
+                                    Text(customer.address),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  children: [
+                                    HugeIcon(icon: HugeIcons.strokeRoundedPhoneCheck),
+                                    const SizedBox(width: 12),
+                                    Text(customer.phone),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('Cancel'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    icon: HugeIcon(icon: HugeIcons.strokeRoundedMoreVerticalCircle02, size: 28),
                   ),
-                  isThreeLine: true,
                 ),
               );
             },

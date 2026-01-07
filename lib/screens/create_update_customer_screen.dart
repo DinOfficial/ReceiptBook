@@ -14,12 +14,10 @@ class CreateUpdateCustomerScreen extends StatefulWidget {
   static final name = 'create-update-customer';
 
   @override
-  State<CreateUpdateCustomerScreen> createState() =>
-      _CreateUpdateCustomerScreenState();
+  State<CreateUpdateCustomerScreen> createState() => _CreateUpdateCustomerScreenState();
 }
 
-class _CreateUpdateCustomerScreenState
-    extends State<CreateUpdateCustomerScreen> {
+class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -35,14 +33,13 @@ class _CreateUpdateCustomerScreenState
       _phoneController.text = widget.customer!.phone;
       _emailController.text = widget.customer!.email;
     }
+    print('CustomerList: ${widget.customer}');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(
-        title: widget.customer == null ? 'Create customer' : 'Edit Customer',
-      ),
+      appBar: MainAppBar(title: widget.customer == null ? 'Create customer' : 'Edit Customer'),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Form(
@@ -53,13 +50,8 @@ class _CreateUpdateCustomerScreenState
             children: [
               SizedBox(height: 32),
               Text(
-                widget.customer == null
-                    ? 'Add customer details'
-                    : 'Update customer details',
-                style: GoogleFonts.akayaKanadaka(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w400,
-                ),
+                widget.customer == null ? 'Add customer details' : 'Update customer details',
+                style: GoogleFonts.akayaKanadaka(fontSize: 28, fontWeight: FontWeight.w400),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 48),
@@ -159,13 +151,7 @@ class _CreateUpdateCustomerScreenState
       );
       // Navigation handled in provider
     } else {
-      context.read<CustomerProvider>().addCustomer(
-        context,
-        name,
-        address,
-        phone,
-        email,
-      );
+      context.read<CustomerProvider>().addCustomer(context, name, address, phone, email);
       if (mounted) {
         clearData();
         ToastHelper.showSuccess(context, 'Customer data save successfully!');

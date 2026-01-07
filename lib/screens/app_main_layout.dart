@@ -3,7 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:receipt_book/screens/add_new_screen.dart';
 import 'package:receipt_book/screens/home_screen.dart';
-import 'package:receipt_book/screens/persons_screen.dart';
+import 'package:receipt_book/screens/customerList_screen.dart';
 import 'package:receipt_book/screens/settings_screen.dart';
 
 class AppMainLayout extends StatefulWidget {
@@ -20,7 +20,7 @@ class _AppMainLayoutState extends State<AppMainLayout> {
   static final List<Widget> _pages = [
     HomeScreen(title: 'Home'),
     AddNewScreen(title: 'Add New'),
-    PersonsScreen(title: 'Persons'),
+    CustomerListScreen(title: 'Persons'),
     SettingsScreen(title: 'Settings'),
   ];
 
@@ -65,7 +65,7 @@ class _AppMainLayoutState extends State<AppMainLayout> {
               ),
               GButton(
                 icon: Icons.person,
-                text: 'Persons',
+                text: 'Customers',
                 iconSize: 28,
                 iconColor: _selectedIndex == 2 ? Colors.black87 : Colors.white54,
                 gap: 2,
