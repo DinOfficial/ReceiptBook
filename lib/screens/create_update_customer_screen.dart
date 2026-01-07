@@ -54,10 +54,10 @@ class _CreateUpdateCustomerScreenState
               SizedBox(height: 32),
               Text(
                 widget.customer == null
-                    ? 'Add customer to create invoice'
+                    ? 'Add customer details'
                     : 'Update customer details',
                 style: GoogleFonts.akayaKanadaka(
-                  fontSize: 24,
+                  fontSize: 28,
                   fontWeight: FontWeight.w400,
                 ),
                 textAlign: TextAlign.center,
@@ -65,7 +65,6 @@ class _CreateUpdateCustomerScreenState
               SizedBox(height: 48),
               TextFormField(
                 controller: _nameController,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(label: Text('Customer name')),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
@@ -77,17 +76,18 @@ class _CreateUpdateCustomerScreenState
               SizedBox(height: 12),
               TextFormField(
                 controller: _emailController,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(label: Text('Email')),
                 validator: (String? value) {
-                  // Optional email, or valid email check?
+                  if (value == null || value.isEmpty) {
+                    return 'Customer email required !';
+                  }
                   return null;
                 },
               ),
               SizedBox(height: 12),
               TextFormField(
                 controller: _addressController,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: InputDecoration(label: Text('Address')),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
@@ -99,7 +99,7 @@ class _CreateUpdateCustomerScreenState
               SizedBox(height: 12),
               TextFormField(
                 controller: _phoneController,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(label: Text('Phone')),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
@@ -173,6 +173,7 @@ class _CreateUpdateCustomerScreenState
         ToastHelper.showError(context, 'Error saving customer data');
       }
     }
+    FocusScope.of(context).unfocus();
   }
 
   void clearData() {
