@@ -43,7 +43,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
   String? selectedPaymentSystem;
 
   final TextEditingController _invoiceNoController = TextEditingController();
-   TextEditingController _timeController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
   final TextEditingController _invoiceDateController = TextEditingController();
   DateTime? selectedDate;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -56,7 +56,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     _invoiceNoController.text = 'INV${Random().nextInt(999999).toString().padLeft(6, '0')}';
     selectedDate = DateTime.now();
     _invoiceDateController.text = DateFormat('dd-MMM-yyyy').format(selectedDate!);
-    _timeController.text = DateFormat('HH:mm a').format(DateTime.now()); // This sets default time to now
+    _timeController.text = DateFormat(
+      'HH:mm a',
+    ).format(DateTime.now());
     selectedStatus = statusItems[0];
 
     // Check if editing
@@ -603,6 +605,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   ),
                 ],
               ),
+
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -23,16 +23,11 @@ class CompanyProvider extends ChangeNotifier {
   final _imgbb = ImgbbController();
 
   Stream<List<CompanyModel>> streamCompany(String uid) {
-    return _db
-        .collection('users')
-        .doc(uid)
-        .collection('companies')
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => CompanyModel.fromFirestore(doc, null))
-              .toList(),
-        );
+    return _db.collection('users').doc(uid).collection('companies').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return CompanyModel.fromMap(doc.data());
+      }).toList();
+    });
   }
 
   Future<void> addCompany(
@@ -45,11 +40,7 @@ class CompanyProvider extends ChangeNotifier {
   ) async {
     if (!await NetworkChecker.hasInternet) {
       if (!context.mounted) return;
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        InternetAccessScreen.name,
-        (p) => false,
-      );
+      Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
       return;
     }
 
@@ -80,11 +71,7 @@ class CompanyProvider extends ChangeNotifier {
         photo: photoUrl,
       );
 
-      await _db
-          .collection('users')
-          .doc(uid)
-          .collection('companies')
-          .add(company.toFirestore());
+      await _db.collection('users').doc(uid).collection('companies').add(company.toFirestore());
 
       if (!context.mounted) return;
       ToastHelper.showSuccess(context, 'Company data saved successfully!');

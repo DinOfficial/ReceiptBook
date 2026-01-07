@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:receipt_book/services/app_theme_style.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:receipt_book/utils/toast_helper.dart';
 
@@ -46,7 +47,9 @@ class InvoiceImageSave extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: AppThemeStyle.primaryColor,
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Invoice Preview',

@@ -65,8 +65,6 @@ class InvoiceActionsController {
   ) async {
     final pdf = pw.Document();
 
-    // Fetch image if present
-    // Fetch image if present
     pw.ImageProvider? profileImage;
     if (company.photo.isNotEmpty) {
       try {
@@ -210,7 +208,7 @@ class InvoiceActionsController {
             (item) => [
               pw.Center(child: pw.Text(item.title)),
               pw.Center(child: pw.Text(item.quantity.toString())),
-              pw.Center(child: pw.Text("BDT ${item.amount}")),
+              pw.Center(child: pw.Text("BDT ${item.amount.toStringAsFixed(2)}")),
             ],
           )
           .toList(),
@@ -223,11 +221,11 @@ class InvoiceActionsController {
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.end,
         children: [
-          _buildTotalRow('SubTotal', invoice.subtotal.toString()),
-          _buildTotalRow('Discount', invoice.discount.toString()),
-          _buildTotalRow('Tax', invoice.tax.toString()),
+          _buildTotalRow('SubTotal', invoice.subtotal.toStringAsFixed(2).toString()),
+          _buildTotalRow('Discount', invoice.discount.toStringAsFixed(2).toString()),
+          _buildTotalRow('Tax', invoice.tax.toStringAsFixed(2).toString()),
           pw.Divider(thickness: 1),
-          _buildTotalRow('Total', invoice.total.toString(), isBold: true),
+          _buildTotalRow('Total', invoice.total.toStringAsFixed(2).toString(), isBold: true),
         ],
       ),
     );

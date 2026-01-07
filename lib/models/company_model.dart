@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class CompanyModel {
   final String name;
   final String email;
@@ -15,17 +13,13 @@ class CompanyModel {
     required this.photo,
   });
 
-  factory CompanyModel.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    final data = snapshot.data();
+  factory CompanyModel.fromMap(Map<String, dynamic> map) {
     return CompanyModel(
-      name: data?['name'],
-      email: data?['email'],
-      address: data?['address'],
-      phone: data?['phone'],
-      photo: data?['photo'],
+      name: map['name'] ?? '',
+      email: map['email'] ?? '',
+      address: map['address'] ?? '',
+      phone: map['phone'] ?? '',
+      photo: map['photo'] ?? '',
     );
   }
 
