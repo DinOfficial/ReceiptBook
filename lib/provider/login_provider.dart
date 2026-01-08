@@ -63,7 +63,7 @@ class LoginProvider extends ChangeNotifier {
               .set({
                 'email': userCredential.user!.email,
                 'name': userCredential.user!.displayName,
-                'createdAt': FieldValue.serverTimestamp(),
+                'createdAt': DateTime.now(),
               }, SetOptions(merge: true));
           if (!context.mounted) return;
           ToastHelper.showSuccess(context, 'User login successfully');

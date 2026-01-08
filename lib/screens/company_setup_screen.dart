@@ -77,6 +77,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                     fontSize: 24,
                     fontWeight: FontWeight.w400,
                   ),
+
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -118,25 +119,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                       Expanded(
                         child: _image != null
                             ? Text(_image!.name)
-                            : Consumer<CompanyProvider>(
-                                builder: (context, provider, _) {
-                                  return StreamBuilder(
-                                    stream: provider.streamCompany(
-                                      FirebaseAuth.instance.currentUser?.uid ??
-                                          '',
-                                    ),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData &&
-                                          snapshot.data!.isNotEmpty) {
-                                        return Text(
-                                          'Current Logo: ${snapshot.data!.first.name} (Tap to change)',
-                                        );
-                                      }
-                                      return Text('Select your company logo');
-                                    },
-                                  );
-                                },
-                              ),
+                            :  Text('Select logo'),
                       ),
                     ],
                   ),
