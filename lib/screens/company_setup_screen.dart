@@ -200,21 +200,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
   void _onTapSubmit() {
     final isFormValid = _formKey.currentState!.validate();
     if (_image == null) {
-      // Check if we already have a logo (edit mode)
-      // If we are editing, we might not need to re-upload image if not changed
-      // But addCompany likely expects an image.
-      // For now, we enforce image selection if it's a new setup,
-      // but if pre-filled, we might need a way to skip or re-download.
-      // Based on user request, just "Business page not dynamic".
-      // I will assume for now user will pick image if they want to update it,
-      // OR I need to handle "update without image change".
-      // Let's check updateCompany logic if it exists, otherwise addCompany might overwrite.
-
-      // If updating, we might skip this check if we know we have data.
       final uid = FirebaseAuth.instance.currentUser?.uid;
-      // ... simplified check:
-      // If fields are filled but image is null, warn user they must pick image (limitation of XFile)
-      // OR modify provider to accept null image for updates.
       ToastHelper.showError(context, 'Please select company logo (Required for update)');
       return;
     }
@@ -234,7 +220,6 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
     await companyProvider.addCompany(context, name, email, address, phone, photo);
     if (mounted) {
       clearData();
-      ToastHelper.showSuccess(context, 'Company setup completed');
       Navigator.of(context).pushNamedAndRemoveUntil(AppMainLayout.name, (p) => false);
     }
   }
