@@ -34,7 +34,6 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
       final companyProvider = context.read<CompanyProvider>();
       final uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid != null) {
-        // Listen once to get current data to pre-fill
         companyProvider.streamCompany(uid).first.then((companies) {
           if (companies.isNotEmpty) {
             final company = companies.first;
@@ -43,8 +42,6 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
               _emailController.text = company.email;
               _addressController.text = company.address;
               _phoneController.text = company.phone;
-              // Note: Image cannot be easily pre-filled from network URL into XFile
-              // We will handle this by showing a network image if _image is null
             });
           }
         });

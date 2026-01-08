@@ -30,12 +30,12 @@ class ThemeModeProvider extends ChangeNotifier {
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
-    if(mode == _themeMode) return;
+    if (mode == _themeMode) return;
     _themeMode = mode;
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     String themePreference;
-    switch(mode){
+    switch (mode) {
       case ThemeMode.light:
         themePreference = 'light';
         break;
@@ -47,5 +47,14 @@ class ThemeModeProvider extends ChangeNotifier {
         break;
     }
     await prefs.setString(_themeKey, themePreference);
+  }
+
+  bool isDarkModeEnabled(BuildContext context) {
+    if (_themeMode == ThemeMode.system) {
+      final brightness = MediaQuery.of(context).platformBrightness;
+      return brightness == Brightness.dark;
+    } else {
+      return _themeMode == ThemeMode.dark;
+    }
   }
 }

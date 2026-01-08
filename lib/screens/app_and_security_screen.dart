@@ -3,10 +3,24 @@ import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/biometric_provider.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
 
-class AppAndSecurityScreen extends StatelessWidget {
+class AppAndSecurityScreen extends StatefulWidget {
   const AppAndSecurityScreen({super.key});
 
   static const String name = 'app_and_security';
+
+  @override
+  State<AppAndSecurityScreen> createState() => _AppAndSecurityScreenState();
+}
+
+class _AppAndSecurityScreenState extends State<AppAndSecurityScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<BiometricProvider>(context, listen: false).ensureInitialized();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +33,13 @@ class AppAndSecurityScreen extends StatelessWidget {
             builder: (context, biometricProvider, _) {
               return SwitchListTile(
                 activeColor: const Color(0xff2692ce),
-                title: const Text(
-                  'Biometric Login',
-                  style: TextStyle(fontSize: 20),
+                title: const Text('Biometric Login', style: TextStyle(fontSize: 20)),
+                subtitle: Text(
+                  biometricProvider.canCheckBiometrics
+                      ? 'Enable biometric authentication for extra security'
+                      : 'Biometric authentication is not available on this device',
                 ),
-                subtitle: const Text(
-                  'Enable biometric authentication for extra security',
-                ),
-                secondary: const Icon(
-                  Icons.fingerprint,
-                  size: 32,
-                  color: Color(0xff2692ce),
-                ),
+                secondary: const Icon(Icons.fingerprint, size: 32, color: Color(0xff2692ce)),
                 value: biometricProvider.isBiometricEnabled,
                 onChanged: biometricProvider.canCheckBiometrics
                     ? (value) async {
@@ -40,16 +49,7 @@ class AppAndSecurityScreen extends StatelessWidget {
               );
             },
           ),
-          // Placeholder for other security settings
           const SizedBox(height: 20),
-          const ListTile(
-            title: Text('Terms and Conditions'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 16),
-          ),
-          const ListTile(
-            title: Text('Data Privacy'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 16),
-          ),
         ],
       ),
     );

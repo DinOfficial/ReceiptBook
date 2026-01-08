@@ -1,3 +1,4 @@
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
@@ -7,8 +8,8 @@ import 'package:receipt_book/screens/invoice_settings_screen.dart';
 import 'package:receipt_book/screens/terms_of_service_screen.dart';
 import 'package:receipt_book/screens/data_privacy_screen.dart';
 import 'package:receipt_book/screens/share_app_screen.dart';
-import 'package:receipt_book/services/app_theme_style.dart';
 import 'package:receipt_book/screens/app_and_security_screen.dart';
+import 'package:receipt_book/services/app_theme_style.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -76,10 +77,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               groupValue: provider.themeMode,
                               onChanged: (ThemeMode? value) {
                                 if (value != null) {
-                                  // Provider-কে কল করে থিম পরিবর্তন করা হচ্ছে
                                   provider.setThemeMode(value);
-                                  Navigator.pop(context); // ডায়ালগ বন্ধ করা হচ্ছে
+                                  ThemeSwitcher.of(
+                                    context,
+                                  ).changeTheme(
+                                      theme: AppThemeStyle.lightTheme,
+                                      isReversed: false,
+                                  );
                                 }
+                                Navigator.pop(context);
                               },
                             ),
                             RadioListTile<ThemeMode>(
@@ -89,8 +95,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               onChanged: (ThemeMode? value) {
                                 if (value != null) {
                                   provider.setThemeMode(value);
-                                  Navigator.pop(context);
+                                  ThemeSwitcher.of(
+                                    context,
+                                  ).changeTheme(theme: AppThemeStyle.darkTheme, isReversed: false);
                                 }
+                                Navigator.pop(context);
                               },
                             ),
                             RadioListTile<ThemeMode>(
@@ -101,6 +110,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               onChanged: (ThemeMode? value) {
                                 if (value != null) {
                                   provider.setThemeMode(value);
+
+                                  final brightness = MediaQuery.of(context).platformBrightness;
+                                  final theme = brightness == Brightness.dark
+                                      ? AppThemeStyle.darkTheme
+                                      : AppThemeStyle.lightTheme;
+
+                                  ThemeSwitcher.of(context).changeTheme(theme: theme);
+
                                   Navigator.pop(context);
                                 }
                               },
@@ -114,7 +131,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
           ),
-          // =================== বাকি ListTile অপরিবর্তিত থাকবে ===================
 
           const SizedBox(height: 20),
           ListTile(
@@ -146,25 +162,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
           ),
           const SizedBox(height: 20),
-
-          // Biometric option moved to App & Security
-          const SizedBox(height: 20),
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             onTap: () {
-              // Assuming AppAndSecurityScreen contains Terms/Privacy links, or we link them directly here?
-              // The request said "in setting page...". I'll link specific tiles if they exist or create new ones?
-              // The existing list has "App & Security". Let's assume that screen has the details.
-              // BUT I also created standalone screens. Let's make the "App & Security" tile go to a screen that lists these?
-              // Or simpler: I will assume the user wants them accessible.
-              // The UI has "Get support", "Who we are" etc.
-              // I will link "Share this app" to ShareAppScreen.
-
-              // Wait, I previously tried to add tiles for Terms/Privacy directly in the settings list.
-              // Let's stick to the existing tiles but create new ones if needed or reuse.
-              // Actually the user said "in setting page terms and condition...".
-              // The code I saw in step 89 has "App & Security" tile.
-              // I will ADD the Terms and Privacy tiles to the main settings list as per my previous failed attempt, but cleaner.
               Navigator.pushNamed(context, AppAndSecurityScreen.name);
             },
             shape: RoundedRectangleBorder(
