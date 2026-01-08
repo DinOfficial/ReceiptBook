@@ -31,20 +31,6 @@ class _WelcomeAppBarState extends State<WelcomeAppBar> {
     return AppBar(
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 12),
-          child: Consumer<ThemeModeProvider>(
-            builder: (context, themeProvider, _) {
-              return Switch(
-                value: themeProvider.themeMode == ThemeMode.dark,
-                thumbIcon: thumbIcon,
-                onChanged: (bool value) {
-                  themeProvider.toggleThemeMode(value);
-                },
-              );
-            },
-          ),
-        ),
-        Padding(
           padding: const EdgeInsets.only(right: 40),
           child: Consumer<WelcomeScreenProvider>(
             builder: (context, welcomeAppBarProvider, _) {

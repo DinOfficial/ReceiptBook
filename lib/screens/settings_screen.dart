@@ -21,39 +21,101 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final WidgetStateProperty<Icon?> thumbIcon =
-      WidgetStateProperty.resolveWith<Icon?>((Set<WidgetState> states) {
-        if (states.contains(WidgetState.selected)) {
-          return const Icon(Icons.nights_stay, color: Colors.black87);
-        }
-        return const Icon(Icons.wb_sunny, color: Colors.orange);
-      });
+  final WidgetStateProperty<Icon?> thumbIcon = WidgetStateProperty.resolveWith<Icon?>((
+    Set<WidgetState> states,
+  ) {
+    if (states.contains(WidgetState.selected)) {
+      return const Icon(Icons.nights_stay, color: Colors.black87);
+    }
+    return const Icon(Icons.wb_sunny, color: Colors.orange);
+  });
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeModeProvider>(context);
+    String getCurrentThemeText(ThemeMode themeMode) {
+      switch (themeMode) {
+        case ThemeMode.light:
+          return 'light Mode';
+        case ThemeMode.dark:
+          return 'Dark';
+        case ThemeMode.system:
+          return 'System Default';
+      }
+    }
+
     return Scaffold(
       appBar: MainAppBar(title: 'Settings'),
       body: ListView(
         padding: EdgeInsets.only(top: 24, left: 12, right: 12, bottom: 20),
         children: [
           ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            onTap: () {},
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
             leading: HugeIcon(icon: HugeIcons.strokeRoundedSun02, size: 32),
-            title: Text('Change apps mode', style: TextStyle(fontSize: 16)),
-            trailing: Switch(
-              value: themeProvider.themeMode == ThemeMode.dark,
-              thumbIcon: thumbIcon,
-              onChanged: (bool value) {
-                themeProvider.toggleThemeMode(value);
-              },
-            ),
+            title: Text('App Theme', style: TextStyle(fontSize: 16)),
+            subtitle: Text(getCurrentThemeText(themeProvider.themeMode)),
+            trailing: HugeIcon(icon: HugeIcons.strokeRoundedMoreVerticalCircle02, size: 28),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Consumer<ThemeModeProvider>(
+                    builder: (context, provider, child) {
+                      return AlertDialog(
+                        title: Text('Choose App Theme'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            RadioListTile<ThemeMode>(
+                              title: const Text('Light Mode'),
+                              value: ThemeMode.light,
+                              groupValue: provider.themeMode,
+                              onChanged: (ThemeMode? value) {
+                                if (value != null) {
+                                  // Provider-কে কল করে থিম পরিবর্তন করা হচ্ছে
+                                  provider.setThemeMode(value);
+                                  Navigator.pop(context); // ডায়ালগ বন্ধ করা হচ্ছে
+                                }
+                              },
+                            ),
+                            RadioListTile<ThemeMode>(
+                              title: const Text('Dark Mode'),
+                              value: ThemeMode.dark,
+                              groupValue: provider.themeMode,
+                              onChanged: (ThemeMode? value) {
+                                if (value != null) {
+                                  provider.setThemeMode(value);
+                                  Navigator.pop(context);
+                                }
+                              },
+                            ),
+                            RadioListTile<ThemeMode>(
+                              title: const Text('System Default'),
+                              subtitle: const Text('Follows device settings'),
+                              value: ThemeMode.system,
+                              groupValue: provider.themeMode,
+                              onChanged: (ThemeMode? value) {
+                                if (value != null) {
+                                  provider.setThemeMode(value);
+                                  Navigator.pop(context);
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+            },
           ),
+          // =================== বাকি ListTile অপরিবর্তিত থাকবে ===================
+
           const SizedBox(height: 20),
           ListTile(
             onTap: () {
@@ -63,10 +125,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
-            leading: HugeIcon(
-              icon: HugeIcons.strokeRoundedBriefcase06,
-              size: 32,
-            ),
+            leading: HugeIcon(icon: HugeIcons.strokeRoundedBriefcase06, size: 32),
             title: Text('Business Information', style: TextStyle(fontSize: 16)),
             subtitle: Text('Update | complete your company information'),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
@@ -112,10 +171,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
-            leading: HugeIcon(
-              icon: HugeIcons.strokeRoundedShieldUser,
-              size: 32,
-            ),
+            leading: HugeIcon(icon: HugeIcons.strokeRoundedShieldUser, size: 32),
             title: Text('App & Security', style: TextStyle(fontSize: 20)),
             subtitle: Text('Terms, Conditions & Privacy'),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
@@ -145,10 +201,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               borderRadius: BorderRadius.circular(16),
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
-            leading: HugeIcon(
-              icon: HugeIcons.strokeRoundedSecurityCheck,
-              size: 32,
-            ),
+            leading: HugeIcon(icon: HugeIcons.strokeRoundedSecurityCheck, size: 32),
             title: Text('Data Privacy', style: TextStyle(fontSize: 20)),
             subtitle: Text('How we use your data'),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
@@ -170,10 +223,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 50),
           Center(
-            child: Text(
-              'App Version: 1.1.1',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
-            ),
+            child: Text('App Version: 1.1.1', style: TextStyle(color: Colors.grey, fontSize: 16)),
           ),
         ],
       ),
