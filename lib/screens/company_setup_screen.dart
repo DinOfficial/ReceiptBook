@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -73,10 +74,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                 ],
                 child: Text(
                   'Setup your company details',
-                  style: GoogleFonts.akayaKanadaka(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: GoogleFonts.akayaKanadaka(fontSize: 24, fontWeight: FontWeight.w400),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -107,41 +105,25 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                         child: Center(
                           child: Text(
                             'Logo',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Expanded(
-                        child: _image != null
-                            ? Text(_image!.name)
-                            : Consumer<CompanyProvider>(
-                                builder: (context, provider, _) {
-                                  return StreamBuilder(
-                                    stream: provider.streamCompany(
-                                      FirebaseAuth.instance.currentUser?.uid ??
-                                          '',
-                                    ),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData &&
-                                          snapshot.data!.isNotEmpty) {
-                                        return Text(
-                                          'Current Logo: ${snapshot.data!.first.name} (Tap to change)',
-                                        );
-                                      }
-                                      return Text('Select your company logo');
-                                    },
-                                  );
-                                },
-                              ),
-                      ),
+                      Expanded(child: _image != null ? Text(_image!.name) : Text('Select Logo')),
                     ],
                   ),
                 ),
               ),
+              SizedBox(height: 12),
+              if (_image != null)
+                Container(
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(File(_image!.path)),
+                  ),
+                ),
               SizedBox(height: 12),
               TextFormField(
                 controller: _nameController,
@@ -201,10 +183,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                       width: double.infinity,
                       child: OutlinedButton(
                         onPressed: _onTapSubmit,
-                        child: HugeIcon(
-                          icon: HugeIcons.strokeRoundedCircleArrowRight01,
-                          size: 28,
-                        ),
+                        child: HugeIcon(icon: HugeIcons.strokeRoundedCircleArrowRight01, size: 28),
                       ),
                     ),
                   );
@@ -236,10 +215,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
       // ... simplified check:
       // If fields are filled but image is null, warn user they must pick image (limitation of XFile)
       // OR modify provider to accept null image for updates.
-      ToastHelper.showError(
-        context,
-        'Please select company logo (Required for update)',
-      );
+      ToastHelper.showError(context, 'Please select company logo (Required for update)');
       return;
     }
     if (isFormValid) {
@@ -255,20 +231,11 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
     final XFile photo = _image!;
 
     final CompanyProvider companyProvider = context.read<CompanyProvider>();
-    await companyProvider.addCompany(
-      context,
-      name,
-      email,
-      address,
-      phone,
-      photo,
-    );
+    await companyProvider.addCompany(context, name, email, address, phone, photo);
     if (mounted) {
       clearData();
       ToastHelper.showSuccess(context, 'Company setup completed');
-      Navigator.of(
-        context,
-      ).pushNamedAndRemoveUntil(AppMainLayout.name, (p) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(AppMainLayout.name, (p) => false);
     }
   }
 

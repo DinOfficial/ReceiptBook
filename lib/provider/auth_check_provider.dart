@@ -49,7 +49,7 @@ class AuthCheckProvider extends ChangeNotifier {
       final snapshot = await _fireStore
           .collection('users')
           .doc(uid)
-          .collection('company')
+          .collection('companies')
           .get();
 
       if (!context.mounted) return;
@@ -94,11 +94,7 @@ class AuthCheckProvider extends ChangeNotifier {
       }
     } catch (e) {
       if (context.mounted) {
-        // Don't auto-redirect to Welcome on error, it confuses the user.
-        // Show error and stay, or go to Login if really needed.
         ToastHelper.showError(context, 'Authentication check failed: $e');
-        // Fallback to login if it's a critical state issue, but usually stay put so user can see error.
-        // For now, let's NOT redirect to WelcomeScreen blindly.
       }
     }
   }
