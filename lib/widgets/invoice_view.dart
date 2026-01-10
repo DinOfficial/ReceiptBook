@@ -36,7 +36,6 @@ class _InvoiceViewState extends State<InvoiceView> {
       _companyStream = context.read<CompanyProvider>().streamCompany(uid);
       _customerStream = context.read<CustomerProvider>().streamCustomers(uid);
     } else {
-      // Handle logged out state if necessary
       _companyStream = Stream.value([]);
       _customerStream = Stream.value([]);
     }
@@ -47,31 +46,20 @@ class _InvoiceViewState extends State<InvoiceView> {
     return StreamBuilder<List<CompanyModel>>(
       stream: _companyStream,
       builder: (context, companySnapshot) {
-        if (companySnapshot.hasError) {
-          return Scaffold(body: Center(child: Text('Company Stream Error: ${companySnapshot.error}')));
-        }
-        
-        // Show loading only if we have no data and it's still waiting
-        if (companySnapshot.connectionState == ConnectionState.waiting && !companySnapshot.hasData) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
-        }
-        
         final companies = companySnapshot.data ?? [];
         final company = companies.isNotEmpty
             ? companies.first
-            : CompanyModel(name: "Company Name", email: "companyemail@email.com", address: "Address", phone: "99999999", photo: "");
+            : CompanyModel(
+                name: "Your Company Name",
+                email: "company@email.com",
+                address: "Your Address",
+                phone: "01XXXXXXXXX",
+                photo: "",
+              );
 
         return StreamBuilder<List<CustomerModel>>(
           stream: _customerStream,
           builder: (context, customerSnapshot) {
-            if (customerSnapshot.hasError) {
-              return Scaffold(body: Center(child: Text('Customer Stream Error: ${customerSnapshot.error}')));
-            }
-
-            if (customerSnapshot.connectionState == ConnectionState.waiting && !customerSnapshot.hasData) {
-              return const Scaffold(body: Center(child: CircularProgressIndicator()));
-            }
-
             final customers = customerSnapshot.data ?? [];
             final customer = customers.firstWhere(
               (c) => c.id == widget.invoice.customerId,
@@ -108,7 +96,7 @@ class _InvoiceViewState extends State<InvoiceView> {
                     canChangeOrientation: false,
                     canChangePageFormat: false,
                     canDebug: false,
-                    loadingWidget: const Center(child: CircularProgressIndicator()),
+                    loadingWidget: const SizedBox.shrink(),
                     actions: [
                       PdfPreviewAction(
                         icon: const Icon(Icons.image),
@@ -143,56 +131,4 @@ class _InvoiceViewState extends State<InvoiceView> {
   }
 }
 
-/// ===== REUSABLE WIDGETS =====
 
-Widget _invoiceButton(IconData icon, String title, VoidCallback onTap) {
-  return InkWell(
-    focusColor: AppThemeStyle.primaryColor,
-    borderRadius: BorderRadius.circular(10),
-    onTap: onTap,
-    child: Column(
-      children: [
-        CircleAvatar(radius: 22, child: Icon(icon, size: 22)),
-        const SizedBox(height: 6),
-        Text(title, style: const TextStyle(fontSize: 12)),
-      ],
-    ),
-  );
-}
-
-class _priceRow extends StatelessWidget {
-  final String title, value;
-  final bool isBold;
-
-  const _priceRow({required this.title, required this.value, this.isBold = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(title, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
-          const SizedBox(width: 12),
-          Text(value, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
-        ],
-      ),
-    );
-  }
-}
-
-Widget _cell(String text, {required int flex, bool isHeader = false}) {
-  return Expanded(
-    flex: flex,
-    child: Container(
-      padding: const EdgeInsets.all(8),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300)),
-      child: Text(
-        text,
-        style: TextStyle(fontWeight: isHeader ? FontWeight.bold : FontWeight.normal),
-      ),
-    ),
-  );
-}

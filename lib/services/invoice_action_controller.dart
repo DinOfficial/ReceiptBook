@@ -72,9 +72,6 @@ class InvoiceActionsController {
           format: PdfPageFormat.a4,
           html: '<html><img src="${company.photo}"></html>',
         );
-        // Note: convertHtml returns bytes of a PDF. This isn't efficient for just an image.
-        // Better to use network fetch if allowed.
-        // Printing package 'networkImage' helper:
         final netImage = await networkImage(company.photo);
         profileImage = netImage;
       } catch (e) {
@@ -274,9 +271,6 @@ class InvoiceActionsController {
             ],
           ),
         ),
-        //...
-        //...
-        //...
       ],
     );
   }
