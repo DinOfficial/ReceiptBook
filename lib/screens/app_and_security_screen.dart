@@ -36,8 +36,8 @@ class _AppAndSecurityScreenState extends State<AppAndSecurityScreen> {
                 title: const Text('Biometric Login', style: TextStyle(fontSize: 20)),
                 subtitle: Text(
                   biometricProvider.canCheckBiometrics
-                      ? 'Enable biometric authentication for extra security'
-                      : 'Biometric authentication is not available on this device',
+                      ? 'Use fingerprint or face unlock for extra security'
+                      : 'No biometric credentials found. Please add fingerprint or face lock in device settings',
                 ),
                 secondary: const Icon(Icons.fingerprint, size: 32, color: Color(0xff2692ce)),
                 value: biometricProvider.isBiometricEnabled,

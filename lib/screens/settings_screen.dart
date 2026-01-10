@@ -1,5 +1,7 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
@@ -9,6 +11,7 @@ import 'package:receipt_book/screens/terms_of_service_screen.dart';
 import 'package:receipt_book/screens/data_privacy_screen.dart';
 import 'package:receipt_book/screens/share_app_screen.dart';
 import 'package:receipt_book/screens/app_and_security_screen.dart';
+import 'package:receipt_book/screens/welcome_screen.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
 
@@ -80,10 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   provider.setThemeMode(value);
                                   ThemeSwitcher.of(
                                     context,
-                                  ).changeTheme(
-                                      theme: AppThemeStyle.lightTheme,
-                                      isReversed: false,
-                                  );
+                                  ).changeTheme(theme: AppThemeStyle.lightTheme, isReversed: false);
                                 }
                                 Navigator.pop(context);
                               },
@@ -173,7 +173,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             leading: HugeIcon(icon: HugeIcons.strokeRoundedShieldUser, size: 32),
             title: Text('App & Security', style: TextStyle(fontSize: 20)),
-            subtitle: Text('Terms, Conditions & Privacy'),
+            subtitle: Text('Setup your app security'),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
           ),
           const SizedBox(height: 20),
@@ -220,6 +220,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: Text('Share this app ', style: TextStyle(fontSize: 20)),
             subtitle: Text('If you enjoy it share with your friends'),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
+          ),
+          const SizedBox(height: 40),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            tileColor: Colors.redAccent,
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+              GoogleSignIn().signOut();
+              Navigator.pushNamedAndRemoveUntil(context, WelcomeScreen.name, (p) => false);
+            },
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            leading: HugeIcon(icon: HugeIcons.strokeRoundedLogout01, size: 32),
+            title: Text('Logout', style: TextStyle(fontSize: 20)),
           ),
           const SizedBox(height: 50),
           Center(

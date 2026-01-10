@@ -33,16 +33,22 @@ class BiometricProvider extends ChangeNotifier {
 
   Future<void> _checkBiometrics() async {
     try {
-      _canCheckBiometrics = await auth.canCheckBiometrics;
-      notifyListeners();
+      final isSupported = await auth.isDeviceSupported();
+      final biometrics = await auth.getAvailableBiometrics();
+
+      _canCheckBiometrics =
+          isSupported && biometrics.isNotEmpty;
+
     } on PlatformException catch (e) {
       if (kDebugMode) {
         print("Error checking biometrics: $e");
       }
       _canCheckBiometrics = false;
-      notifyListeners();
     }
+
+    notifyListeners();
   }
+
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -71,14 +77,12 @@ class BiometricProvider extends ChangeNotifier {
 
   Future<void> toggleBiometric(bool value) async {
     if (value) {
-      // If enabling, verify identity first
+      if (!_canCheckBiometrics) return;
+
       bool authenticated = await authenticate();
-      if (authenticated) {
-        _isBiometricEnabled = true;
-      } else {
-        // Failed to authenticate, do not enable
-        return;
-      }
+      if (!authenticated) return;
+
+      _isBiometricEnabled = true;
     } else {
       _isBiometricEnabled = false;
     }
@@ -87,4 +91,5 @@ class BiometricProvider extends ChangeNotifier {
     await prefs.setBool('biometric_enabled', _isBiometricEnabled);
     notifyListeners();
   }
+
 }
