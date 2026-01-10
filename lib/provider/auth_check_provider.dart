@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/biometric_provider.dart';
@@ -77,11 +78,15 @@ class AuthCheckProvider extends ChangeNotifier {
             Navigator.pushReplacementNamed(context, LoginScreen.name);
             return;
           }
-          print('✅ [AuthCheck] Biometric authentication passed');
+          if (kDebugMode) {
+            print('✅ [AuthCheck] Biometric authentication passed');
+          }
         } else {
-          print(
+          if (kDebugMode) {
+            print(
             '⏭️ [AuthCheck] Skipping biometric (not enabled or not available)',
           );
+          }
         }
       }
 
@@ -90,7 +95,7 @@ class AuthCheckProvider extends ChangeNotifier {
       if (snapshot.docs.isNotEmpty) {
         Navigator.pushReplacementNamed(context, AppMainLayout.name);
       } else {
-        Navigator.pushReplacementNamed(context, CompanySetupScreen.name);
+        Navigator.pushReplacementNamed(context, AppMainLayout.name);
       }
     } catch (e) {
       if (context.mounted) {

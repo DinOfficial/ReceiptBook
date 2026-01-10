@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -57,7 +58,6 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Form(
@@ -73,11 +73,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                 ],
                 child: Text(
                   'Setup your company details',
-                  style: GoogleFonts.akayaKanadaka(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
-                  ),
-
+                  style: GoogleFonts.akayaKanadaka(fontSize: 24, fontWeight: FontWeight.w400),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -108,23 +104,25 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                         child: Center(
                           child: Text(
                             'Logo',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Expanded(
-                        child: _image != null
-                            ? Text(_image!.name)
-                            :  Text('Select logo'),
-                      ),
+                      Expanded(child: _image != null ? Text(_image!.name) : Text('Select Logo')),
                     ],
                   ),
                 ),
               ),
+              SizedBox(height: 12),
+              if (_image != null)
+                Container(
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(File(_image!.path)),
+                  ),
+                ),
               SizedBox(height: 12),
               TextFormField(
                 controller: _nameController,
@@ -184,10 +182,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                       width: double.infinity,
                       child: OutlinedButton(
                         onPressed: _onTapSubmit,
-                        child: HugeIcon(
-                          icon: HugeIcons.strokeRoundedCircleArrowRight01,
-                          size: 28,
-                        ),
+                        child: HugeIcon(icon: HugeIcons.strokeRoundedCircleArrowRight01, size: 28),
                       ),
                     ),
                   );
@@ -204,25 +199,8 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
   void _onTapSubmit() {
     final isFormValid = _formKey.currentState!.validate();
     if (_image == null) {
-      // Check if we already have a logo (edit mode)
-      // If we are editing, we might not need to re-upload image if not changed
-      // But addCompany likely expects an image.
-      // For now, we enforce image selection if it's a new setup,
-      // but if pre-filled, we might need a way to skip or re-download.
-      // Based on user request, just "Business page not dynamic".
-      // I will assume for now user will pick image if they want to update it,
-      // OR I need to handle "update without image change".
-      // Let's check updateCompany logic if it exists, otherwise addCompany might overwrite.
-
-      // If updating, we might skip this check if we know we have data.
       final uid = FirebaseAuth.instance.currentUser?.uid;
-      // ... simplified check:
-      // If fields are filled but image is null, warn user they must pick image (limitation of XFile)
-      // OR modify provider to accept null image for updates.
-      ToastHelper.showError(
-        context,
-        'Please select company logo (Required for update)',
-      );
+      ToastHelper.showError(context, 'Please select company logo (Required for update)');
       return;
     }
     if (isFormValid) {
@@ -238,20 +216,10 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
     final XFile photo = _image!;
 
     final CompanyProvider companyProvider = context.read<CompanyProvider>();
-    await companyProvider.addCompany(
-      context,
-      name,
-      email,
-      address,
-      phone,
-      photo,
-    );
+    await companyProvider.addCompany(context, name, email, address, phone, photo);
     if (mounted) {
       clearData();
-      ToastHelper.showSuccess(context, 'Company setup completed');
-      Navigator.of(
-        context,
-      ).pushNamedAndRemoveUntil(AppMainLayout.name, (p) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(AppMainLayout.name, (p) => false);
     }
   }
 

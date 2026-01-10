@@ -23,34 +23,44 @@ class InvoiceView extends StatefulWidget {
 
 class _InvoiceViewState extends State<InvoiceView> {
   late final InvoiceActionsController _actionsController;
+  late final Stream<List<CompanyModel>> _companyStream;
+  late final Stream<List<CustomerModel>> _customerStream;
 
   @override
   void initState() {
     super.initState();
     _actionsController = InvoiceActionsController(widget.invoice);
+    
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      _companyStream = context.read<CompanyProvider>().streamCompany(uid);
+      _customerStream = context.read<CustomerProvider>().streamCustomers(uid);
+    } else {
+      _companyStream = Stream.value([]);
+      _customerStream = Stream.value([]);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
     return StreamBuilder<List<CompanyModel>>(
-      stream: context.watch<CompanyProvider>().streamCompany(uid),
+      stream: _companyStream,
       builder: (context, companySnapshot) {
-        if (!companySnapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final companies = companySnapshot.data!;
+        final companies = companySnapshot.data ?? [];
         final company = companies.isNotEmpty
             ? companies.first
-            : CompanyModel(name: "Compnay Name", email: "compamyemail@email.com", address: "Address", phone: "99999999", photo: "");
+            : CompanyModel(
+                name: "Your Company Name",
+                email: "company@email.com",
+                address: "Your Address",
+                phone: "01XXXXXXXXX",
+                photo: "",
+              );
 
         return StreamBuilder<List<CustomerModel>>(
-          stream: context.watch<CustomerProvider>().streamCustomers(uid),
+          stream: _customerStream,
           builder: (context, customerSnapshot) {
-            if (!customerSnapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            final customers = customerSnapshot.data!;
+            final customers = customerSnapshot.data ?? [];
             final customer = customers.firstWhere(
               (c) => c.id == widget.invoice.customerId,
               orElse: () => CustomerModel(id: '', name: 'Unknown Customer', address: '', phone: ''),
@@ -59,7 +69,7 @@ class _InvoiceViewState extends State<InvoiceView> {
             return Consumer<InvoiceSettingsProvider>(
               builder: (context, settings, _) {
                 return Scaffold(
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: Colors.white,
                   appBar: AppBar(
                     title: const Text('Invoice Preview'),
                     backgroundColor: AppThemeStyle.primaryColor,
@@ -86,14 +96,12 @@ class _InvoiceViewState extends State<InvoiceView> {
                     canChangeOrientation: false,
                     canChangePageFormat: false,
                     canDebug: false,
-                    loadingWidget: Center(child: CircularProgressIndicator()),
+                    loadingWidget: const SizedBox.shrink(),
                     actions: [
                       PdfPreviewAction(
                         icon: const Icon(Icons.image),
                         onPressed: (context, build, pageFormat) async {
-                          // Generate PDF bytes
                           final pdfBytes = await build(pageFormat);
-                          // Rasterize the first page to image
                           await for (final page in Printing.raster(pdfBytes, pages: [0], dpi: 72)) {
                             final image = await page.toPng();
                             if (context.mounted) {
@@ -107,7 +115,7 @@ class _InvoiceViewState extends State<InvoiceView> {
                                 ),
                               );
                             }
-                            break; // Process only the first page
+                            break;
                           }
                         },
                       ),
@@ -123,56 +131,4 @@ class _InvoiceViewState extends State<InvoiceView> {
   }
 }
 
-/// ===== REUSABLE WIDGETS =====
 
-Widget _invoiceButton(IconData icon, String title, VoidCallback onTap) {
-  return InkWell(
-    focusColor: AppThemeStyle.primaryColor,
-    borderRadius: BorderRadius.circular(10),
-    onTap: onTap,
-    child: Column(
-      children: [
-        CircleAvatar(radius: 22, child: Icon(icon, size: 22)),
-        const SizedBox(height: 6),
-        Text(title, style: const TextStyle(fontSize: 12)),
-      ],
-    ),
-  );
-}
-
-class _priceRow extends StatelessWidget {
-  final String title, value;
-  final bool isBold;
-
-  const _priceRow({required this.title, required this.value, this.isBold = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(title, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
-          const SizedBox(width: 12),
-          Text(value, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
-        ],
-      ),
-    );
-  }
-}
-
-Widget _cell(String text, {required int flex, bool isHeader = false}) {
-  return Expanded(
-    flex: flex,
-    child: Container(
-      padding: const EdgeInsets.all(8),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300)),
-      child: Text(
-        text,
-        style: TextStyle(fontWeight: isHeader ? FontWeight.bold : FontWeight.normal),
-      ),
-    ),
-  );
-}
