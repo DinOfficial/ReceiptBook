@@ -58,7 +58,6 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Form(
