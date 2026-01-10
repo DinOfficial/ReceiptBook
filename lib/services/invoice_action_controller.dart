@@ -17,32 +17,6 @@ class InvoiceActionsController {
 
   InvoiceActionsController(this.invoice);
 
-  /// ======================= PRINT =========================
-  Future<void> printInvoice({
-    required CompanyModel company,
-    required CustomerModel customer,
-    required String template,
-  }) async {
-    final pdf = await _generatePdf(company, customer, template);
-    await Printing.layoutPdf(onLayout: (_) => pdf);
-  }
-
-  /// ======================= SHARE PDF =====================
-  Future<void> shareInvoicePdf({
-    required CompanyModel company,
-    required CustomerModel customer,
-    required String template,
-  }) async {
-    final pdf = await _generatePdf(company, customer, template);
-    final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/${invoice.invoiceNo}.pdf');
-    await file.writeAsBytes(pdf);
-    Share.shareXFiles([
-      XFile(file.path),
-    ], text: 'Invoice - ${invoice.invoiceNo}');
-  }
-
-  /// ======================= INTERNAL PDF BUILDER =========
   Future<Uint8List> generatePdf(
     CompanyModel company,
     CustomerModel customer,
@@ -53,125 +27,61 @@ class InvoiceActionsController {
     pw.ImageProvider? profileImage;
     if (company.photo.isNotEmpty && company.photo.startsWith('http')) {
       try {
-        // ছবি লোড করার জন্য সর্বোচ্চ ৩ সেকেন্ড সময় দেওয়া হয়েছে, যাতে এটি আটকে না থাকে
         profileImage = await networkImage(company.photo).timeout(
-          const Duration(seconds: 3),
+          const Duration(seconds: 2),
           onTimeout: () => throw Exception('Image timeout'),
         );
       } catch (e) {
-        debugPrint('Error loading logo: $e');
-        profileImage = null; // ছবি না পেলে বা সময় বেশি নিলে null থাকবে
+        debugPrint('Logo load error: $e');
       }
     }
 
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.all(32),
         build: (context) {
-          switch (template) {
-            case 'modern':
-              return _buildClassicLayout(company, customer, profileImage); // Temporary fallback
-            case 'minimal':
-              return _buildClassicLayout(company, customer, profileImage);
-            case 'professional':
-              return _buildProfessionalLayout(company, customer, profileImage);
-            case 'classic':
-            default:
-              return _buildClassicLayout(company, customer, profileImage);
-          }
+          return _buildClassicLayout(company, customer, profileImage);
         },
       ),
     );
     return pdf.save();
   }
 
-  Future<Uint8List> _generatePdf(
-    CompanyModel company,
-    CustomerModel customer,
-    String template,
-  ) async {
-    return generatePdf(company, customer, template);
-  }
-
-  // --- TEMPLATE: CLASSIC ---
-  pw.Widget _buildClassicLayout(
-    CompanyModel company,
-    CustomerModel customer,
-    pw.ImageProvider? logo,
-  ) {
+  pw.Widget _buildClassicLayout(CompanyModel company, CustomerModel customer, pw.ImageProvider? logo) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        _buildClassicHeader(company, logo),
-        pw.SizedBox(height: 25),
-        _buildClassicRecipientInfo(customer),
+        _buildHeader(company, logo),
+        pw.SizedBox(height: 30),
+        _buildInfo(customer),
+        pw.SizedBox(height: 30),
+        _buildItemsTable(),
         pw.SizedBox(height: 20),
-        _buildClassicItemsTable(),
-        pw.SizedBox(height: 10),
-        _buildClassicTotals(),
+        _buildTotals(),
       ],
     );
   }
 
-  pw.Widget _buildClassicHeader(CompanyModel company, pw.ImageProvider? logo) {
-    return pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-      children: [
-        pw.Row(
-          children: [
-            if (logo != null)
-              pw.Container(
-                width: 60,
-                height: 60,
-                margin: const pw.EdgeInsets.only(right: 15),
-                child: pw.Image(logo),
-              ),
-            pw.Text(
-              "INVOICE",
-              style: pw.TextStyle(
-                fontSize: 28,
-                fontWeight: pw.FontWeight.bold,
-                letterSpacing: 2,
-              ),
-            ),
-          ],
-        ),
-        pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.end,
-          children: [
-            pw.Text(
-              company.name,
-              style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
-            ),
-            pw.Text(company.address),
-            pw.Text("Phone: ${company.phone}"),
-          ],
-        ),
-      ],
-    );
-  }
-
-  pw.Widget _buildClassicRecipientInfo(CustomerModel customer) {
+  pw.Widget _buildHeader(CompanyModel company, pw.ImageProvider? logo) {
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
       children: [
         pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Text(
-              "Bill To:",
-              style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-            ),
-            pw.SizedBox(height: 4),
-            pw.Text(customer.name.isNotEmpty ? customer.name : 'Unknown Customer'),
-            pw.Text(customer.address),
-            pw.Text("Phone: ${customer.phone}"),
+            if (logo != null) pw.Container(width: 60, height: 60, child: pw.Image(logo)),
+            pw.Text(company.name.toUpperCase(), 
+                style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
+            pw.Text(company.address),
+            pw.Text("Phone: ${company.phone}"),
           ],
         ),
         pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.end,
           children: [
-            pw.Text("Invoice No: ${invoice.invoiceNo}"),
+            pw.Text("INVOICE", style: pw.TextStyle(fontSize: 30, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
+            pw.Text("Invoice #: ${invoice.invoiceNo}"),
             pw.Text("Date: ${invoice.date.toString().split(' ')[0]}"),
           ],
         ),
@@ -179,53 +89,96 @@ class InvoiceActionsController {
     );
   }
 
-  pw.Widget _buildClassicItemsTable() {
-    return pw.TableHelper.fromTextArray(
-      headers: ["Item", "Qty", "Amount"],
-      data: invoice.items
-          .map(
-            (item) => [
-              item.title,
-              item.quantity.toString(),
-              "BDT ${item.amount.toStringAsFixed(2)}",
-            ],
-          )
-          .toList(),
+  pw.Widget _buildInfo(CustomerModel customer) {
+    return pw.Row(
+      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Text("BILL TO:", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 12)),
+            pw.Text(customer.name.isEmpty ? "Customer Name" : customer.name, style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+            pw.Text(customer.address),
+            pw.Text(customer.phone),
+          ],
+        ),
+        pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.end,
+          children: [
+            pw.Text("STATUS", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 12)),
+            pw.Text(invoice.status.toUpperCase(), style: pw.TextStyle(color: invoice.status.toLowerCase() == 'paid' ? PdfColors.green : PdfColors.red)),
+          ],
+        ),
+      ],
     );
   }
 
-  pw.Widget _buildClassicTotals() {
-    return pw.Align(
+  pw.Widget _buildItemsTable() {
+    final headers = ['Item Name', 'Quantity', 'Price', 'Total'];
+    final data = invoice.items.map((item) {
+
+      String itemTitle = item.title.toString().trim();
+      if (itemTitle.isEmpty) {
+        itemTitle = "No Name Item";
+      }
+
+      return [
+        itemTitle, 
+        item.quantity.toString(),
+        item.amount.toStringAsFixed(2),
+        (item.quantity * item.amount).toStringAsFixed(2),
+      ];
+    }).toList();
+
+    return pw.TableHelper.fromTextArray(
+      headers: headers,
+      data: data,
+      border: null,
+      headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, color: PdfColors.white),
+      headerDecoration: const pw.BoxDecoration(color: PdfColors.blue),
+      cellHeight: 30,
+      cellAlignments: {
+        0: pw.Alignment.centerLeft,
+        1: pw.Alignment.center,
+        2: pw.Alignment.centerRight,
+        3: pw.Alignment.centerRight,
+      },
+    );
+  }
+
+  pw.Widget _buildTotals() {
+    return pw.Container(
       alignment: pw.Alignment.centerRight,
-      child: pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.end,
-        children: [
-          _buildTotalRow('SubTotal', invoice.subtotal.toStringAsFixed(2)),
-          _buildTotalRow('Discount', invoice.discount.toStringAsFixed(2)),
-          _buildTotalRow('Tax', invoice.tax.toStringAsFixed(2)),
-          pw.Divider(thickness: 1),
-          _buildTotalRow('Total', invoice.total.toStringAsFixed(2), isBold: true),
-        ],
+      child: pw.SizedBox(
+        width: 200,
+        child: pw.Column(
+          children: [
+            _row("Subtotal", "BDT ${invoice.subtotal.toStringAsFixed(2)}"),
+            _row("Discount", "- BDT ${invoice.discount.toStringAsFixed(2)}"),
+            _row("Tax", "BDT ${invoice.tax.toStringAsFixed(2)}"),
+            pw.Divider(color: PdfColors.grey),
+            _row("Grand Total", "BDT ${invoice.total.toStringAsFixed(2)}", isBold: true),
+          ],
+        ),
       ),
     );
   }
 
-  pw.Widget _buildProfessionalLayout(CompanyModel company, CustomerModel customer, pw.ImageProvider? logo) {
-    // Basic fallback for professional to ensure it renders
-    return _buildClassicLayout(company, customer, logo);
-  }
-
-  pw.Widget _buildTotalRow(String label, String value, {bool isBold = false}) {
+  pw.Widget _row(String label, String value, {bool isBold = false}) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 2),
       child: pw.Row(
-        mainAxisSize: pw.MainAxisSize.min,
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
         children: [
           pw.Text(label, style: pw.TextStyle(fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal)),
-          pw.SizedBox(width: 20),
           pw.Text(value, style: pw.TextStyle(fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal)),
         ],
       ),
     );
+  }
+
+  Future<Uint8List> _generatePdf(CompanyModel company, CustomerModel customer, String template) async {
+    return generatePdf(company, customer, template);
   }
 }
