@@ -41,6 +41,8 @@ dependencies:
   toastification: ^3.0.3
   rxdart: ^0.28.0
   animated_theme_switcher: ^2.0.10
+  easy_localization: ^3.0.8
+
 
 
 dev_dependencies:
