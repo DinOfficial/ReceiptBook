@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -43,7 +44,7 @@ class _AddNewScreenState extends State<AddNewScreen> {
                   HugeIcon(icon: HugeIcons.strokeRoundedAddInvoice, color: Colors.white, size: 100),
                   const SizedBox(height: 12),
                   Text(
-                    'Create new invoice',
+                    context.tr('create_new_invoice'),
                     style: GoogleFonts.akayaKanadaka(
                       fontSize: 32,
                       fontWeight: FontWeight.w600,
@@ -74,7 +75,7 @@ class _AddNewScreenState extends State<AddNewScreen> {
                 children: [
                   const HugeIcon(icon: HugeIcons.strokeRoundedUser, color: Colors.white, size: 100),
                   Text(
-                    'Create new customer',
+                    context.tr('create_new_customer'),
                     style: GoogleFonts.akayaKanadaka(
                       fontSize: 32,
                       fontWeight: FontWeight.w600,

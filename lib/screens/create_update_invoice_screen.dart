@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -56,9 +57,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     _invoiceNoController.text = 'INV${Random().nextInt(999999).toString().padLeft(6, '0')}';
     selectedDate = DateTime.now();
     _invoiceDateController.text = DateFormat('dd-MMM-yyyy').format(selectedDate!);
-    _timeController.text = DateFormat(
-      'HH:mm a',
-    ).format(DateTime.now());
+    _timeController.text = DateFormat('HH:mm a').format(DateTime.now());
     selectedStatus = statusItems[0];
 
     // Check if editing
@@ -122,7 +121,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
     final uid = FirebaseAuth.instance.currentUser!.uid;
 
     return Scaffold(
-      appBar: MainAppBar(title: widget.invoice == null ? 'Create New Invoice' : 'Edit Invoice'),
+      appBar: MainAppBar(
+        title: widget.invoice == null
+            ? context.tr('create_update_invoice_screen.create_new_invoice')
+            : context.tr('create_update_invoice_screen.edit_invoice'),
+      ),
       bottomNavigationBar: BottomAppBar(
         child: SizedBox(
           height: 60,
@@ -132,14 +135,19 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   ? null
                   : () async {
                       if (itemProvider.itemList.isEmpty) {
-                        ToastHelper.showError(context, 'Please add items');
+                        ToastHelper.showError(
+                          context,
+                          context.tr('create_update_invoice_screen.add_items'),
+                        );
                       } else {
                         if (_formKey.currentState!.validate()) {
                           if (selectedCustomer == null) {
-                            ToastHelper.showError(context, 'Please select a customer');
+                            ToastHelper.showError(
+                              context,
+                              context.tr('create_update_invoice_screen.select_customer'),
+                            );
                             return;
                           }
-
                           if (widget.invoice == null) {
                             // Create
                             final newInvoice = await invoiceProvider.createInvoice(
@@ -205,7 +213,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                     },
               child: invoiceProvider.isProcessing
                   ? CircularProgressIndicator()
-                  : Text(widget.invoice == null ? 'Create Invoice' : 'Update Invoice'),
+                  : Text(
+                      widget.invoice == null
+                          ? context.tr('create_update_invoice_screen.create_invoice')
+                          : context.tr('create_update_invoice_screen.update_invoice'),
+                    ),
             ),
           ),
         ),
@@ -217,7 +229,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Bill To', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                context.tr('create_update_invoice_screen.bill_to'),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 12),
               Row(
                 children: [
@@ -227,9 +242,6 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) return CircularProgressIndicator();
                         final customers = snapshot.data!;
-                        if (kDebugMode) {
-                          print('all customer : $customers');
-                        }
 
                         // Handle Customer Selection for Edit Mode
                         if (widget.invoice != null && selectedCustomer == null) {
@@ -262,7 +274,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                               minWidth: 24,
                             ),
                           ),
-                          hint: const Text('Select customer', style: TextStyle(fontSize: 14)),
+                          hint: Text(context.tr('create_update_invoice_screen.customer')),
+                          style: TextStyle(fontSize: 14),
                           items: customers
                               .map(
                                 (customer) => DropdownMenuItem<CustomerModel>(
@@ -285,7 +298,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                                     horizontal: 10,
                                     vertical: 8,
                                   ),
-                                  hintText: 'Search for a customer...',
+                                  hintText: context.tr('create_update_invoice_screen.search'),
                                   hintStyle: const TextStyle(fontSize: 12),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
@@ -301,7 +314,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           ),
                           validator: (value) {
                             if (value == null) {
-                              return 'Please select customer.';
+                              return context.tr('create_update_invoice_screen.select_customer');
                             }
                             return null;
                           },
@@ -363,10 +376,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   Expanded(
                     child: TextFormField(
                       controller: _invoiceNoController,
-                      decoration: const InputDecoration(
-                        labelText: 'Invoice No.',
-                        prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedFile02),
-                        prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
+                      decoration: InputDecoration(
+                        labelText: context.tr('create_update_invoice_screen.invoice_no'),
+                        prefixIcon: const HugeIcon(icon: HugeIcons.strokeRoundedFile02),
+                        prefixIconConstraints: const BoxConstraints(minHeight: 24, minWidth: 34),
                       ),
                       readOnly: true,
                     ),
@@ -382,7 +395,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                         prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
                       ),
                       barrierDismissible: true,
-                      hint: const Text('Status', style: TextStyle(fontSize: 14)),
+                      hint: Text(
+                        context.tr('create_update_invoice_screen.status'),
+                        style: TextStyle(fontSize: 14),
+                      ),
                       items: statusItems
                           .map(
                             (item) => DropdownMenuItem<String>(
@@ -393,7 +409,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           .toList(),
                       validator: (value) {
                         if (value == null) {
-                          return 'Please select status.';
+                          return context.tr('create_update_invoice_screen.select_status');
                         }
                         return null;
                       },
@@ -433,10 +449,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       controller: _invoiceDateController,
                       readOnly: true,
                       onTap: _selectedDate,
-                      decoration: const InputDecoration(
-                        labelText: 'Date',
-                        prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedCalendar01),
-                        prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
+                      decoration: InputDecoration(
+                        labelText: context.tr('create_update_invoice_screen.date'),
+                        prefixIcon: const HugeIcon(icon: HugeIcons.strokeRoundedCalendar01),
+                        prefixIconConstraints: const BoxConstraints(minHeight: 24, minWidth: 34),
                       ),
                     ),
                   ),
@@ -447,7 +463,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       readOnly: true,
                       onTap: () => _selectTime(context),
                       decoration: InputDecoration(
-                        labelText: 'Time',
+                        labelText: context.tr('create_update_invoice_screen.time'),
                         prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedStopWatch),
                         prefixIconConstraints: const BoxConstraints(minHeight: 24, minWidth: 34),
                       ),
@@ -464,7 +480,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   prefixIcon: HugeIcon(icon: HugeIcons.strokeRoundedCreditCard),
                   prefixIconConstraints: BoxConstraints(minHeight: 24, minWidth: 34),
                 ),
-                hint: const Text('Payment System', style: TextStyle(fontSize: 14)),
+                hint: Text(
+                  context.tr('create_update_invoice_screen.payment_system'),
+                  style: TextStyle(fontSize: 14),
+                ),
                 items: paymentSystemItems
                     .map(
                       (item) => DropdownMenuItem<String>(
@@ -475,7 +494,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                     .toList(),
                 validator: (value) {
                   if (value == null) {
-                    return 'Please select payment system.';
+                    return context.tr('create_update_invoice_screen.select_payment_system');
                   }
                   return null;
                 },
@@ -507,14 +526,17 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                 mainAxisAlignment: .spaceBetween,
                 crossAxisAlignment: .center,
                 children: [
-                  Text('Items', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(
+                    context.tr('create_update_invoice_screen.items'),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                   SizedBox(
                     child: ElevatedButton.icon(
                       onPressed: () {
                         _openItemDialog(context, itemProvider);
                       },
                       icon: const HugeIcon(icon: HugeIcons.strokeRoundedAddCircle),
-                      label: const Text('Add Item'),
+                      label: Text(context.tr('create_update_invoice_screen.add_items')),
                     ),
                   ),
                 ],
@@ -532,7 +554,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                               size: 92,
                             ),
                             Text(
-                              'No item added',
+                              context.tr('create_update_invoice_screen.not_item'),
                               style: TextStyle(fontSize: 20, color: Colors.black38),
                             ),
                           ],
@@ -550,7 +572,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           onTap: () =>
                               _openItemDialog(context, itemProvider, item: item, index: index),
                           title: Text(item.title),
-                          subtitle: Text('Quantity: ${item.quantity}'),
+                          subtitle: Text(
+                            context.tr('create_update_invoice_screen.quantity ${item.quantity}'),
+                          ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -571,15 +595,15 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       },
                     ),
               const SizedBox(height: 24),
-              const Text(
-                'Payment Details',
+              Text(
+                context.tr('create_update_invoice_screen.payment_details'),
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Subtotal'),
+                  Text(context.tr('create_update_invoice_screen.subtotal')),
                   Text('৳ ${itemProvider.subtotal.toStringAsFixed(2)}'),
                 ],
               ),
@@ -587,7 +611,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Discount: ${itemProvider.discountAmount().toStringAsFixed(2)}'),
+                  Text(
+                    '${context.tr('create_update_invoice_screen.discount')} ${itemProvider.discountAmount().toStringAsFixed(2)}',
+                  ),
                   SizedBox(
                     width: 100,
                     child: TextFormField(
@@ -610,7 +636,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Tax: ${itemProvider.taxAmount().toStringAsFixed(2)}'),
+                  Text(
+                    '${context.tr('create_update_invoice_screen.tax')} ${itemProvider.taxAmount().toStringAsFixed(2)}',
+                  ),
                   SizedBox(
                     width: 100,
                     child: TextFormField(
@@ -632,7 +660,10 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Grand Total', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    context.tr('create_update_invoice_screen.grand_total'),
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   Text(
                     '৳ ${itemProvider.grandTotal.toStringAsFixed(2)}',
                     style: const TextStyle(fontWeight: FontWeight.bold),

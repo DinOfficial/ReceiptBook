@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -26,14 +27,14 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
 
     if (uid == null) {
       return Scaffold(
-        appBar: MainAppBar(title: 'Customers'),
-        body: Center(child: Text('Please log in to view customers')),
+        appBar: MainAppBar(title: context.tr('customer_list_screen.customers')),
+        body: Center(child: Text(context.tr('customer_list_screen.please_log_in'))),
       );
     }
 
     return Scaffold(
       appBar: MainAppBar(
-        title: 'Customers',
+        title: context.tr('customer_list_screen.customers'),
         actions: [
           StreamBuilder<List<CustomerModel>>(
             stream: context.watch<CustomerProvider>().streamCustomers(uid),
@@ -67,10 +68,13 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                 children: [
                   Icon(Icons.person_off, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
-                  Text('No customers yet', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                  Text(
+                    context.tr('customer_list_screen.no_customers'),
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
                   SizedBox(height: 8),
                   Text(
-                    'Add your first customer using the + button',
+                    context.tr('customer_list_screen.add_customer_first'),
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                 ],
@@ -98,14 +102,12 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: Text('Delete Customer?'),
-                            content: Text(
-                              'This will delete the customer AND ALL associated invoices. This action cannot be undone.',
-                            ),
+                            title: Text(context.tr('customer_list_screen.delete_customer')),
+                            content: Text(context.tr('customer_list_screen.delete_info')),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context),
-                                child: Text('Cancel'),
+                                child: Text(context.tr('customer_list_screen.cancel')),
                               ),
                               TextButton(
                                 onPressed: () {
@@ -116,7 +118,10 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                                   );
                                   Navigator.pop(context);
                                 },
-                                child: Text('Delete', style: TextStyle(color: Colors.red)),
+                                child: Text(
+                                  context.tr('customer_list_screen.delete'),
+                                  style: TextStyle(color: Colors.red),
+                                ),
                               ),
                             ],
                           ),
@@ -125,7 +130,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
                       icon: Icons.delete_outline_rounded,
-                      label: 'Delete',
+                      label: context.tr('customer_list_screen.delete'),
                     ),
                     SlidableAction(
                       onPressed: (BuildContext context) {
@@ -138,7 +143,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                       icon: Icons.edit_location_alt_outlined,
-                      label: 'Edit',
+                      label: context.tr('customer_list_screen.edit'),
                     ),
                   ],
                 ),
@@ -151,25 +156,26 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: Text('Delete Customer?'),
-                            content: Text(
-                              'This will delete the customer AND ALL associated invoices. This action cannot be undone.',
-                            ),
+                            title: Text(context.tr('customer_list_screen.delete_customer')),
+                            content: Text(context.tr('customer_list_screen.delete_info')),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context),
-                                child: Text('Cancel'),
+                                child: Text(context.tr('customer_list_screen.cancel')),
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pop(context); // Close dialog
                                   context.read<CustomerProvider>().deleteCustomer(
                                     context,
                                     customer.id!,
                                     context.read<InvoiceProvider>(),
                                   );
+                                  Navigator.pop(context);
                                 },
-                                child: Text('Delete', style: TextStyle(color: Colors.red)),
+                                child: Text(
+                                  context.tr('customer_list_screen.delete'),
+                                  style: TextStyle(color: Colors.red),
+                                ),
                               ),
                             ],
                           ),
@@ -178,7 +184,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
                       icon: Icons.delete_outline_rounded,
-                      label: 'Delete',
+                      label: context.tr('customer_list_screen.delete'),
                     ),
                     SlidableAction(
                       onPressed: (BuildContext context) {
@@ -191,7 +197,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                       icon: Icons.edit_location_alt_outlined,
-                      label: 'Edit',
+                      label: context.tr('customer_list_screen.edit'),
                     ),
                   ],
                 ),
@@ -248,7 +254,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: Text('Cancel'),
+                            child: Text(context.tr('customer_list_screen.cancel')),
                           ),
                         ],
                       ),
@@ -315,7 +321,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child: Text('Cancel'),
+                              child: Text(context.tr('customer_list_screen.cancel')),
                             ),
                           ],
                         ),

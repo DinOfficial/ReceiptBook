@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -33,13 +34,16 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
       _phoneController.text = widget.customer!.phone;
       _emailController.text = widget.customer!.email;
     }
-    print('CustomerList: ${widget.customer}');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(title: widget.customer == null ? 'Create customer' : 'Edit Customer'),
+      appBar: MainAppBar(
+        title: widget.customer == null
+            ? context.tr('create_update_customer_screen.add_customer')
+            : context.tr('create_update_customer_screen.update_customer'),
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Form(
@@ -50,17 +54,21 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
             children: [
               SizedBox(height: 32),
               Text(
-                widget.customer == null ? 'Add customer details' : 'Update customer details',
+                widget.customer == null
+                    ? context.tr('create_update_customer_screen.add_customer_details')
+                    : context.tr('create_update_customer_screen.update_customer_details'),
                 style: GoogleFonts.akayaKanadaka(fontSize: 28, fontWeight: FontWeight.w400),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 48),
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(label: Text('Customer name')),
+                decoration: InputDecoration(
+                  label: Text(context.tr('create_update_customer_screen.customer_name')),
+                ),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Customer name required !';
+                    return context.tr('create_update_customer_screen.customer_name_required !');
                   }
                   return null;
                 },
@@ -69,10 +77,12 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(label: Text('Email')),
+                decoration: InputDecoration(
+                  label: Text(context.tr('create_update_customer_screen.email')),
+                ),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Customer email required !';
+                    return context.tr('create_update_customer_screen.email_required !');
                   }
                   return null;
                 },
@@ -80,10 +90,12 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
               SizedBox(height: 12),
               TextFormField(
                 controller: _addressController,
-                decoration: InputDecoration(label: Text('Address')),
+                decoration: InputDecoration(
+                  label: Text(context.tr('create_update_customer_screen.address')),
+                ),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Address  required !';
+                    return context.tr('create_update_customer_screen.address_required !');
                   }
                   return null;
                 },
@@ -92,10 +104,12 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
               TextFormField(
                 controller: _phoneController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(label: Text('Phone')),
+                decoration: InputDecoration(
+                  label: Text(context.tr('create_update_customer_screen.phone')),
+                ),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Phone  required !';
+                    return context.tr('create_update_customer_screen.phone_required !');
                   }
                   return null;
                 },
@@ -112,7 +126,9 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
                       child: OutlinedButton(
                         onPressed: _addCustomer,
                         child: Text(
-                          widget.customer == null ? 'Add' : 'Update',
+                          widget.customer == null
+                              ? context.tr('create_update_customer_screen.add')
+                              : context.tr('create_update_customer_screen.update'),
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
@@ -154,9 +170,9 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
       context.read<CustomerProvider>().addCustomer(context, name, address, phone, email);
       if (mounted) {
         clearData();
-        ToastHelper.showSuccess(context, 'Customer data save successfully!');
+        ToastHelper.showSuccess(context, context.tr('create_update_customer_screen.success'));
       } else {
-        ToastHelper.showError(context, 'Error saving customer data');
+        ToastHelper.showError(context, context.tr('create_update_customer_screen.error'));
       }
     }
     FocusScope.of(context).unfocus();

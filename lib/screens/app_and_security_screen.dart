@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/biometric_provider.dart';
@@ -25,7 +26,7 @@ class _AppAndSecurityScreenState extends State<AppAndSecurityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MainAppBar(title: 'App & Security'),
+      appBar: MainAppBar(title: context.tr('app_and_security_screen.app_and_security')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -33,11 +34,14 @@ class _AppAndSecurityScreenState extends State<AppAndSecurityScreen> {
             builder: (context, biometricProvider, _) {
               return SwitchListTile(
                 activeColor: const Color(0xff2692ce),
-                title: const Text('Biometric Login', style: TextStyle(fontSize: 20)),
+                title: Text(
+                  context.tr('app_and_security_screen.biometric_login'),
+                  style: TextStyle(fontSize: 20),
+                ),
                 subtitle: Text(
                   biometricProvider.canCheckBiometrics
-                      ? 'Use fingerprint or face unlock for extra security'
-                      : 'No biometric credentials found. Please add fingerprint or face lock in device settings',
+                      ? context.tr('app_and_security_screen.user_fingerprint')
+                      : context.tr('app_and_security_screen.no_biometric_credentials'),
                 ),
                 secondary: const Icon(Icons.fingerprint, size: 32, color: Color(0xff2692ce)),
                 value: biometricProvider.isBiometricEnabled,

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -16,18 +17,18 @@ class AppMainLayout extends StatefulWidget {
 }
 
 class _AppMainLayoutState extends State<AppMainLayout> {
-  int _selectedIndex = 0;
-  static final List<Widget> _pages = [
+  int selectedIndex = 0;
+  final List<Widget> pages = [
     HomeScreen(title: 'Home'),
     AddNewScreen(title: 'Add New'),
-    CustomerListScreen(title: 'Persons'),
+    CustomerListScreen(title: 'Customers'),
     SettingsScreen(title: 'Settings'),
   ];
-
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      body: _pages.elementAt(_selectedIndex),
+      body: pages.elementAt(selectedIndex),
       bottomNavigationBar: Container(
         height: 66,
         width: MediaQuery.of(context).size.width * .8,
@@ -51,37 +52,37 @@ class _AppMainLayoutState extends State<AppMainLayout> {
             tabs: <GButton>[
               GButton(
                 icon: Icons.home,
-                text: 'Home',
+                text: context.tr('main_layout.home'),
                 iconSize: 28,
-                iconColor: _selectedIndex == 0 ? Colors.black87 : Colors.white54,
+                iconColor: selectedIndex == 0 ? Colors.black87 : Colors.white54,
                 gap: 2,
               ),
               GButton(
                 icon: Icons.add,
-                text: 'Add New',
+                text: context.tr('main_layout.add_new'),
                 iconSize: 28,
-                iconColor: _selectedIndex == 1 ? Colors.black87 : Colors.white54,
+                iconColor: selectedIndex == 1 ? Colors.black87 : Colors.white54,
                 gap: 2,
               ),
               GButton(
                 icon: Icons.person,
-                text: 'Customers',
+                text: context.tr('main_layout.persons'),
                 iconSize: 28,
-                iconColor: _selectedIndex == 2 ? Colors.black87 : Colors.white54,
+                iconColor: selectedIndex == 2 ? Colors.black87 : Colors.white54,
                 gap: 2,
               ),
               GButton(
                 icon: Icons.settings,
-                text: 'Settings',
+                text: context.tr('main_layout.settings'),
                 iconSize: 28,
-                iconColor: _selectedIndex == 3 ? Colors.black87 : Colors.white54,
+                iconColor: selectedIndex == 3 ? Colors.black87 : Colors.white54,
                 gap: 2,
               ),
             ],
-            selectedIndex: _selectedIndex,
+            selectedIndex: selectedIndex,
             onTabChange: (index) {
               setState(() {
-                _selectedIndex = index;
+                selectedIndex = index;
               });
             },
           ),

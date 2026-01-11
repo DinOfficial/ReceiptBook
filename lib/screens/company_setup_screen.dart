@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -73,7 +74,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                   SlideEffect(),
                 ],
                 child: Text(
-                  'Setup your company details',
+                  context.tr('company_setup.setup_your_company_details'),
                   style: GoogleFonts.akayaKanadaka(fontSize: 24, fontWeight: FontWeight.w400),
                   textAlign: TextAlign.center,
                 ),
@@ -104,13 +105,17 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
                         ),
                         child: Center(
                           child: Text(
-                            'Logo',
+                            context.tr('company_setup.logo'),
                             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                           ),
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Expanded(child: _image != null ? Text(_image!.name) : Text('Select Logo')),
+                      Expanded(
+                        child: _image != null
+                            ? Text(_image!.name)
+                            : Text(context.tr('company_setup.please_select_company_logo')),
+                      ),
                     ],
                   ),
                 ),
@@ -128,10 +133,10 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
               TextFormField(
                 controller: _nameController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(label: Text('Company Name')),
+                decoration: InputDecoration(label: Text(context.tr('company_setup.company_name'))),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Company name required !';
+                    return context.tr('company_setup.company_name_required');
                   }
                   return null;
                 },
@@ -140,10 +145,10 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
               TextFormField(
                 controller: _emailController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(label: Text('Email')),
+                decoration: InputDecoration(label: Text(context.tr('company_setup.email'))),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Email  required !';
+                    return context.tr('company_setup.email_required');
                   }
                   return null;
                 },
@@ -152,10 +157,10 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
               TextFormField(
                 controller: _addressController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(label: Text('Address')),
+                decoration: InputDecoration(label: Text(context.tr('company_setup.address'))),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Address  required !';
+                    return context.tr('company_setup.address_required');
                   }
                   return null;
                 },
@@ -164,10 +169,10 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
               TextFormField(
                 controller: _phoneController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                decoration: InputDecoration(label: Text('Phone')),
+                decoration: InputDecoration(label: Text(context.tr('company_setup.phone'))),
                 validator: (String? value) {
                   if (value == null || value.isEmpty) {
-                    return 'Phone  required !';
+                    return context.tr('company_setup.phone_required');
                   }
                   return null;
                 },
@@ -200,8 +205,7 @@ class _CompanySetupScreenState extends State<CompanySetupScreen> {
   void _onTapSubmit() {
     final isFormValid = _formKey.currentState!.validate();
     if (_image == null) {
-      final uid = FirebaseAuth.instance.currentUser?.uid;
-      ToastHelper.showError(context, 'Please select company logo (Required for update)');
+      ToastHelper.showError(context, context.tr('company_setup.please_select_company_logo'));
       return;
     }
     if (isFormValid) {
