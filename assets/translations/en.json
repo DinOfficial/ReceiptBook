@@ -178,5 +178,33 @@
     "password_must_confirm": "Password and confirm password must be same",
     "register": "Register",
     "have_an_account": "Have an account ? Login"
+  },
+  "invoice_item_dialog": {
+    "edit_item": "Edit Item",
+    "add_item": "Add Item",
+    "item_title": "Item Title",
+    "enter_title": "Please enter item title",
+    "quantity": "Quantity",
+    "enter_quantity": "Please enter quantity",
+    "valid_quantity": "Please enter a valid quantity",
+    "amount": "Amount",
+    "enter_amount": "Please enter amount",
+    "valid_amount": "Please enter a valid amount",
+    "update": "Update",
+    "add": "Add"
+  },
+  "search_delegate": {
+    "search_invoices": "Search invoices",
+    "search_customers": "Search Customers",
+    "no_invoices_found": "No invoices found",
+    "no_customers_found": "No Customers found"
+  },
+  "statics_card": {
+    "statistics": "Statistics",
+    "total": "Total",
+    "amount": "Amount",
+    "paid": "Paid",
+    "sent": "Sent",
+    "draft": "Draft"
   }
 }

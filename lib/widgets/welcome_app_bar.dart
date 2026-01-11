@@ -13,7 +13,6 @@ class WelcomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   State<WelcomeAppBar> createState() => _WelcomeAppBarState();
 
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
@@ -47,7 +46,6 @@ class _WelcomeAppBarState extends State<WelcomeAppBar> {
                   return DropdownMenuItem<String>(value: value['code'], child: Text(value['name']));
                 }).toList(),
                 onChanged: (String? newValue) async {
-                  print('local new Value: $newValue');
                   if (newValue != null && newValue != currentLang.languageCode) {
                     await context.setLocale(Locale(newValue));
                     if (mounted) {

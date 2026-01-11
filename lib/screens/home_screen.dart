@@ -6,8 +6,6 @@ import 'package:receipt_book/models/invoice_model.dart';
 import 'package:receipt_book/provider/auth_check_provider.dart';
 import 'package:receipt_book/provider/invoice_provider.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
-import 'package:receipt_book/widgets/search_delegates.dart';
-import '../widgets/header_home.dart';
 import '../widgets/statistics_card.dart';
 import '../widgets/transection_list_tile.dart';
 

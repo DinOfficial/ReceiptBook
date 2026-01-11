@@ -1,20 +1,20 @@
 {
   "welcome_screen": {
     "receipt_book": "রসিদ বই",
-    "continue_with_google": "গুগল দিয়ে চালিয়ে যান",
-    "continue_with_email": "ইমেইল দিয়ে চালিয়ে যান",
-    "forgot_password": "পাসওয়ার্ড ভুলে গেছেন",
+    "continue_with_google": "গুগল দিয়ে চালিয়ে যান",
+    "continue_with_email": "ইমেইল দিয়ে চালিয়ে যান",
+    "forgot_password": "পাসওয়ার্ড ভুলে গেছেন",
     "don't_account": "একাউন্ট নেই? একাউন্ট তৈরি করুন"
   },
   "add_new_screen": {
-    "create_new_invoice": "নতুন ইনভয়েস তৈরি করুন",
+    "create_new_invoice": "নতুন ইনভয়েস তৈরি করুন",
     "create_new_customer": "নতুন কাস্টমার তৈরি করুন"
   },
   "app_and_security_screen": {
     "app_and_security": "অ্যাপ ও নিরাপত্তা",
-    "biometric_login": "বায়োমেট্রিক লগইন",
+    "biometric_login": "বায়োমেট্রিক লগইন",
     "user_fingerprint": "অতিরিক্ত নিরাপত্তার জন্য ফিঙ্গারপ্রিন্ট বা ফেস আনলক ব্যবহার করুন",
-    "no_biometric_credentials": "কোনো বায়োমেট্রিক তথ্য পাওয়া যায়নি। অনুগ্রহ করে ডিভাইস সেটিংসে ফিঙ্গারপ্রিন্ট বা ফেস লক যুক্ত করুন"
+    "no_biometric_credentials": "কোনো বায়োমেট্রিক তথ্য পাওয়া যায়নি। ডিভাইস সেটিংসে ফিঙ্গারপ্রিন্ট বা ফেস লক যোগ করুন"
   },
   "main_layout": {
     "home": "হোম",
@@ -62,24 +62,24 @@
     "error": "কাস্টমারের তথ্য সংরক্ষণে সমস্যা হয়েছে"
   },
   "create_update_invoice_screen": {
-    "create_new_invoice": "নতুন ইনভয়েস তৈরি করুন",
-    "edit_invoice": "ইনভয়েস সম্পাদনা করুন",
+    "create_new_invoice": "নতুন ইনভয়েস তৈরি করুন",
+    "edit_invoice": "ইনভয়েস সম্পাদনা করুন",
     "add_items": "আইটেম যোগ করুন",
     "select_customer": "অনুগ্রহ করে একজন কাস্টমার নির্বাচন করুন",
-    "create_invoice": "ইনভয়েস তৈরি করুন",
-    "update_invoice": "ইনভয়েস আপডেট করুন",
-    "bill_to": "বিল প্রাপকের নাম",
+    "create_invoice": "ইনভয়েস তৈরি করুন",
+    "update_invoice": "ইনভয়েস আপডেট করুন",
+    "bill_to": "বিল প্রদান করুন",
     "customer": "কাস্টমার নির্বাচন করুন",
     "search": "কাস্টমার খুঁজুন...",
-    "invoice_no": "ইনভয়েস নম্বর",
+    "invoice_no": "ইনভয়েস নম্বর",
     "status": "স্ট্যাটাস",
-    "select_status": "অনুগ্রহ করে স্ট্যাটাস নির্বাচন করুন",
+    "select_status": "স্ট্যাটাস নির্বাচন করুন",
     "date": "তারিখ",
-    "time": "সময়",
+    "time": "সময়",
     "payment_system": "পেমেন্ট পদ্ধতি",
     "select_payment_system": "পেমেন্ট পদ্ধতি নির্বাচন করুন",
     "items": "আইটেমসমূহ",
-    "not_item": "কোনো আইটেম যোগ করা হয়নি",
+    "not_item": "কোনো আইটেম যোগ করা হয়নি",
     "quantity": "পরিমাণ",
     "payment_details": "পেমেন্ট বিবরণ",
     "subtotal": "সাবটোটাল: ",
@@ -88,12 +88,12 @@
     "grand_total": "সর্বমোট: "
   },
   "customer_list_screen": {
-    "customers": "কাস্টমার তালিকা",
-    "please_log_in": "কাস্টমার দেখার জন্য লগইন করুন",
+    "customers": "কাস্টমার",
+    "please_log_in": "কাস্টমার দেখতে লগইন করুন",
     "no_customers": "এখনো কোনো কাস্টমার নেই",
-    "add_customer_first": "+ বাটন ব্যবহার করে আপনার প্রথম কাস্টমার যোগ করুন",
+    "add_customer_first": "+ বাটন ব্যবহার করে প্রথম কাস্টমার যোগ করুন",
     "delete_customer": "কাস্টমার ডিলিট করবেন?",
-    "delete_info": "এতে কাস্টমার এবং সংশ্লিষ্ট সব ইনভয়েস ডিলিট হয়ে যাবে। এটি আর ফিরিয়ে আনা যাবে না।",
+    "delete_info": "এই কাস্টমার এবং সংশ্লিষ্ট সব ইনভয়েস ডিলিট হয়ে যাবে। এটি ফেরত আনা যাবে না।",
     "cancel": "বাতিল",
     "delete": "ডিলিট",
     "edit": "এডিট"
@@ -101,7 +101,7 @@
   "home_screen": {
     "home": "হোম",
     "user_not_logged": "ইউজার লগইন করা নেই",
-    "no_invoices": "এখনো কোনো ইনভয়েস নেই"
+    "no_invoices": "এখনো কোনো ইনভয়েস নেই"
   },
   "internet_access_screen": {
     "internet_access": "ইন্টারনেট সংযোগ",
@@ -109,9 +109,9 @@
   },
   "invoice_settings_screen": {
     "settings": "সেটিংস",
-    "invoice_template": "ইনভয়েস টেমপ্লেট",
-    "select_template": "আপনার ব্যবসার সাথে মানানসই টেমপ্লেট নির্বাচন করুন",
-    "no_payment_methods_added": "কোনো পেমেন্ট পদ্ধতি যোগ করা হয়নি",
+    "invoice_template": "ইনভয়েস টেমপ্লেট",
+    "select_template": "আপনার ব্যবসার জন্য উপযুক্ত টেমপ্লেট নির্বাচন করুন",
+    "no_payment_methods_added": "কোনো পেমেন্ট পদ্ধতি যোগ করা হয়নি",
     "payment_methods": "পেমেন্ট পদ্ধতি",
     "add_payment_method": "পেমেন্ট পদ্ধতি যোগ করুন",
     "cancel": "বাতিল",
@@ -126,23 +126,85 @@
     "system_default": "সিস্টেম ডিফল্ট",
     "follow_device_settings": "ডিভাইস সেটিং অনুসরণ করুন",
     "business_information": "ব্যবসার তথ্য",
-    "subtitle": "আপডেট | আপনার কোম্পানির তথ্য সম্পূর্ণ করুন",
-    "invoice_settings": "ইনভয়েস সেটিংস",
-    "choose_invoice_template": "ইনভয়েস টেমপ্লেট নির্বাচন করুন",
+    "subtitle": "আপডেট | কোম্পানির তথ্য সম্পূর্ণ করুন",
+    "invoice_settings": "ইনভয়েস সেটিংস",
+    "choose_invoice_template": "ইনভয়েস টেমপ্লেট নির্বাচন করুন",
     "app_and_security": "অ্যাপ ও নিরাপত্তা",
     "setup_app_security": "অ্যাপ নিরাপত্তা সেটআপ করুন",
     "terms_and_conditions": "শর্তাবলী",
-    "read_our_terms": "আমাদের শর্তাবলী পড়ুন",
+    "read_our_terms": "আমাদের শর্তাবলী পড়ুন",
     "data_privacy": "ডাটা প্রাইভেসি",
     "how_we_use_your_data": "আমরা কীভাবে আপনার ডাটা ব্যবহার করি",
-    "share_this_app": "এই অ্যাপ শেয়ার করুন",
-    "if_enjoy": "ভালো লাগলে বন্ধুদের সাথে শেয়ার করুন",
+    "share_this_app": "এই অ্যাপ শেয়ার করুন",
+    "if_enjoy": "ভালো লাগলে বন্ধুদের সাথে শেয়ার করুন",
     "logout": "লগআউট"
   },
   "share_app_screen": {
-    "share_app": "অ্যাপ শেয়ার করুন",
-    "share_this_app": "ReceiptBook বন্ধুদের সাথে শেয়ার করুন!",
-    "help_to_grow": "আপনার নেটওয়ার্কে শেয়ার করে আমাদের বড় হতে সাহায্য করুন",
-    "share_now": "এখনই শেয়ার করুন"
+    "share_app": "অ্যাপ শেয়ার করুন",
+    "share_this_app": "ReceiptBook বন্ধুদের সাথে শেয়ার করুন!",
+    "help_to_grow": "শেয়ার করে আমাদের বড় হতে সাহায্য করুন",
+    "share_now": "এখনই শেয়ার করুন"
+  },
+  "confirm_email_verification": {
+    "email_sent": "একটি ভেরিফিকেশন ইমেইল পাঠানো হয়েছে",
+    "back_to_login": "লগইনে ফিরে যান"
+  },
+  "forgot_email_screen": {
+    "enter_email": "আপনার ইমেইল লিখুন,",
+    "a_password_reset_link": "একটি পাসওয়ার্ড রিসেট লিংক পাঠানো হবে",
+    "email": "ইমেইল",
+    "send_reset_link": "রিসেট লিংক পাঠান"
+  },
+  "login": {
+    "welcome": "স্বাগতম",
+    "receipt_book": "রসিদ বই",
+    "log_in": "লগইন",
+    "email": "ইমেইল",
+    "password": "পাসওয়ার্ড",
+    "enter_email": "আপনার ইমেইল লিখুন",
+    "enter_password": "আপনার পাসওয়ার্ড লিখুন",
+    "forgot_password": "পাসওয়ার্ড ভুলে গেছেন?"
+  },
+  "register": {
+    "your_name": "আপনার নাম",
+    "enter_your_name": "আপনার নাম লিখুন",
+    "email": "ইমেইল",
+    "enter_your_email": "আপনার ইমেইল লিখুন",
+    "password": "পাসওয়ার্ড",
+    "enter_your_password": "আপনার পাসওয়ার্ড লিখুন",
+    "sixty_character": "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে",
+    "confirm_password": "পাসওয়ার্ড নিশ্চিত করুন",
+    "enter_your_confirm_password": "কনফার্ম পাসওয়ার্ড লিখুন",
+    "password_must_confirm": "পাসওয়ার্ড দুটি একই হতে হবে",
+    "register": "রেজিস্টার",
+    "have_an_account": "একাউন্ট আছে? লগইন করুন"
+  },
+  "invoice_item_dialog": {
+    "edit_item": "আইটেম সম্পাদনা",
+    "add_item": "আইটেম যোগ করুন",
+    "item_title": "আইটেম নাম",
+    "enter_title": "আইটেমের নাম লিখুন",
+    "quantity": "পরিমাণ",
+    "enter_quantity": "পরিমাণ লিখুন",
+    "valid_quantity": "সঠিক পরিমাণ লিখুন",
+    "amount": "মূল্য",
+    "enter_amount": "মূল্য লিখুন",
+    "valid_amount": "সঠিক মূল্য লিখুন",
+    "update": "আপডেট",
+    "add": "যোগ করুন"
+  },
+  "search_delegate": {
+    "search_invoices": "ইনভয়েস খুঁজুন",
+    "search_customers": "কাস্টমার খুঁজুন",
+    "no_invoices_found": "কোনো ইনভয়েস পাওয়া যায়নি",
+    "no_customers_found": "কোনো কাস্টমার পাওয়া যায়নি"
+  },
+  "statics_card": {
+    "statistics": "পরিসংখ্যান",
+    "total": "মোট",
+    "amount": "পরিমাণ",
+    "paid": "পরিশোধিত",
+    "sent": "পাঠানো হয়েছে",
+    "draft": "ড্রাফট"
   }
 }

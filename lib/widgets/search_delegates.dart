@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart' as context;
 import 'package:flutter/material.dart';
 import 'package:receipt_book/models/customer_model.dart';
 import 'package:receipt_book/models/invoice_model.dart';
@@ -10,7 +11,7 @@ class InvoiceSearchDelegate extends SearchDelegate<InvoiceModel?> {
   InvoiceSearchDelegate(this.invoices);
 
   @override
-  String get searchFieldLabel => 'Search invoices...';
+  String get searchFieldLabel => context.tr('search_delegate.search_invoices');
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -78,7 +79,7 @@ class InvoiceSearchDelegate extends SearchDelegate<InvoiceModel?> {
             Icon(Icons.search_off, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text(
-              'No invoices found',
+              context.tr('search_delegate.no_invoices_found'),
               style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
           ],
@@ -104,7 +105,7 @@ class CustomerSearchDelegate extends SearchDelegate<CustomerModel?> {
   CustomerSearchDelegate(this.customers);
 
   @override
-  String get searchFieldLabel => 'Search customers...';
+  String get searchFieldLabel => context.tr('search_delegate.search_customers');
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -172,7 +173,7 @@ class CustomerSearchDelegate extends SearchDelegate<CustomerModel?> {
             Icon(Icons.person_search, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text(
-              'No customers found',
+              context.tr('search_delegate.no_customers_found'),
               style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
           ],

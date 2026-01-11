@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:receipt_book/widgets/search_delegates.dart';
 
@@ -39,8 +40,8 @@ class StatisticsCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Statistics',
+              Text(
+                context.tr('statics_card.statistics'),
                 style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
               ),
               IconButton(
@@ -59,7 +60,7 @@ class StatisticsCard extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: _StatCard(
-                    title: 'Total',
+                    title: context.tr('statics_card.total'),
                     value: totalInvoices.toString(),
                     icon: Icons.receipt_long,
                   ),
@@ -68,7 +69,7 @@ class StatisticsCard extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: _StatCard(
-                    title: 'Amount',
+                    title: context.tr('statics_card.amount'),
                     value: '৳ ${totalAmount.toStringAsFixed(0)}',
                     icon: Icons.attach_money,
                   ),
@@ -84,7 +85,7 @@ class StatisticsCard extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: _StatCard(
-                    title: 'Paid',
+                    title: context.tr('statics_card.paid'),
                     value: paidCount.toString(),
                     icon: Icons.check_circle,
                     color: Colors.green.shade100,
@@ -94,7 +95,7 @@ class StatisticsCard extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: _StatCard(
-                    title: 'Sent',
+                    title: context.tr('statics_card.sent'),
                     value: sentCount.toString(),
                     icon: Icons.send,
                     color: Colors.orange.shade100,
@@ -104,7 +105,7 @@ class StatisticsCard extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: _StatCard(
-                    title: 'Draft',
+                    title: context.tr('statics_card.draft'),
                     value: draftCount.toString(),
                     icon: Icons.drafts,
                     color: Colors.grey.shade200,

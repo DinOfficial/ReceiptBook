@@ -1,10 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:receipt_book/models/item_model.dart';
 
 class InvoiceItemDialog extends StatefulWidget {
-  final ItemModel? item; // null for add, non-null for edit
-  final int? index; // index in the list for editing
+  final ItemModel? item;
+  final int? index;
 
   const InvoiceItemDialog({super.key, this.item, this.index});
 
@@ -22,12 +23,8 @@ class _InvoiceItemDialogState extends State<InvoiceItemDialog> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.item?.title ?? '');
-    _quantityController = TextEditingController(
-      text: widget.item?.quantity.toString() ?? '',
-    );
-    _amountController = TextEditingController(
-      text: widget.item?.amount.toString() ?? '',
-    );
+    _quantityController = TextEditingController(text: widget.item?.quantity.toString() ?? '');
+    _amountController = TextEditingController(text: widget.item?.amount.toString() ?? '');
   }
 
   @override
@@ -43,7 +40,11 @@ class _InvoiceItemDialogState extends State<InvoiceItemDialog> {
     final isEditing = widget.item != null;
 
     return AlertDialog(
-      title: Text(isEditing ? 'Edit Item' : 'Add Item'),
+      title: Text(
+        isEditing
+            ? context.tr('invoice_item_dialog.edit_item')
+            : context.tr('invoice_item_dialog.add_item'),
+      ),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -52,13 +53,13 @@ class _InvoiceItemDialogState extends State<InvoiceItemDialog> {
             children: [
               TextFormField(
                 controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Item Title',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: context.tr('invoice_item_dialog.item_title'),
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter item title';
+                    return context.tr('invoice_item_dialog.enter_title');
                   }
                   return null;
                 },
@@ -66,19 +67,19 @@ class _InvoiceItemDialogState extends State<InvoiceItemDialog> {
               const SizedBox(height: 12),
               TextFormField(
                 controller: _quantityController,
-                decoration: const InputDecoration(
-                  labelText: 'Quantity',
+                decoration: InputDecoration(
+                  labelText: context.tr('invoice_item_dialog.quantity'),
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter quantity';
+                    return context.tr('invoice_item_dialog.enter_quantity');
                   }
                   final qty = int.tryParse(value);
                   if (qty == null || qty <= 0) {
-                    return 'Please enter a valid quantity';
+                    return context.tr('invoice_item_dialog.valid_quantity');
                   }
                   return null;
                 },
@@ -86,23 +87,19 @@ class _InvoiceItemDialogState extends State<InvoiceItemDialog> {
               const SizedBox(height: 12),
               TextFormField(
                 controller: _amountController,
-                decoration: const InputDecoration(
-                  labelText: 'Amount',
+                decoration: InputDecoration(
+                  labelText: context.tr('invoice_item_dialog.amount'),
                   border: OutlineInputBorder(),
                 ),
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-                ],
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))],
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter amount';
+                    return context.tr('invoice_item_dialog.enter_amount');
                   }
                   final amount = double.tryParse(value);
                   if (amount == null || amount <= 0) {
-                    return 'Please enter a valid amount';
+                    return context.tr('invoice_item_dialog.valid_amount');
                   }
                   return null;
                 },
@@ -112,10 +109,7 @@ class _InvoiceItemDialogState extends State<InvoiceItemDialog> {
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
         ElevatedButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
@@ -127,7 +121,11 @@ class _InvoiceItemDialogState extends State<InvoiceItemDialog> {
               Navigator.pop(context, {'item': item, 'index': widget.index});
             }
           },
-          child: Text(isEditing ? 'Update' : 'Add'),
+          child: Text(
+            isEditing
+                ? context.tr('invoice_item_dialog.update')
+                : context.tr('invoice_item_dialog.add'),
+          ),
         ),
       ],
     );
