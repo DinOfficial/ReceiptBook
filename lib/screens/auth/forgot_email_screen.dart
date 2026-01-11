@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,8 +40,8 @@ class _ForgotEmailScreenState extends State<ForgotEmailScreen> {
                     height: 100,
                   ).animate().fadeIn(duration: 900.ms),
                   Text(
-                    'Enter your email, a password \n'
-                    ' reset link will be sent',
+                    '${'forgot_email_screen.enter_email'}\n'
+                    ' ${'forgot_email_screen.a_password_reset_link'}',
                     style: GoogleFonts.akayaKanadaka(fontSize: 20, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),
@@ -49,7 +50,9 @@ class _ForgotEmailScreenState extends State<ForgotEmailScreen> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(label: Text('Email')),
+                    decoration: InputDecoration(
+                      label: Text(context.tr('forgot_email_screen.email')),
+                    ),
                   ),
                   SizedBox(height: 24),
                   SizedBox(
@@ -63,7 +66,10 @@ class _ForgotEmailScreenState extends State<ForgotEmailScreen> {
                       },
                       child: logiProvider.getResetPasswordIsLoading
                           ? CircularProgressIndicator()
-                          : Text('Send reset link ', style: TextStyle(fontSize: 20)),
+                          : Text(
+                              context.tr('forgot_email_screen.send_reset_link'),
+                              style: TextStyle(fontSize: 20),
+                            ),
                     ),
                   ),
                   SizedBox(height: 24),

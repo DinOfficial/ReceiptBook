@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,11 +44,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 120,
                   ).animate().fadeIn(duration: 900.ms),
                   Text(
-                    'Welcome',
+                    context.tr('login.welcome'),
                     style: GoogleFonts.akayaKanadaka(fontSize: 32, fontWeight: FontWeight.w400),
                   ),
                   Text(
-                    '"Receipt Book"',
+                    '"${'login.receipt_book'}"',
                     style: GoogleFonts.akayaKanadaka(
                       fontSize: 38,
                       fontWeight: FontWeight.w600,
@@ -58,9 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextFormField(
                     controller: _emailController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(label: Text('Email')),
+                    decoration: InputDecoration(label: Text(context.tr('login.email'))),
                     validator: (String? value) {
-                      if (value == null || value.isEmpty) return 'Enter registered email';
+                      if (value == null || value.isEmpty) return context.tr('login.enter_email');
                       return null;
                     },
                   ),
@@ -70,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     obscureText: !passwordToggleProvider.isVisible,
                     decoration: InputDecoration(
-                      label: Text('Password'),
+                      label: Text(context.tr('login.password')),
                       suffixIcon: IconButton(
                         onPressed: () {
                           passwordToggleProvider.togglePassword();
@@ -83,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     validator: (String? value) {
-                      if (value == null || value.isEmpty) return 'Enter password';
+                      if (value == null || value.isEmpty) return context.tr('login.enter_password');
                       return null;
                     },
                   ),
@@ -93,8 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         Navigator.pushNamed(context, ForgotEmailScreen.name);
                       },
-                      child: const Text(
-                        'Forgot Password?',
+                      child: Text(
+                        context.tr('login.forgot_password'),
                         style: TextStyle(color: Colors.blue),
                       ),
                     ),
@@ -107,17 +108,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: loginProvider.getEmailLoginIsLoading ? null : _onTapLogin,
                       child: loginProvider.getEmailLoginIsLoading
                           ? CircularProgressIndicator()
-                          : Text('Log in ', style: TextStyle(fontSize: 20)),
+                          : Text(context.tr('login.log_in'), style: TextStyle(fontSize: 20)),
                     ),
                   ),
                   const SizedBox(height: 16),
                   const Row(
                     children: [
                       Expanded(child: Divider()),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text('OR'),
-                      ),
+                      Padding(padding: EdgeInsets.symmetric(horizontal: 8), child: Text('OR')),
                       Expanded(child: Divider()),
                     ],
                   ),
@@ -132,14 +130,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       icon: loginProvider.getGoogleUserLoading
                           ? CircularProgressIndicator()
                           : Image.asset('assets/images/g_logo.png', height: 24, width: 24),
-                      label: const Text('Sign in with Google'),
+                      label: Text(context.tr('welcome_screen.continue_with_google')),
                     ),
                   ),
                   SizedBox(height: 24),
                   TextButton(
                     onPressed: _onTapRegistration,
                     child: Text(
-                      'Don\'t have an account ? Create Account',
+                      context.tr('welcome_screen.don\'t_account'),
                       style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                   ),

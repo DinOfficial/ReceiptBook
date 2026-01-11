@@ -97,5 +97,86 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit"
+  },
+  "home_screen": {
+    "home": "Home",
+    "user_not_logged": "User not logged in",
+    "no_invoices": "No invoices yet"
+  },
+  "internet_access_screen": {
+    "internet_access": "Internet Access",
+    "no_internet_connection": "No Internet Connection !"
+  },
+  "invoice_settings_screen": {
+    "settings": "Settings",
+    "invoice_template": "Invoice Template",
+    "select_template": "Select the template that best fits your business style",
+    "no_payment_methods_added": "No payment methods added.",
+    "payment_methods": "Payment Methods",
+    "add_payment_method": "Add Payment Method",
+    "cancel": "Cancel",
+    "add": "Add"
+  },
+  "settings_screen": {
+    "settings": "Settings",
+    "app_theme": "App Theme",
+    "choose_theme": "Choose App Theme",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode",
+    "system_default": "System Default",
+    "follow_device_settings": "Follow device settings",
+    "business_information": "Business Information",
+    "subtitle": "Update | complete your company information",
+    "invoice_settings": "Invoice Settings",
+    "choose_invoice_template": "Choose your invoice template",
+    "app_and_security": "App & Security",
+    "setup_app_security": "Setup your app security",
+    "terms_and_conditions": "Terms & Conditions",
+    "read_our_terms": "Read our terms",
+    "data_privacy": "Data Privacy",
+    "how_we_use_your_data": "How we use your data",
+    "share_this_app": "Share this app",
+    "if_enjoy": "If you enjoy it share with your friends",
+    "logout": "Logout"
+  },
+  "share_app_screen": {
+    "share_app": "Share App",
+    "share_this_app": "Share ReceiptBook with friends!",
+    "help_to_grow": "Help us grow by sharing the app with your network.",
+    "share_now": "Share Now"
+  },
+  "confirm_email_verification": {
+    "email_sent": "A verification email has been sent to",
+    "back_to_login": "Back to login"
+  },
+  "forgot_email_screen": {
+    "enter_email": "Enter your email,",
+    "a_password_reset_link": "a password reset link will be sent",
+    "email": "Email",
+    "send_reset_link": "Send reset link "
+  },
+  "login": {
+    "welcome": "Welcome",
+    "receipt_book": "Receipt Book",
+    "log_in": "Log in",
+    "email": "Email",
+    "password": "Password",
+    "enter_email": "Enter your email",
+    "enter_password": "Enter your password",
+    "forgot_password": "Forgot Password?"
+  },
+  "register": {
+    "your_name": "Your Name",
+    "enter_your_name": "Enter your name",
+    "email": "Email",
+    "enter_your_email": "Enter your email",
+    "password": "Password",
+    "enter_your_password": "Enter your password",
+    "sixty_character": "Password must be 6 character",
+    "confirm_password": "Confirm Password",
+    "enter_your_confirm_password": "Enter your confirm password",
+    "password_must_confirm": "Password and confirm password must be same",
+    "register": "Register",
+    "have_an_account": "Have an account ? Login"
   }
 }

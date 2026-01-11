@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
@@ -40,14 +41,14 @@ class _InternetAccessScreenState extends State<InternetAccessScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Internet Access')),
+      appBar: AppBar(title: Text(context.tr('internet_access_screen.internet_access'))),
       body: Center(
         child: Column(
           mainAxisAlignment: .center,
           crossAxisAlignment: .center,
           children: [
             HugeIcon(icon: HugeIconsStrokeRounded.strokeRoundedWifiDisconnected03, size: 120,color: Colors.red,),
-            Text('No internet access !', style: TextStyle(fontSize: 24, color: Colors.red),),
+            Text(context.tr('internet_access_screen.no_internet_connection'), style: TextStyle(fontSize: 24, color: Colors.red),),
           ],
         ),
       ),

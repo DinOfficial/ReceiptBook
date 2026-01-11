@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,10 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) {
       AuthCheckProvider().authCheckAndRedirection(context);
-      return Scaffold(body: Center(child: Text("User not logged in")));
+      return Scaffold(body: Center(child: Text(context.tr('home_screen.user_not_logged'))));
     }
     return Scaffold(
-      appBar: MainAppBar(title: 'Home'),
+      appBar: MainAppBar(title: context.tr('main_layout.home')),
       body: Column(
         children: [
           Expanded(
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Center(child: Text("Error: ${snapshot.error}"));
                 }
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text("No invoices found."));
+                  return Center(child: Text(context.tr('home_screen.no_invoices')));
                 }
 
                 final invoices = snapshot.data!;
@@ -58,11 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 return ListView.separated(
                   padding: const EdgeInsets.only(bottom: 12),
                   itemCount: invoices.length + 1,
-                  // itemCount: 1, // Debugging: Only show Statistics
                   separatorBuilder: (context, index) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     if (index == 0) {
-                      // Statistics Section
                       return StatisticsCard(
                         invoices: invoices,
                         totalInvoices: totalInvoices,

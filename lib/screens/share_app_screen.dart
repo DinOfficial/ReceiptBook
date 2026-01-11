@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:receipt_book/widgets/main_app_bar.dart';
@@ -14,7 +15,7 @@ class ShareAppScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MainAppBar(title: 'Share App'),
+      appBar: MainAppBar(title: context.tr('share_app_screen.share_app')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -23,14 +24,14 @@ class ShareAppScreen extends StatelessWidget {
             children: [
               const Icon(Icons.share, size: 80, color: Colors.blue),
               const SizedBox(height: 20),
-              const Text(
-                'Share ReceiptBook with friends!',
+              Text(
+                context.tr('share_app_screen.share_this_app'),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
-              const Text(
-                'Help us grow by sharing the app with your network.',
+              Text(
+                context.tr('share_app_screen.help_to_grow'),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey),
               ),
@@ -41,7 +42,7 @@ class ShareAppScreen extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: () => _shareApp(context),
                   icon: const Icon(Icons.share),
-                  label: const Text('Share Now'),
+                  label: Text(context.tr('share_app_screen.share_now')),
                 ),
               ),
             ],

@@ -1,4 +1,5 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -49,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
 
     return Scaffold(
-      appBar: MainAppBar(title: 'Settings'),
+      appBar: MainAppBar(title: context.tr('settings_screen.settings')),
       body: ListView(
         padding: EdgeInsets.only(top: 24, left: 12, right: 12, bottom: 20),
         children: [
@@ -60,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
             leading: HugeIcon(icon: HugeIcons.strokeRoundedSun02, size: 32),
-            title: Text('App Theme', style: TextStyle(fontSize: 16)),
+            title: Text(context.tr('settings_screen.app_theme'), style: TextStyle(fontSize: 16)),
             subtitle: Text(getCurrentThemeText(themeProvider.themeMode)),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedMoreVerticalCircle02, size: 28),
             onTap: () {
@@ -70,12 +71,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   return Consumer<ThemeModeProvider>(
                     builder: (context, provider, child) {
                       return AlertDialog(
-                        title: Text('Choose App Theme'),
+                        title: Text(
+                          context.tr('settings_screen.choose_theme'),
+                          style: TextStyle(fontSize: 20),
+                        ),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             RadioListTile<ThemeMode>(
-                              title: const Text('Light Mode'),
+                              title: Text(context.tr('settings_screen.light_mode')),
                               value: ThemeMode.light,
                               groupValue: provider.themeMode,
                               onChanged: (ThemeMode? value) {
@@ -89,7 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               },
                             ),
                             RadioListTile<ThemeMode>(
-                              title: const Text('Dark Mode'),
+                              title: Text(context.tr('settings_screen.dark_mode')),
                               value: ThemeMode.dark,
                               groupValue: provider.themeMode,
                               onChanged: (ThemeMode? value) {
@@ -103,8 +107,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               },
                             ),
                             RadioListTile<ThemeMode>(
-                              title: const Text('System Default'),
-                              subtitle: const Text('Follows device settings'),
+                              title: Text(context.tr('settings_screen.system_default')),
+                              subtitle: Text(context.tr('settings_screen.follow_device_settings')),
                               value: ThemeMode.system,
                               groupValue: provider.themeMode,
                               onChanged: (ThemeMode? value) {
@@ -142,8 +146,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
             leading: HugeIcon(icon: HugeIcons.strokeRoundedBriefcase06, size: 32),
-            title: Text('Business Information', style: TextStyle(fontSize: 16)),
-            subtitle: Text('Update | complete your company information'),
+            title: Text(
+              context.tr('settings_screen.business_information'),
+              style: TextStyle(fontSize: 16),
+            ),
+            subtitle: Text(context.tr('settings_screen.subtitle')),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
           ),
           const SizedBox(height: 16),
@@ -157,8 +164,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
             leading: HugeIcon(icon: HugeIcons.strokeRoundedPrinter, size: 32),
-            title: Text('Invoice settings', style: TextStyle(fontSize: 20)),
-            subtitle: Text('Choose your invoice template'),
+            title: Text(
+              context.tr('settings_screen.invoice_settings'),
+              style: TextStyle(fontSize: 20),
+            ),
+            subtitle: Text(context.tr('settings_screen.choose_invoice_template')),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
           ),
           const SizedBox(height: 20),
@@ -172,8 +182,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
             leading: HugeIcon(icon: HugeIcons.strokeRoundedShieldUser, size: 32),
-            title: Text('App & Security', style: TextStyle(fontSize: 20)),
-            subtitle: Text('Setup your app security'),
+            title: Text(
+              context.tr('settings_screen.app_and_security'),
+              style: TextStyle(fontSize: 20),
+            ),
+            subtitle: Text(context.tr('settings_screen.setup_app_security')),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
           ),
           const SizedBox(height: 20),
@@ -187,8 +200,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
             leading: HugeIcon(icon: HugeIcons.strokeRoundedGoogleDoc, size: 32),
-            title: Text('Terms & Conditions', style: TextStyle(fontSize: 20)),
-            subtitle: Text('Read our terms'),
+            title: Text(
+              context.tr('settings_screen.terms_and_conditions'),
+              style: TextStyle(fontSize: 20),
+            ),
+            subtitle: Text(context.tr('settings_screen.read_our_terms')),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
           ),
           const SizedBox(height: 20),
@@ -202,8 +218,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
             leading: HugeIcon(icon: HugeIcons.strokeRoundedSecurityCheck, size: 32),
-            title: Text('Data Privacy', style: TextStyle(fontSize: 20)),
-            subtitle: Text('How we use your data'),
+            title: Text(context.tr('settings_screen.data_privacy'), style: TextStyle(fontSize: 20)),
+            subtitle: Text(context.tr('settings_screen.how_we_use_your_data')),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
           ),
           const SizedBox(height: 20),
@@ -217,8 +233,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               side: BorderSide(color: Color(0xff2692ce), width: 1.5),
             ),
             leading: HugeIcon(icon: HugeIcons.strokeRoundedShare08, size: 32),
-            title: Text('Share this app ', style: TextStyle(fontSize: 20)),
-            subtitle: Text('If you enjoy it share with your friends'),
+            title: Text(
+              context.tr('settings_screen.share_this_app'),
+              style: TextStyle(fontSize: 20),
+            ),
+            subtitle: Text(context.tr('settings_screen.if_enjoy')),
             trailing: HugeIcon(icon: HugeIcons.strokeRoundedArrowRightDouble),
           ),
           const SizedBox(height: 40),
@@ -232,7 +251,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             leading: HugeIcon(icon: HugeIcons.strokeRoundedLogout01, size: 32),
-            title: Text('Logout', style: TextStyle(fontSize: 20)),
+            title: Text(context.tr('settings_screen.logout'), style: TextStyle(fontSize: 20)),
           ),
           const SizedBox(height: 50),
           Center(

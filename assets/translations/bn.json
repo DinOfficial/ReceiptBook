@@ -1,9 +1,148 @@
 {
   "welcome_screen": {
-    "receipt_book": "রিসিট বুক",
+    "receipt_book": "রসিদ বই",
     "continue_with_google": "গুগল দিয়ে চালিয়ে যান",
-    "continue_with_email": "ইমেল দিয়ে চালিয়ে যান",
-    "forgot_password": "পাসওয়ার্ড ভুলে গেছেন?",
-    "don't_account": "অ্যাকাউন্ট নেই? অ্যাকাউন্ট তৈরি করুন"
+    "continue_with_email": "ইমেইল দিয়ে চালিয়ে যান",
+    "forgot_password": "পাসওয়ার্ড ভুলে গেছেন",
+    "don't_account": "একাউন্ট নেই? একাউন্ট তৈরি করুন"
+  },
+  "add_new_screen": {
+    "create_new_invoice": "নতুন ইনভয়েস তৈরি করুন",
+    "create_new_customer": "নতুন কাস্টমার তৈরি করুন"
+  },
+  "app_and_security_screen": {
+    "app_and_security": "অ্যাপ ও নিরাপত্তা",
+    "biometric_login": "বায়োমেট্রিক লগইন",
+    "user_fingerprint": "অতিরিক্ত নিরাপত্তার জন্য ফিঙ্গারপ্রিন্ট বা ফেস আনলক ব্যবহার করুন",
+    "no_biometric_credentials": "কোনো বায়োমেট্রিক তথ্য পাওয়া যায়নি। অনুগ্রহ করে ডিভাইস সেটিংসে ফিঙ্গারপ্রিন্ট বা ফেস লক যুক্ত করুন"
+  },
+  "main_layout": {
+    "home": "হোম",
+    "add_new": "নতুন যোগ করুন",
+    "persons": "কাস্টমার",
+    "settings": "সেটিংস"
+  },
+  "company_setup": {
+    "setup_your_company_details": "আপনার কোম্পানির তথ্য সেটআপ করুন",
+    "logo": "লোগো",
+    "company_name": "কোম্পানির নাম",
+    "email": "ইমেইল",
+    "address": "ঠিকানা",
+    "phone": "ফোন",
+    "submit": "জমা দিন",
+    "select_logo": "লোগো নির্বাচন করুন",
+    "company_name_required": "কোম্পানির নাম আবশ্যক!",
+    "email_required": "ইমেইল আবশ্যক!",
+    "address_required": "ঠিকানা আবশ্যক!",
+    "phone_required": "ফোন নম্বর আবশ্যক!",
+    "please_select_company_logo": "অনুগ্রহ করে কোম্পানির লোগো নির্বাচন করুন (আপডেটের জন্য আবশ্যক)",
+    "update_company_details": "কোম্পানির তথ্য আপডেট করুন",
+    "update": "আপডেট",
+    "delete": "ডিলিট",
+    "yes": "হ্যাঁ",
+    "no": "না",
+    "delete_company_confirmation": "আপনি কি নিশ্চিত এই কোম্পানিটি ডিলিট করতে চান?"
+  },
+  "create_update_customer_screen": {
+    "add_customer": "কাস্টমার যোগ করুন",
+    "add_customer_details": "কাস্টমারের তথ্য যোগ করুন",
+    "update_customer_details": "কাস্টমারের তথ্য আপডেট করুন",
+    "customer_name": "কাস্টমারের নাম",
+    "address": "ঠিকানা",
+    "phone": "ফোন",
+    "email": "ইমেইল",
+    "update_customer": "কাস্টমার আপডেট করুন",
+    "add": "যোগ করুন",
+    "delete_customer_confirmation": "আপনি কি নিশ্চিত এই কাস্টমারটি ডিলিট করতে চান?",
+    "customer_name_required": "কাস্টমারের নাম আবশ্যক!",
+    "address_required": "ঠিকানা আবশ্যক!",
+    "phone_required": "ফোন নম্বর আবশ্যক!",
+    "email_required": "ইমেইল আবশ্যক!",
+    "success": "কাস্টমারের তথ্য সফলভাবে সংরক্ষণ হয়েছে!",
+    "error": "কাস্টমারের তথ্য সংরক্ষণে সমস্যা হয়েছে"
+  },
+  "create_update_invoice_screen": {
+    "create_new_invoice": "নতুন ইনভয়েস তৈরি করুন",
+    "edit_invoice": "ইনভয়েস সম্পাদনা করুন",
+    "add_items": "আইটেম যোগ করুন",
+    "select_customer": "অনুগ্রহ করে একজন কাস্টমার নির্বাচন করুন",
+    "create_invoice": "ইনভয়েস তৈরি করুন",
+    "update_invoice": "ইনভয়েস আপডেট করুন",
+    "bill_to": "বিল প্রাপকের নাম",
+    "customer": "কাস্টমার নির্বাচন করুন",
+    "search": "কাস্টমার খুঁজুন...",
+    "invoice_no": "ইনভয়েস নম্বর",
+    "status": "স্ট্যাটাস",
+    "select_status": "অনুগ্রহ করে স্ট্যাটাস নির্বাচন করুন",
+    "date": "তারিখ",
+    "time": "সময়",
+    "payment_system": "পেমেন্ট পদ্ধতি",
+    "select_payment_system": "পেমেন্ট পদ্ধতি নির্বাচন করুন",
+    "items": "আইটেমসমূহ",
+    "not_item": "কোনো আইটেম যোগ করা হয়নি",
+    "quantity": "পরিমাণ",
+    "payment_details": "পেমেন্ট বিবরণ",
+    "subtotal": "সাবটোটাল: ",
+    "discount": "ডিসকাউন্ট: ",
+    "tax": "ট্যাক্স",
+    "grand_total": "সর্বমোট: "
+  },
+  "customer_list_screen": {
+    "customers": "কাস্টমার তালিকা",
+    "please_log_in": "কাস্টমার দেখার জন্য লগইন করুন",
+    "no_customers": "এখনো কোনো কাস্টমার নেই",
+    "add_customer_first": "+ বাটন ব্যবহার করে আপনার প্রথম কাস্টমার যোগ করুন",
+    "delete_customer": "কাস্টমার ডিলিট করবেন?",
+    "delete_info": "এতে কাস্টমার এবং সংশ্লিষ্ট সব ইনভয়েস ডিলিট হয়ে যাবে। এটি আর ফিরিয়ে আনা যাবে না।",
+    "cancel": "বাতিল",
+    "delete": "ডিলিট",
+    "edit": "এডিট"
+  },
+  "home_screen": {
+    "home": "হোম",
+    "user_not_logged": "ইউজার লগইন করা নেই",
+    "no_invoices": "এখনো কোনো ইনভয়েস নেই"
+  },
+  "internet_access_screen": {
+    "internet_access": "ইন্টারনেট সংযোগ",
+    "no_internet_connection": "ইন্টারনেট সংযোগ নেই!"
+  },
+  "invoice_settings_screen": {
+    "settings": "সেটিংস",
+    "invoice_template": "ইনভয়েস টেমপ্লেট",
+    "select_template": "আপনার ব্যবসার সাথে মানানসই টেমপ্লেট নির্বাচন করুন",
+    "no_payment_methods_added": "কোনো পেমেন্ট পদ্ধতি যোগ করা হয়নি",
+    "payment_methods": "পেমেন্ট পদ্ধতি",
+    "add_payment_method": "পেমেন্ট পদ্ধতি যোগ করুন",
+    "cancel": "বাতিল",
+    "add": "যোগ করুন"
+  },
+  "settings_screen": {
+    "settings": "সেটিংস",
+    "app_theme": "অ্যাপ থিম",
+    "choose_theme": "অ্যাপ থিম নির্বাচন করুন",
+    "light_mode": "লাইট মোড",
+    "dark_mode": "ডার্ক মোড",
+    "system_default": "সিস্টেম ডিফল্ট",
+    "follow_device_settings": "ডিভাইস সেটিং অনুসরণ করুন",
+    "business_information": "ব্যবসার তথ্য",
+    "subtitle": "আপডেট | আপনার কোম্পানির তথ্য সম্পূর্ণ করুন",
+    "invoice_settings": "ইনভয়েস সেটিংস",
+    "choose_invoice_template": "ইনভয়েস টেমপ্লেট নির্বাচন করুন",
+    "app_and_security": "অ্যাপ ও নিরাপত্তা",
+    "setup_app_security": "অ্যাপ নিরাপত্তা সেটআপ করুন",
+    "terms_and_conditions": "শর্তাবলী",
+    "read_our_terms": "আমাদের শর্তাবলী পড়ুন",
+    "data_privacy": "ডাটা প্রাইভেসি",
+    "how_we_use_your_data": "আমরা কীভাবে আপনার ডাটা ব্যবহার করি",
+    "share_this_app": "এই অ্যাপ শেয়ার করুন",
+    "if_enjoy": "ভালো লাগলে বন্ধুদের সাথে শেয়ার করুন",
+    "logout": "লগআউট"
+  },
+  "share_app_screen": {
+    "share_app": "অ্যাপ শেয়ার করুন",
+    "share_this_app": "ReceiptBook বন্ধুদের সাথে শেয়ার করুন!",
+    "help_to_grow": "আপনার নেটওয়ার্কে শেয়ার করে আমাদের বড় হতে সাহায্য করুন",
+    "share_now": "এখনই শেয়ার করুন"
   }
 }

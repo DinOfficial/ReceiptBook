@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/invoice_settings_provider.dart';
@@ -20,17 +21,17 @@ class InvoiceSettingsScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: MainAppBar(title: 'Settings'),
+      appBar: MainAppBar(title: context.tr('invoice_settings_screen.settings')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text(
-            'Invoice Template',
+          Text(
+            context.tr('invoice_settings_screen.invoice_template'),
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Select the template that best fits your business style',
+          Text(
+            context.tr('invoice_settings_screen.select_template'),
             style: TextStyle(color: Colors.grey),
           ),
           const SizedBox(height: 16),
@@ -42,9 +43,7 @@ class InvoiceSettingsScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
                 side: BorderSide(
-                  color: isSelected
-                      ? const Color(0xff2a8bdc)
-                      : Colors.grey.shade300,
+                  color: isSelected ? const Color(0xff2a8bdc) : Colors.grey.shade300,
                   width: isSelected ? 2 : 1,
                 ),
               ),
@@ -66,11 +65,7 @@ class InvoiceSettingsScreen extends StatelessWidget {
                           border: Border.all(color: Colors.grey.shade300),
                         ),
                         child: Center(
-                          child: Icon(
-                            _getTemplateIcon(template),
-                            size: 40,
-                            color: Colors.white,
-                          ),
+                          child: Icon(_getTemplateIcon(template), size: 40, color: Colors.white),
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -80,28 +75,18 @@ class InvoiceSettingsScreen extends StatelessWidget {
                           children: [
                             Text(
                               settingsProvider.getTemplateName(template),
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               settingsProvider.getTemplateDescription(template),
-                              style: TextStyle(
-                                color: Colors.grey.shade600,
-                                fontSize: 14,
-                              ),
+                              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
                             ),
                           ],
                         ),
                       ),
                       if (isSelected)
-                        const Icon(
-                          Icons.check_circle,
-                          color: Color(0xff2a8bdc),
-                          size: 32,
-                        ),
+                        const Icon(Icons.check_circle, color: Color(0xff2a8bdc), size: 32),
                     ],
                   ),
                 ),
@@ -114,22 +99,21 @@ class InvoiceSettingsScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Payment Methods',
+              Text(
+                context.tr('invoice_settings_screen.payment_methods'),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               IconButton(
-                onPressed: () =>
-                    _showAddPaymentMethodDialog(context, settingsProvider),
+                onPressed: () => _showAddPaymentMethodDialog(context, settingsProvider),
                 icon: const Icon(Icons.add_circle, color: Color(0xff2a8bdc)),
               ),
             ],
           ),
           const SizedBox(height: 8),
           if (settingsProvider.paymentMethods.isEmpty)
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(8.0),
-              child: Text('No payment methods added.'),
+              child: Text(context.tr('invoice_settings_screen.no_payment_methods_added')),
             )
           else
             ...settingsProvider.paymentMethods.map((method) {
@@ -157,16 +141,13 @@ class InvoiceSettingsScreen extends StatelessWidget {
     );
   }
 
-  void _showAddPaymentMethodDialog(
-    BuildContext context,
-    InvoiceSettingsProvider provider,
-  ) {
+  void _showAddPaymentMethodDialog(BuildContext context, InvoiceSettingsProvider provider) {
     final TextEditingController controller = TextEditingController();
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Add Payment Method', style: TextStyle(fontSize: 20),),
+          title: Text(context.tr('invoice_settings_screen.add_payment_method'), style: TextStyle(fontSize: 20)),
           content: TextField(
             controller: controller,
             decoration: const InputDecoration(
@@ -175,10 +156,7 @@ class InvoiceSettingsScreen extends StatelessWidget {
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context), child: Text(context.tr('invoice_settings_screen.cancel'))),
             ElevatedButton(
               onPressed: () {
                 if (controller.text.isNotEmpty) {
@@ -186,7 +164,7 @@ class InvoiceSettingsScreen extends StatelessWidget {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Add'),
+              child: Text(context.tr('invoice_settings_screen.add')),
             ),
           ],
         );

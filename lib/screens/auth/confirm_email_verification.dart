@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:receipt_book/screens/auth/log_in_screen.dart';
@@ -24,7 +25,7 @@ class _ConfirmEmailVerificationState extends State<ConfirmEmailVerification> {
           crossAxisAlignment: .center,
           children: [
             Text(
-              'A verification emil has been sent to "$email"',
+              '${context.tr('confirm_email_verification.email_sent')} "$email"',
               style: GoogleFonts.akayaKanadaka(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -43,7 +44,10 @@ class _ConfirmEmailVerificationState extends State<ConfirmEmailVerification> {
               onPressed: () {
                 Navigator.of(context).pushNamed(LoginScreen.name);
               },
-              child: const Text("Back To login", style: TextStyle(fontWeight: FontWeight.w600)),
+              child: Text(
+                context.tr('confirm_email_verification.back_to_login'),
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
             ),
           ],
         ),

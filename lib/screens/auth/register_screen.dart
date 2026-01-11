@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -44,11 +45,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     height: 100,
                   ).animate().fadeIn(duration: 900.ms),
                   Text(
-                    'Welcome',
+                    context.tr('login.welcome'),
                     style: GoogleFonts.akayaKanadaka(fontSize: 32, fontWeight: FontWeight.w400),
                   ),
                   Text(
-                    '"Receipt Book"',
+                    '"${'login.receipt_book'}"',
                     style: GoogleFonts.akayaKanadaka(
                       fontSize: 38,
                       fontWeight: FontWeight.w600,
@@ -59,9 +60,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   TextFormField(
                     controller: _nameTEController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(label: Text('Your Name')),
+                    decoration: InputDecoration(label: Text(context.tr('register.your_name'))),
                     validator: (String? value) {
-                      if (value == null || value.isEmpty) return 'Enter your name';
+                      if (value == null || value.isEmpty)
+                        return context.tr('register.enter_your_name');
                       return null;
                     },
                   ),
@@ -70,9 +72,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     controller: _emailTEController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(label: Text('Email')),
+                    decoration: InputDecoration(label: Text(context.tr('register.email'))),
                     validator: (String? value) {
-                      if (value == null || value.isEmpty) return 'Enter your email';
+                      if (value == null || value.isEmpty)
+                        return context.tr('register.enter_your_email');
                       return null;
                     },
                   ),
@@ -82,7 +85,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     obscureText: !passwordToggleProvider.isVisible,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
-                      label: Text('Password'),
+                      label: Text(context.tr('register.password')),
                       suffixIcon: IconButton(
                         onPressed: () {
                           passwordToggleProvider.togglePassword();
@@ -95,8 +98,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                     validator: (String? value) {
-                      if (value == null || value.isEmpty) return 'Enter your password';
-                      if (value.length < 5) return 'Password must be 6 character';
+                      if (value == null || value.isEmpty)
+                        return context.tr('register.enter_your_password');
+                      if (value.length < 5) return context.tr('register.sixty_character');
                       return null;
                     },
                   ),
@@ -106,7 +110,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     obscureText: !passwordToggleProvider.isConfirmVisible,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
-                      label: Text('Confirm Password'),
+                      label: Text(context.tr('register.confirm_password')),
                       suffixIcon: IconButton(
                         onPressed: () {
                           passwordToggleProvider.toggleConfirmPassword();
@@ -119,9 +123,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                     validator: (String? value) {
-                      if (value == null || value.isEmpty) return 'Enter your confirm password';
+                      if (value == null || value.isEmpty) {
+                        return context.tr('register.enter_your_confirm_password');
+                      }
                       if (_passwordTEController.text != value) {
-                        return 'Password and confirm password must be same';
+                        return context.tr('register.password_must_confirm');
                       }
                       return null;
                     },
@@ -134,17 +140,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       onPressed: loginProvider.getEmailRegisterIsLoading ? null : _onTapSignUp,
                       child: loginProvider.getEmailRegisterIsLoading
                           ? CircularProgressIndicator()
-                          : Text('Register ', style: TextStyle(fontSize: 20)),
+                          : Text(context.tr('register.register'), style: TextStyle(fontSize: 20)),
                     ),
                   ),
                   const SizedBox(height: 16),
                   const Row(
                     children: [
                       Expanded(child: Divider()),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Text('OR'),
-                      ),
+                      Padding(padding: EdgeInsets.symmetric(horizontal: 8), child: Text('OR')),
                       Expanded(child: Divider()),
                     ],
                   ),
@@ -159,18 +162,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       icon: loginProvider.getGoogleUserLoading
                           ? CircularProgressIndicator()
                           : Image.asset('assets/images/g_logo.png', height: 24, width: 24),
-                      label: const Text('Sign up with Google'),
+                      label: Text(context.tr('welcome_screen.continue_with_google')),
                     ),
                   ),
                   SizedBox(height: 24),
                   TextButton(
                     onPressed: _onTapLogin,
                     child: Text(
-                      'Have an account ? Login',
+                      context.tr('register.have_an_account'),
                       style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                   ),
-                  const SizedBox(height: 24,)
+                  const SizedBox(height: 24),
                 ],
               ),
             );
