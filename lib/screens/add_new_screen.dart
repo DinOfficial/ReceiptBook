@@ -44,9 +44,9 @@ class _AddNewScreenState extends State<AddNewScreen> {
                   HugeIcon(icon: HugeIcons.strokeRoundedAddInvoice, color: Colors.white, size: 100),
                   const SizedBox(height: 12),
                   Text(
-                    context.tr('create_new_invoice'),
+                    context.tr('add_new_screen.create_new_invoice'),
                     style: GoogleFonts.akayaKanadaka(
-                      fontSize: 32,
+                      fontSize: 28,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
@@ -75,9 +75,9 @@ class _AddNewScreenState extends State<AddNewScreen> {
                 children: [
                   const HugeIcon(icon: HugeIcons.strokeRoundedUser, color: Colors.white, size: 100),
                   Text(
-                    context.tr('create_new_customer'),
+                    context.tr('add_new_screen.create_new_customer'),
                     style: GoogleFonts.akayaKanadaka(
-                      fontSize: 32,
+                      fontSize: 28,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
