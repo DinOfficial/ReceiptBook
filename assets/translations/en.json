@@ -1,0 +1,9 @@
+{
+  "welcome_screen": {
+    "receipt_book": "Receipt Book",
+    "continue_with_google": "Continue With Google",
+    "continue_with_email": "Continue With Email",
+    "forgot_password": "Forgot Password",
+    "don't_account": "Don't have an account? Create Account"
+  }
+}

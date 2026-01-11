@@ -1,0 +1,9 @@
+{
+  "welcome_screen": {
+    "receipt_book": "রিসিট বুক",
+    "continue_with_google": "গুগল দিয়ে চালিয়ে যান",
+    "continue_with_email": "ইমেল দিয়ে চালিয়ে যান",
+    "forgot_password": "পাসওয়ার্ড ভুলে গেছেন?",
+    "don't_account": "অ্যাকাউন্ট নেই? অ্যাকাউন্ট তৈরি করুন"
+  }
+}

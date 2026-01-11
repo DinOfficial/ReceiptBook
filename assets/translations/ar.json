@@ -1,0 +1,9 @@
+{
+  "welcome_screen": {
+    "receipt_book": "دفتر الإيصالات",
+    "continue_with_google": "المتابعة باستخدام جوجل",
+    "continue_with_email": "المتابعة باستخدام البريد الإلكتروني",
+    "forgot_password": "هل نسيت كلمة السر؟",
+    "don't_account": "ليس لديك حساب؟ إنشاء حساب"
+  }
+}

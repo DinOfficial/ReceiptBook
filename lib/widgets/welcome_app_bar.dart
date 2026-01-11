@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
@@ -28,22 +29,32 @@ class _WelcomeAppBarState extends State<WelcomeAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    Locale currentLang = context.locale;
     return AppBar(
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 40),
           child: Consumer<WelcomeScreenProvider>(
             builder: (context, welcomeAppBarProvider, _) {
-              return DropdownButton(
+              return DropdownButton<String>(
+                underline: const SizedBox(),
                 icon: Padding(
                   padding: const EdgeInsets.all(4),
                   child: HugeIcon(icon: HugeIcons.strokeRoundedInternet, size: 20),
                 ),
-                value: welcomeAppBarProvider.selectedValue,
+                value: currentLang.languageCode,
                 items: welcomeAppBarProvider.menuItemList.map((value) {
-                  return DropdownMenuItem(value: value, child: Text(value));
+                  return DropdownMenuItem<String>(value: value['code'], child: Text(value['name']));
                 }).toList(),
-                onChanged: welcomeAppBarProvider.onChangeMenu,
+                onChanged: (String? newValue) async {
+                  print('local new Value: $newValue');
+                  if (newValue != null && newValue != currentLang.languageCode) {
+                    await context.setLocale(Locale(newValue));
+                    if (mounted) {
+                      setState(() {});
+                    }
+                  }
+                },
               );
             },
           ),

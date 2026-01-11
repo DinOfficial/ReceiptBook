@@ -14,28 +14,35 @@ import 'package:receipt_book/provider/log_out_provider.dart';
 import 'package:receipt_book/provider/login_provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:toastification/toastification.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
-        ChangeNotifierProvider(create: (_) => LoginProvider()),
-        ChangeNotifierProvider(create: (_) => LogOutProvider()),
-        ChangeNotifierProvider(create: (_) => AuthCheckProvider()),
-        ChangeNotifierProvider(create: (_) => PasswordTogglerProvider()),
-        ChangeNotifierProvider(create: (_) => CompanyProvider()),
-        ChangeNotifierProvider(create: (_) => ThemeModeProvider()),
-        ChangeNotifierProvider(create: (_) => CustomerProvider()),
-        ChangeNotifierProvider(create: (_) => ItemProvider()),
-        ChangeNotifierProvider(create: (_) => InvoiceProvider()),
-        ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
-        ChangeNotifierProvider(create: (_) => BiometricProvider()),
-      ],
-      child: const ToastificationWrapper(child: ReceiptBookApp()),
+    EasyLocalization(
+      supportedLocales: [Locale('en'),Locale('bn'), Locale('ar',)],
+      path: 'assets/translations',
+      fallbackLocale: Locale('en'),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
+          ChangeNotifierProvider(create: (_) => LoginProvider()),
+          ChangeNotifierProvider(create: (_) => LogOutProvider()),
+          ChangeNotifierProvider(create: (_) => AuthCheckProvider()),
+          ChangeNotifierProvider(create: (_) => PasswordTogglerProvider()),
+          ChangeNotifierProvider(create: (_) => CompanyProvider()),
+          ChangeNotifierProvider(create: (_) => ThemeModeProvider()),
+          ChangeNotifierProvider(create: (_) => CustomerProvider()),
+          ChangeNotifierProvider(create: (_) => ItemProvider()),
+          ChangeNotifierProvider(create: (_) => InvoiceProvider()),
+          ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
+          ChangeNotifierProvider(create: (_) => BiometricProvider()),
+        ],
+        child: const ToastificationWrapper(child: ReceiptBookApp()),
+      ),
     ),
   );
 }

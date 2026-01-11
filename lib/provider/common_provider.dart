@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 
 class WelcomeScreenProvider extends ChangeNotifier {
-  String? _selectedValue = 'English';
-  final List<String> _items = ['English', 'বাংলা', 'हिन्दी'];
+  final List<Map<String, dynamic>> _items = [
+    {"code": "en", "name": "English"},
+    {"code": "bn", "name": "বাংলা"},
+    {"code": "ar", "name": "عربي"},
+  ];
 
-  void onChangeMenu(String? value) {
-    _selectedValue = value;
-    notifyListeners();
-  }
+  List<Map<String, dynamic>> get menuItemList => _items;
 
-  String? get selectedValue => _selectedValue;
-
-  List<String> get menuItemList => _items;
 }
 
 class PasswordTogglerProvider extends ChangeNotifier {

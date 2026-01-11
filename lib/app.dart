@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
@@ -27,34 +28,39 @@ class ReceiptBookApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeModeProvider>();
     return ThemeProvider(
-      initTheme: themeProvider.themeMode == ThemeMode.dark? AppThemeStyle.darkTheme:AppThemeStyle.lightTheme,
+      initTheme: themeProvider.themeMode == ThemeMode.dark
+          ? AppThemeStyle.darkTheme
+          : AppThemeStyle.lightTheme,
       builder: (context, theme) {
         return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: AppThemeStyle.lightTheme,
-            darkTheme: AppThemeStyle.darkTheme,
-            themeMode: themeProvider.themeMode,
-            initialRoute: SplashScreen.name,
-            routes: {
-              SplashScreen.name: (_) => SplashScreen(),
-              WelcomeScreen.name: (_) => WelcomeScreen(),
-              RegistrationScreen.name: (_) => RegistrationScreen(),
-              ConfirmEmailVerification.name: (_) => ConfirmEmailVerification(),
-              LoginScreen.name: (_) => LoginScreen(),
-              ForgotEmailScreen.name: (_) => ForgotEmailScreen(),
-              AppMainLayout.name: (_) => AppMainLayout(),
-              CompanySetupScreen.name: (_) => CompanySetupScreen(),
-              CreateUpdateCustomerScreen.name: (_) => CreateUpdateCustomerScreen(),
-              CreateUpdateInvoiceScreen.name: (_) => CreateUpdateInvoiceScreen(),
-              InternetAccessScreen.name: (_) => InternetAccessScreen(),
-              InvoiceSettingsScreen.name: (_) => InvoiceSettingsScreen(),
-              AppAndSecurityScreen.name: (_) => AppAndSecurityScreen(),
-              TermsOfServiceScreen.name: (_) => TermsOfServiceScreen(),
-              DataPrivacyScreen.name: (_) => DataPrivacyScreen(),
-              ShareAppScreen.name: (_) => ShareAppScreen(),
-            },
+          debugShowCheckedModeBanner: false,
+          theme: AppThemeStyle.lightTheme,
+          darkTheme: AppThemeStyle.darkTheme,
+          themeMode: themeProvider.themeMode,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          initialRoute: SplashScreen.name,
+          routes: {
+            SplashScreen.name: (_) => SplashScreen(),
+            WelcomeScreen.name: (_) => WelcomeScreen(),
+            RegistrationScreen.name: (_) => RegistrationScreen(),
+            ConfirmEmailVerification.name: (_) => ConfirmEmailVerification(),
+            LoginScreen.name: (_) => LoginScreen(),
+            ForgotEmailScreen.name: (_) => ForgotEmailScreen(),
+            AppMainLayout.name: (_) => AppMainLayout(),
+            CompanySetupScreen.name: (_) => CompanySetupScreen(),
+            CreateUpdateCustomerScreen.name: (_) => CreateUpdateCustomerScreen(),
+            CreateUpdateInvoiceScreen.name: (_) => CreateUpdateInvoiceScreen(),
+            InternetAccessScreen.name: (_) => InternetAccessScreen(),
+            InvoiceSettingsScreen.name: (_) => InvoiceSettingsScreen(),
+            AppAndSecurityScreen.name: (_) => AppAndSecurityScreen(),
+            TermsOfServiceScreen.name: (_) => TermsOfServiceScreen(),
+            DataPrivacyScreen.name: (_) => DataPrivacyScreen(),
+            ShareAppScreen.name: (_) => ShareAppScreen(),
+          },
         );
-      }
+      },
     );
   }
 }

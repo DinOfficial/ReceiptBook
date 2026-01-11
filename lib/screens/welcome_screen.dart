@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,7 +37,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               height: 140,
             ).animate().fadeIn(duration: 900.ms),
             Text(
-              '"Receipt Book"',
+              context.tr('welcome_screen.receipt_book'),
               style: GoogleFonts.akayaKanadaka(
                 fontSize: 38,
                 fontWeight: FontWeight.w600,
@@ -67,7 +68,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             fit: BoxFit.cover,
                           ),
                           SizedBox(width: 8),
-                          Text('Continue with Google', style: TextStyle(fontSize: 20)),
+                          Text(
+                            context.tr('welcome_screen.continue_with_google'),
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ],
                       ),
                     ),
@@ -86,7 +90,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   children: [
                     HugeIcon(icon: HugeIcons.strokeRoundedMail02, size: 28),
                     SizedBox(width: 8),
-                    Text('Continue with Email', style: TextStyle(fontSize: 20)),
+                    Text(
+                      context.tr('welcome_screen.continue_with_email'),
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ],
                 ),
               ),
@@ -94,13 +101,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             SizedBox(height: 24),
             TextButton(
               onPressed: _onTapForgot,
-              child: Text('Forgot Password', style: TextStyle(fontSize: 16, color: Colors.grey)),
+              child: Text(
+                context.tr('welcome_screen.forgot_password'),
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
             ),
             SizedBox(height: 8),
             TextButton(
               onPressed: _onTapLogin,
               child: Text(
-                'Don\'t have an account ? Create Account',
+                context.tr('welcome_screen.don\'t_account'),
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ),
