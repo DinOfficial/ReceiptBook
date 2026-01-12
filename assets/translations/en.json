@@ -120,6 +120,7 @@
   "settings_screen": {
     "settings": "Settings",
     "app_theme": "App Theme",
+    "app_lang": "Language",
     "choose_theme": "Choose App Theme",
     "light_mode": "Light Mode",
     "dark_mode": "Dark Mode",

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_book/provider/common_provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:receipt_book/screens/company_setup_screen.dart';
 import 'package:receipt_book/screens/invoice_settings_screen.dart';
@@ -48,7 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return 'System Default';
       }
     }
-
+    Locale currentLang = context.locale;
     return Scaffold(
       appBar: MainAppBar(title: context.tr('settings_screen.settings')),
       body: ListView(
@@ -135,7 +136,62 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
           ),
-
+          const SizedBox(height: 20),
+          Consumer<WelcomeScreenProvider>(
+            builder: (context, provider, child) {
+              return ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(color: Color(0xff2692ce), width: 1.5),
+                ),
+                leading: HugeIcon(icon: HugeIcons.strokeRoundedLanguageCircle, size: 32),
+                title: Text(context.tr('settings_screen.app_lang'), style: TextStyle(fontSize: 16)),
+                trailing: HugeIcon(icon: HugeIcons.strokeRoundedMoreVerticalCircle02, size: 28),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Consumer<ThemeModeProvider>(
+                        builder: (context, provider, child) {
+                          return AlertDialog(
+                            title: Text(
+                              context.tr('settings_screen.choose_theme'),
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            content: Consumer<WelcomeScreenProvider>(
+                              builder: (context, welcomeAppBarProvider, _) {
+                                return DropdownButton<String>(
+                                  underline: const SizedBox(),
+                                  icon: Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: HugeIcon(icon: HugeIcons.strokeRoundedInternet, size: 20),
+                                  ),
+                                  value: currentLang.languageCode,
+                                  items: welcomeAppBarProvider.menuItemList.map((value) {
+                                    return DropdownMenuItem<String>(value: value['code'], child: Text(value['name']));
+                                  }).toList(),
+                                  onChanged: (String? newValue) async {
+                                    if (newValue != null && newValue != currentLang.languageCode) {
+                                      await context.setLocale(Locale(newValue));
+                                      if (mounted) {
+                                        Navigator.pop(context);
+                                        setState(() {});
+                                      }
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              );
+            }
+          ),
           const SizedBox(height: 20),
           ListTile(
             onTap: () {

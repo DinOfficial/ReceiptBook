@@ -20,7 +20,7 @@ class _AddNewScreenState extends State<AddNewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(title: 'Add New '),
+      appBar: MainAppBar(title: context.tr('main_layout.add_new')),
       body: ListView(
         padding: EdgeInsets.all(20),
         children: [

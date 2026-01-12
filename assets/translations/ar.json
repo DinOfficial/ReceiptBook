@@ -14,7 +14,7 @@
     "app_and_security": "التطبيق والأمان",
     "biometric_login": "تسجيل الدخول البيومتري",
     "user_fingerprint": "استخدم بصمة الإصبع أو التعرف على الوجه لمزيد من الأمان",
-    "no_biometric_credentials": "لم يتم العثور على بيانات بيومترية. يرجى إضافة بصمة أو قفل الوجه من إعدادات الجهاز"
+    "no_biometric_credentials": "لم يتم العثور على بيانات بيومترية. يرجى إضافة بصمة الإصبع أو قفل الوجه من إعدادات الجهاز"
   },
   "main_layout": {
     "home": "الرئيسية",
@@ -60,6 +60,145 @@
     "email_required": "البريد الإلكتروني مطلوب!",
     "success": "تم حفظ بيانات العميل بنجاح!",
     "error": "حدث خطأ أثناء حفظ بيانات العميل"
+  },
+  "create_update_invoice_screen": {
+    "create_new_invoice": "إنشاء فاتورة جديدة",
+    "edit_invoice": "تعديل الفاتورة",
+    "add_items": "إضافة عناصر",
+    "select_customer": "يرجى اختيار عميل",
+    "create_invoice": "إنشاء الفاتورة",
+    "update_invoice": "تحديث الفاتورة",
+    "bill_to": "إصدار الفاتورة إلى",
+    "customer": "اختر العميل",
+    "search": "ابحث عن عميل...",
+    "invoice_no": "رقم الفاتورة",
+    "status": "الحالة",
+    "select_status": "يرجى اختيار الحالة",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "payment_system": "نظام الدفع",
+    "select_payment_system": "يرجى اختيار نظام الدفع",
+    "items": "العناصر",
+    "not_item": "لم تتم إضافة أي عنصر",
+    "quantity": "الكمية",
+    "payment_details": "تفاصيل الدفع",
+    "subtotal": "المجموع الفرعي: ",
+    "discount": "الخصم: ",
+    "tax": "الضريبة",
+    "grand_total": "المجموع الكلي: "
+  },
+  "customer_list_screen": {
+    "customers": "العملاء",
+    "please_log_in": "يرجى تسجيل الدخول لعرض العملاء",
+    "no_customers": "لا يوجد عملاء بعد",
+    "add_customer_first": "أضف أول عميل باستخدام زر +",
+    "delete_customer": "حذف العميل؟",
+    "delete_info": "سيتم حذف العميل وجميع الفواتير المرتبطة به. لا يمكن التراجع عن هذا الإجراء.",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل"
+  },
+  "home_screen": {
+    "home": "الرئيسية",
+    "user_not_logged": "المستخدم غير مسجل الدخول",
+    "no_invoices": "لا توجد فواتير بعد"
+  },
+  "internet_access_screen": {
+    "internet_access": "الوصول إلى الإنترنت",
+    "no_internet_connection": "لا يوجد اتصال بالإنترنت!"
+  },
+  "invoice_settings_screen": {
+    "settings": "الإعدادات",
+    "invoice_template": "قالب الفاتورة",
+    "select_template": "اختر القالب الأنسب لأسلوب عملك",
+    "no_payment_methods_added": "لم تتم إضافة طرق دفع",
+    "payment_methods": "طرق الدفع",
+    "add_payment_method": "إضافة طريقة دفع",
+    "cancel": "إلغاء",
+    "add": "إضافة"
+  },
+  "settings_screen": {
+    "settings": "الإعدادات",
+    "app_theme": "سمة التطبيق",
+    "app_lang": "اللغة",
+    "choose_theme": "اختر سمة التطبيق",
+    "light_mode": "الوضع الفاتح",
+    "dark_mode": "الوضع الداكن",
+    "system_default": "إعدادات النظام",
+    "follow_device_settings": "اتباع إعدادات الجهاز",
+    "business_information": "معلومات النشاط التجاري",
+    "subtitle": "تحديث | أكمل معلومات شركتك",
+    "invoice_settings": "إعدادات الفاتورة",
+    "choose_invoice_template": "اختر قالب الفاتورة",
+    "app_and_security": "التطبيق والأمان",
+    "setup_app_security": "إعداد أمان التطبيق",
+    "terms_and_conditions": "الشروط والأحكام",
+    "read_our_terms": "اقرأ الشروط",
+    "data_privacy": "خصوصية البيانات",
+    "how_we_use_your_data": "كيف نستخدم بياناتك",
+    "share_this_app": "مشاركة التطبيق",
+    "if_enjoy": "إذا أعجبك التطبيق شاركه مع أصدقائك",
+    "logout": "تسجيل الخروج"
+  },
+  "share_app_screen": {
+    "share_app": "مشاركة التطبيق",
+    "share_this_app": "شارك ReceiptBook مع أصدقائك!",
+    "help_to_grow": "ساعدنا على النمو من خلال مشاركة التطبيق مع شبكتك",
+    "share_now": "شارك الآن"
+  },
+  "confirm_email_verification": {
+    "email_sent": "تم إرسال رسالة تأكيد إلى",
+    "back_to_login": "العودة إلى تسجيل الدخول"
+  },
+  "forgot_email_screen": {
+    "enter_email": "أدخل بريدك الإلكتروني،",
+    "a_password_reset_link": "سيتم إرسال رابط إعادة تعيين كلمة المرور",
+    "email": "البريد الإلكتروني",
+    "send_reset_link": "إرسال رابط إعادة التعيين"
+  },
+  "login": {
+    "welcome": "مرحبًا",
+    "receipt_book": "دفتر الإيصالات",
+    "log_in": "تسجيل الدخول",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "enter_email": "أدخل بريدك الإلكتروني",
+    "enter_password": "أدخل كلمة المرور",
+    "forgot_password": "نسيت كلمة المرور؟"
+  },
+  "register": {
+    "your_name": "اسمك",
+    "enter_your_name": "أدخل اسمك",
+    "email": "البريد الإلكتروني",
+    "enter_your_email": "أدخل بريدك الإلكتروني",
+    "password": "كلمة المرور",
+    "enter_your_password": "أدخل كلمة المرور",
+    "sixty_character": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+    "confirm_password": "تأكيد كلمة المرور",
+    "enter_your_confirm_password": "أدخل تأكيد كلمة المرور",
+    "password_must_confirm": "يجب أن تكون كلمتا المرور متطابقتين",
+    "register": "تسجيل",
+    "have_an_account": "لديك حساب؟ تسجيل الدخول"
+  },
+  "invoice_item_dialog": {
+    "edit_item": "تعديل العنصر",
+    "add_item": "إضافة عنصر",
+    "item_title": "اسم العنصر",
+    "enter_title": "يرجى إدخال اسم العنصر",
+    "quantity": "الكمية",
+    "enter_quantity": "يرجى إدخال الكمية",
+    "valid_quantity": "يرجى إدخال كمية صحيحة",
+    "amount": "المبلغ",
+    "enter_amount": "يرجى إدخال المبلغ",
+    "valid_amount": "يرجى إدخال مبلغ صحيح",
+    "update": "تحديث",
+    "add": "إضافة"
+  },
+  "search_delegate": {
+    "search_invoices": "البحث عن الفواتير",
+    "search_customers": "البحث عن العملاء",
+    "no_invoices_found": "لم يتم العثور على فواتير",
+    "no_customers_found": "لم يتم العثور على عملاء"
   },
   "statics_card": {
     "statistics": "الإحصائيات",

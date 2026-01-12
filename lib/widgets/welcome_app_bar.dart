@@ -17,15 +17,6 @@ class WelcomeAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _WelcomeAppBarState extends State<WelcomeAppBar> {
-  final WidgetStateProperty<Icon?> thumbIcon = WidgetStateProperty.resolveWith<Icon?>((
-    Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.selected)) {
-      return const Icon(Icons.nights_stay, color: Colors.black87);
-    }
-    return const Icon(Icons.wb_sunny, color: Colors.orange);
-  });
-
   @override
   Widget build(BuildContext context) {
     Locale currentLang = context.locale;

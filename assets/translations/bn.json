@@ -120,6 +120,7 @@
   "settings_screen": {
     "settings": "সেটিংস",
     "app_theme": "অ্যাপ থিম",
+    "app_lang": "ভাষা",
     "choose_theme": "অ্যাপ থিম নির্বাচন করুন",
     "light_mode": "লাইট মোড",
     "dark_mode": "ডার্ক মোড",
