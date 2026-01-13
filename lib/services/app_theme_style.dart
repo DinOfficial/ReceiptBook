@@ -10,6 +10,12 @@ class AppThemeStyle {
     brightness: Brightness.light,
     primaryColor: primaryColor,
     scaffoldBackgroundColor: Colors.white,
+    // canvasColor: const Color(0xff121212),
+    // colorScheme: const ColorScheme.light(
+    //   primary: primaryColor,
+    //   onPrimary: Colors.black,
+    //   onSurface: textColorLight,
+    // ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         alignment: Alignment.center,
@@ -44,7 +50,9 @@ class AppThemeStyle {
     ),
     datePickerTheme: DatePickerThemeData(backgroundColor: Colors.white),
     timePickerTheme: TimePickerThemeData(backgroundColor: Colors.white),
-    canvasColor: Colors.white,
+    // dropdownMenuTheme: DropdownMenuThemeData(
+    //   menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.white)),
+    // ),
   );
 
   /// ---------------- DARK THEME ---------------- ///
@@ -52,6 +60,12 @@ class AppThemeStyle {
     brightness: Brightness.dark,
     primaryColor: primaryColor,
     scaffoldBackgroundColor: const Color(0xff121212),
+    // canvasColor: const Color(0xff121212),
+    // colorScheme: const ColorScheme.dark(
+    //   primary: primaryColor,
+    //   onPrimary: Colors.white,
+    //   onSurface: textColorDark,
+    // ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         alignment: Alignment.center,
@@ -86,6 +100,8 @@ class AppThemeStyle {
     ),
     datePickerTheme: DatePickerThemeData(backgroundColor: Colors.black87),
     timePickerTheme: TimePickerThemeData(backgroundColor: Colors.black87),
-    canvasColor: Colors.black87,
+    // dropdownMenuTheme: DropdownMenuThemeData(
+    //   menuStyle: MenuStyle(backgroundColor: WidgetStateProperty.all(Colors.black)),
+    // ),
   );
 }

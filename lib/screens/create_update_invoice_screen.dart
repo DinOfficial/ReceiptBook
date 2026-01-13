@@ -338,9 +338,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(color: AppThemeStyle.primaryColor),
-                              color: themeProvider.themeMode == ThemeMode.dark
-                                  ? Colors.black
-                                  : Colors.white,
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                             ),
                           ),
                           menuItemStyleData: const MenuItemStyleData(
@@ -550,12 +550,19 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           children: [
                             HugeIcon(
                               icon: HugeIcons.strokeRoundedCheckList,
-                              color: Colors.black38,
+                              color: themeProvider.themeMode == ThemeMode.dark
+                                  ? Colors.black38
+                                  : Colors.white38,
                               size: 92,
                             ),
                             Text(
                               context.tr('create_update_invoice_screen.not_item'),
-                              style: TextStyle(fontSize: 20, color: Colors.black38),
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: themeProvider.themeMode == ThemeMode.dark
+                                    ? Colors.black38
+                                    : Colors.white38,
+                              ),
                             ),
                           ],
                         ),
@@ -572,9 +579,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           onTap: () =>
                               _openItemDialog(context, itemProvider, item: item, index: index),
                           title: Text(item.title),
-                          subtitle: Text(
-                            context.tr('create_update_invoice_screen.quantity ${item.quantity}'),
-                          ),
+                          subtitle: Text('Qty: ${item.quantity}'),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
