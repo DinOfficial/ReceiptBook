@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/models/invoice_model.dart';
 import 'package:receipt_book/provider/auth_check_provider.dart';
@@ -42,7 +43,91 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Center(child: Text("Error: ${snapshot.error}"));
                 }
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text(context.tr('home_screen.no_invoices')));
+                  final invoices = snapshot.data!;
+
+                  // Calculate statistics
+                  final totalInvoices = invoices.length;
+                  final totalAmount = invoices.fold<double>(0, (sum, inv) => sum + inv.total);
+                  final paidCount = invoices.where((inv) => inv.status == 'Paid').length;
+                  final draftCount = invoices.where((inv) => inv.status == 'Draft').length;
+                  final sentCount = invoices.where((inv) => inv.status == 'Sent').length;
+                  return ListView.separated(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    itemCount: invoices.length + 1,
+                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return StatisticsCard(
+                          invoices: invoices,
+                          totalInvoices: totalInvoices,
+                          totalAmount: totalAmount,
+                          paidCount: paidCount,
+                          sentCount: sentCount,
+                          draftCount: draftCount,
+                        );
+                      }
+                      // Invoice List Items
+                      final invoice = invoices[index - 1];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: TransectionListTile(invoice: invoice),
+                      );
+                    },
+                  );
+                }
+                final invoices = snapshot.data!;
+
+                // Calculate statistics
+                final totalInvoices = invoices.length;
+                final totalAmount = invoices.fold<double>(0, (sum, inv) => sum + inv.total);
+                final paidCount = invoices.where((inv) => inv.status == 'Paid').length;
+                final draftCount = invoices.where((inv) => inv.status == 'Draft').length;
+                final sentCount = invoices.where((inv) => inv.status == 'Sent').length;
+                return ListView.separated(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  itemCount: invoices.length + 1,
+                  separatorBuilder: (context, index) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return StatisticsCard(
+                        invoices: invoices,
+                        totalInvoices: totalInvoices,
+                        totalAmount: totalAmount,
+                        paidCount: paidCount,
+                        sentCount: sentCount,
+                        draftCount: draftCount,
+                      );
+                    }
+                    // Invoice List Items
+                    final invoice = invoices[index - 1];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: TransectionListTile(invoice: invoice),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder<List<InvoiceModel>>(
+              stream: context.read<InvoiceProvider>().getAllInvoices(uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text("Error: ${snapshot.error}"));
+                }
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(
+                    child: Column(
+                      children: [
+                        HugeIcon(icon: HugeIcons.strokeRoundedInvoice, size: 104),
+                        Text(context.tr('home_screen.no_invoices',), style: TextStyle(fontSize: 30),),
+                      ],
+                    ),
+                  );
                 }
 
                 final invoices = snapshot.data!;

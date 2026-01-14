@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:receipt_book/screens/add_new_screen.dart';
+import 'package:receipt_book/screens/create_update_invoice_screen.dart';
 import 'package:receipt_book/screens/home_screen.dart';
 import 'package:receipt_book/screens/customerList_screen.dart';
 import 'package:receipt_book/screens/settings_screen.dart';
@@ -20,13 +21,13 @@ class _AppMainLayoutState extends State<AppMainLayout> {
   int selectedIndex = 0;
   final List<Widget> pages = [
     HomeScreen(title: 'Home'),
-    AddNewScreen(title: 'Add New'),
+    CreateUpdateInvoiceScreen(),
     CustomerListScreen(title: 'Customers'),
     SettingsScreen(title: 'Settings'),
   ];
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: pages.elementAt(selectedIndex),
       bottomNavigationBar: Container(
