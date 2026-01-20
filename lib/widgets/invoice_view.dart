@@ -15,6 +15,8 @@ import 'package:receipt_book/services/app_theme_style.dart';
 import 'package:receipt_book/services/invoice_action_controller.dart';
 import 'package:receipt_book/widgets/invoice_image_screen.dart';
 
+import '../provider/item_provider.dart';
+
 class InvoiceView extends StatefulWidget {
   const InvoiceView({super.key, required this.invoice});
 
@@ -70,6 +72,7 @@ class _InvoiceViewState extends State<InvoiceView> {
 
   @override
   Widget build(BuildContext context) {
+    final itemProvider = context.watch<ItemProvider>();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -84,11 +87,14 @@ class _InvoiceViewState extends State<InvoiceView> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => AppMainLayout()),
-            (route) => false,
-          ),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => AppMainLayout()),
+              (route) => false,
+            );
+            itemProvider.itemList.clear();
+          },
         ),
       ),
       body: Consumer<InvoiceSettingsProvider>(

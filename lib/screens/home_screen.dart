@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
+import 'package:hugeicons/styles/stroke_rounded.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/models/invoice_model.dart';
 import 'package:receipt_book/provider/auth_check_provider.dart';
@@ -42,7 +44,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Center(child: Text("Error: ${snapshot.error}"));
                 }
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text(context.tr('home_screen.no_invoices')));
+                  final invoices = snapshot.data!;
+
+                  // Calculate statistics
+                  final totalInvoices = invoices.length;
+                  final totalAmount = invoices.fold<double>(0, (sum, inv) => sum + inv.total);
+                  final paidCount = invoices.where((inv) => inv.status == 'Paid').length;
+                  final draftCount = invoices.where((inv) => inv.status == 'Draft').length;
+                  final sentCount = invoices.where((inv) => inv.status == 'Sent').length;
+                  return Center(
+                    child: Column(
+                      children: [
+                        StatisticsCard(
+                          invoices: invoices,
+                          totalInvoices: totalInvoices,
+                          totalAmount: totalAmount,
+                          paidCount: paidCount,
+                          sentCount: sentCount,
+                          draftCount: draftCount,
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: .center,
+                            crossAxisAlignment: .center,
+                            children: [
+                              HugeIcon(icon: HugeIconsStrokeRounded.invoice02, size: 60),
+                              const SizedBox(height: 12),
+                              Text(context.tr('home_screen.no_invoices')),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 }
 
                 final invoices = snapshot.data!;
