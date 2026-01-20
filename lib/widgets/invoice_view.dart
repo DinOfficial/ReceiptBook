@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
@@ -8,6 +9,8 @@ import 'package:receipt_book/models/invoice_model.dart';
 import 'package:receipt_book/provider/company_provider.dart';
 import 'package:receipt_book/provider/customer_provider.dart';
 import 'package:receipt_book/provider/invoice_settings_provider.dart';
+import 'package:receipt_book/screens/app_main_layout.dart';
+import 'package:receipt_book/screens/home_screen.dart';
 import 'package:receipt_book/services/app_theme_style.dart';
 import 'package:receipt_book/services/invoice_action_controller.dart';
 import 'package:receipt_book/widgets/invoice_image_screen.dart';
@@ -81,17 +84,18 @@ class _InvoiceViewState extends State<InvoiceView> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => AppMainLayout()),
+            (route) => false,
+          ),
         ),
       ),
       body: Consumer<InvoiceSettingsProvider>(
         builder: (context, settings, _) {
           return PdfPreview(
-            build: (format) => _actionsController.generatePdf(
-              _company,
-              _customer,
-              settings.selectedTemplate,
-            ),
+            build: (format) =>
+                _actionsController.generatePdf(_company, _customer, settings.selectedTemplate),
             allowPrinting: true,
             allowSharing: true,
             canChangeOrientation: false,

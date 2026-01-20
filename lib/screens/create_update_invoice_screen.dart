@@ -167,6 +167,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                               tax: itemProvider.taxAmount(),
                             );
 
+
                             if (newInvoice != null && context.mounted) {
                               Navigator.pushReplacement(
                                 context,
@@ -338,9 +339,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(color: AppThemeStyle.primaryColor),
-                              color: Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                              color: themeProvider.themeMode == ThemeMode.dark
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
                           ),
                           menuItemStyleData: const MenuItemStyleData(

@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: GoogleFonts.akayaKanadaka(fontSize: 32, fontWeight: FontWeight.w400),
                   ),
                   Text(
-                    '"${'login.receipt_book'}"',
+                    context.tr('welcome_screen.receipt_book'),
                     style: GoogleFonts.akayaKanadaka(
                       fontSize: 38,
                       fontWeight: FontWeight.w600,
