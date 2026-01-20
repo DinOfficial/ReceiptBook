@@ -115,16 +115,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               onChanged: (ThemeMode? value) {
                                 if (value != null) {
                                   provider.setThemeMode(value);
-
                                   final brightness = MediaQuery.of(context).platformBrightness;
                                   final theme = brightness == Brightness.dark
                                       ? AppThemeStyle.darkTheme
                                       : AppThemeStyle.lightTheme;
 
                                   ThemeSwitcher.of(context).changeTheme(theme: theme);
-
-                                  Navigator.pop(context);
                                 }
+                                Navigator.pop(context);
                               },
                             ),
                           ],

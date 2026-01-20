@@ -34,6 +34,8 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
       _phoneController.text = widget.customer!.phone;
       _emailController.text = widget.customer!.email;
     }
+
+    print(widget.customer);
   }
 
   @override

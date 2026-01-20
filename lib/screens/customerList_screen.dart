@@ -90,6 +90,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             itemCount: customers.length,
             itemBuilder: (context, index) {
               final customer = customers[index];
+              // print(customer);
               return Slidable(
                 key: ValueKey(customer.id),
                 groupTag: 'customer-list',
@@ -99,6 +100,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                   children: [
                     SlidableAction(
                       onPressed: (BuildContext context) {
+                        print(customer);
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
@@ -106,7 +108,10 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                             content: Text(context.tr('customer_list_screen.delete_info')),
                             actions: [
                               TextButton(
-                                onPressed: () => Navigator.pop(context),
+                                onPressed: () {
+                                  // print(customer);
+                                  Navigator.pop(context);
+                                },
                                 child: Text(context.tr('customer_list_screen.cancel')),
                               ),
                               TextButton(
@@ -134,6 +139,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                     ),
                     SlidableAction(
                       onPressed: (BuildContext context) {
+                        print(customer);
                         Navigator.pushNamed(
                           context,
                           CreateUpdateCustomerScreen.name,
