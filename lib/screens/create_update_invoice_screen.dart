@@ -167,7 +167,6 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                               tax: itemProvider.taxAmount(),
                             );
 
-
                             if (newInvoice != null && context.mounted) {
                               Navigator.pushReplacement(
                                 context,
@@ -281,7 +280,15 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                               .map(
                                 (customer) => DropdownMenuItem<CustomerModel>(
                                   value: customer,
-                                  child: Text(customer.name, style: const TextStyle(fontSize: 14)),
+                                  child: Text(
+                                    customer.name,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: themeProvider.themeMode == ThemeMode.dark
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
                                 ),
                               )
                               .toList(),
@@ -552,8 +559,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                             HugeIcon(
                               icon: HugeIcons.strokeRoundedCheckList,
                               color: themeProvider.themeMode == ThemeMode.dark
-                                  ? Colors.black38
-                                  : Colors.white38,
+                                  ? Colors.white38
+                                  : Colors.black38,
                               size: 92,
                             ),
                             Text(
@@ -561,8 +568,8 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                               style: TextStyle(
                                 fontSize: 20,
                                 color: themeProvider.themeMode == ThemeMode.dark
-                                    ? Colors.black38
-                                    : Colors.white38,
+                                    ? Colors.white38
+                                    : Colors.black38,
                               ),
                             ),
                           ],
