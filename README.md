@@ -1,16 +1,110 @@
-# receipt_book
+# 📘 Receipt Book App
 
-A Receipt Maker App
+A modern, secure, and multi-language **Invoice & Receipt Management Application** built with Flutter and Firebase.
+Designed for small businesses to manage customers, invoices, and company data efficiently with a clean and user-friendly UI.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
 
-A few resources to get you started if this is your first Flutter project:
+### 🔐 Authentication & Security
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* Biometric Login (Fingerprint / Face ID)
+* Email & Password Authentication
+* Google Sign-In (Gmail Login)
+* Secure Firebase Authentication
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 👥 Customer Management
+
+* Add New Customers
+* Edit Customer Information
+* Delete Customers
+
+### 🧾 Invoice Management
+
+* Create Invoices for Customers
+* Edit Existing Invoices
+* Delete Invoices
+* Multiple Invoice Templates
+
+### 🏢 Company Management
+
+* Company Setup (Initial Configuration)
+* Update Company Information
+
+### 📊 Dashboard
+
+* Overview of Customers & Invoices
+* Quick access to key actions
+* Clean and informative layout
+
+### 🌍 Localization
+
+* Multi-language Support:
+
+  * 🇧🇩 Bengali
+  * 🇺🇸 English
+  * 🇸🇦 Arabic
+
+### 🎨 Theme & UI
+
+* Light Mode 🌤️
+* Dark Mode 🌙
+* System Default Mode ⚙️
+* Theme preference saved using Local Storage
+
+---
+
+## 🧠 Architecture & Technology
+
+* **Flutter** (Web, Windows & Mobile compatible)
+* **Firebase**
+
+  * Authentication
+  * Firestore / Database
+* **Clean Architecture**
+* **Provider / State Management**
+* **Local Storage** for theme persistence
+
+---
+
+## 🛠️ Tech Stack
+
+* Flutter
+* Firebase Authentication
+* Firebase Firestore
+* Provider
+* Shared Preferences / Local Storage
+* Intl (Localization)
+
+---
+
+## 📦 Supported Platforms
+
+* ✅ Android
+* ✅ Web
+* ✅ Windows
+
+---
+
+## 🎯 Project Goal
+
+To provide a **simple, smart, and reliable receipt & invoice solution** for businesses with:
+
+* Secure login
+* Multi-language support
+* Modern UI
+* Scalable backend
+
+---
+
+## 🤝 Contribution
+
+Contributions, issues, and feature requests are welcome!
+Feel free to fork the project and submit a pull request.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
