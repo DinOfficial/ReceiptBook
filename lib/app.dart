@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:receipt_book/models/customer_model.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:receipt_book/screens/app_main_layout.dart';
 import 'package:receipt_book/screens/auth/confirm_email_verification.dart';
@@ -50,7 +51,10 @@ class ReceiptBookApp extends StatelessWidget {
             ForgotEmailScreen.name: (_) => ForgotEmailScreen(),
             AppMainLayout.name: (_) => AppMainLayout(),
             CompanySetupScreen.name: (_) => CompanySetupScreen(),
-            CreateUpdateCustomerScreen.name: (_) => CreateUpdateCustomerScreen(),
+            CreateUpdateCustomerScreen.name: (context) {
+              final customer = ModalRoute.of(context)?.settings.arguments as CustomerModel?;
+              return CreateUpdateCustomerScreen(customer: customer);
+            },
             CreateUpdateInvoiceScreen.name: (_) => CreateUpdateInvoiceScreen(),
             InternetAccessScreen.name: (_) => InternetAccessScreen(),
             InvoiceSettingsScreen.name: (_) => InvoiceSettingsScreen(),

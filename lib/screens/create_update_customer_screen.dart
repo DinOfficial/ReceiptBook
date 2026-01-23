@@ -129,8 +129,8 @@ class _CreateUpdateCustomerScreenState extends State<CreateUpdateCustomerScreen>
                         onPressed: _addCustomer,
                         child: Text(
                           widget.customer == null
-                              ? context.tr('create_update_customer_screen.add')
-                              : context.tr('create_update_customer_screen.update'),
+                              ? context.tr('create_update_customer_screen.add_customer')
+                              : context.tr('create_update_customer_screen.update_customer'),
                           style: TextStyle(fontSize: 20),
                         ),
                       ),
