@@ -28,6 +28,13 @@ Future<void> main() async {
       fallbackLocale: Locale('en'),
       child: MultiProvider(
         providers: [
+          // *** IMPORTANT Update for upload play store ***
+          // TODO: fix localization in forgot password page
+          // TODO: ADD back to login button in forgot password page
+          // TODO: add invoice screen if not customer not add yet show a default dropdown like no customer selected
+          // TODO: change name to create invoice in bottom navigation bar
+          // TODO: Update Privacy and policy
+          // TODO: Add account deletion from firebase
           ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
           ChangeNotifierProvider(create: (_) => LoginProvider()),
           ChangeNotifierProvider(create: (_) => LogOutProvider()),
