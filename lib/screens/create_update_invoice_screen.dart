@@ -127,9 +127,11 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
             : context.tr('create_update_invoice_screen.edit_invoice'),
       ),
       bottomNavigationBar: BottomAppBar(
-        child: SizedBox(
-          height: 60,
-          child: Center(
+        color: Colors.transparent,
+        child: Center(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * .5,
+            height: 48,
             child: ElevatedButton(
               onPressed: invoiceProvider.isProcessing
                   ? null
@@ -217,6 +219,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                       widget.invoice == null
                           ? context.tr('create_update_invoice_screen.create_invoice')
                           : context.tr('create_update_invoice_screen.update_invoice'),
+                      style: TextStyle(fontSize: 20),
                     ),
             ),
           ),
@@ -279,9 +282,9 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                           items: customers
                               .map(
                                 (customer) => DropdownMenuItem<CustomerModel>(
-                                  value: customer,
+                                  value: selectedCustomer,
                                   child: Text(
-                                    customer.name,
+                                    selectedCustomer == null ? 'Add Customer' : customer.name,
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: themeProvider.themeMode == ThemeMode.dark
@@ -361,7 +364,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   const SizedBox(width: 12),
                   Container(
                     width: 48,
-                    height: 54,
+                    height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: AppThemeStyle.primaryColor, width: 1.5),
@@ -378,7 +381,7 @@ class _CreateUpdateInvoiceScreenState extends State<CreateUpdateInvoiceScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(

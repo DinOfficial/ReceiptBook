@@ -69,7 +69,7 @@
     "create_invoice": "Create Invoice",
     "update_invoice": "Update Invoice",
     "bill_to": "Bill To",
-    "customer": "Select customer",
+    "customer": "Select customer or add ",
     "search": "Search for a customer...",
     "invoice_no": "Invoice No.",
     "status": "Status",

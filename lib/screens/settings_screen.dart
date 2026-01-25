@@ -311,8 +311,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Navigator.pushNamedAndRemoveUntil(context, WelcomeScreen.name, (p) => false);
             },
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            leading: HugeIcon(icon: HugeIcons.strokeRoundedLogout01, size: 32),
-            title: Text(context.tr('settings_screen.logout'), style: TextStyle(fontSize: 20)),
+            leading: HugeIcon(icon: HugeIcons.strokeRoundedLogout01, size: 32, color: Colors.white,),
+            title: Text(context.tr('settings_screen.logout'), style: TextStyle(fontSize: 20, color: Colors.white)),
           ),
           const SizedBox(height: 50),
           Center(
