@@ -103,7 +103,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               onPressed: _onTapForgot,
               child: Text(
                 context.tr('welcome_screen.forgot_password'),
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
             ),
             SizedBox(height: 8),
@@ -111,7 +111,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               onPressed: _onTapLogin,
               child: Text(
                 context.tr('welcome_screen.don\'t_account'),
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
             ),
           ],
@@ -125,7 +125,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   void _onTapForgot() {
-    Navigator.pushNamed(context, ForgotEmailScreen.name);
+    Navigator.pushNamedAndRemoveUntil(context, ForgotEmailScreen.name, (p) => false);
   }
 
   void _onTapLogin() {

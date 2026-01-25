@@ -42,7 +42,7 @@ class _ConfirmEmailVerificationState extends State<ConfirmEmailVerification> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               onPressed: () {
-                Navigator.of(context).pushNamed(LoginScreen.name);
+                Navigator.pushNamedAndRemoveUntil(context, LoginScreen.name, (p) => false);
               },
               child: Text(
                 context.tr('confirm_email_verification.back_to_login'),

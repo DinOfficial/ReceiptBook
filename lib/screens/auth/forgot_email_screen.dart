@@ -40,8 +40,8 @@ class _ForgotEmailScreenState extends State<ForgotEmailScreen> {
                     height: 100,
                   ).animate().fadeIn(duration: 900.ms),
                   Text(
-                    '${'forgot_email_screen.enter_email'}\n'
-                    ' ${'forgot_email_screen.a_password_reset_link'}',
+                    '${context.tr('forgot_email_screen.enter_email')}\n'
+                    ' ${context.tr('forgot_email_screen.a_password_reset_link')}',
                     style: GoogleFonts.akayaKanadaka(fontSize: 20, fontWeight: FontWeight.w400),
                     textAlign: TextAlign.center,
                   ),

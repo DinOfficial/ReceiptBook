@@ -59,7 +59,7 @@ class ReceiptBookApp extends StatelessWidget {
             InternetAccessScreen.name: (_) => InternetAccessScreen(),
             InvoiceSettingsScreen.name: (_) => InvoiceSettingsScreen(),
             AppAndSecurityScreen.name: (_) => AppAndSecurityScreen(),
-            TermsOfServiceScreen.name: (_) => TermsOfServiceScreen(),
+            TermsAndConditionsPage.name: (_) => TermsAndConditionsPage(),
             DataPrivacyScreen.name: (_) => DataPrivacyScreen(),
             ShareAppScreen.name: (_) => ShareAppScreen(),
           },

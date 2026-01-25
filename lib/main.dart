@@ -29,7 +29,7 @@ Future<void> main() async {
       child: MultiProvider(
         providers: [
           // *** IMPORTANT Update for upload play store ***
-          // TODO: fix localization in forgot password page
+          // TODO: fix localization in forgot password page == Done
           // TODO: ADD back to login button in forgot password page
           // TODO: add invoice screen if not customer not add yet show a default dropdown like no customer selected
           // TODO: change name to create invoice in bottom navigation bar

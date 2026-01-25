@@ -49,6 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           return 'System Default';
       }
     }
+
     Locale currentLang = context.locale;
     return Scaffold(
       appBar: MainAppBar(title: context.tr('settings_screen.settings')),
@@ -163,11 +164,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   underline: const SizedBox(),
                                   icon: Padding(
                                     padding: const EdgeInsets.all(4),
-                                    child: HugeIcon(icon: HugeIcons.strokeRoundedInternet, size: 20),
+                                    child: HugeIcon(
+                                      icon: HugeIcons.strokeRoundedInternet,
+                                      size: 20,
+                                    ),
                                   ),
                                   value: currentLang.languageCode,
                                   items: welcomeAppBarProvider.menuItemList.map((value) {
-                                    return DropdownMenuItem<String>(value: value['code'], child: Text(value['name']));
+                                    return DropdownMenuItem<String>(
+                                      value: value['code'],
+                                      child: Text(value['name']),
+                                    );
                                   }).toList(),
                                   onChanged: (String? newValue) async {
                                     if (newValue != null && newValue != currentLang.languageCode) {
@@ -188,7 +195,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               );
-            }
+            },
           ),
           const SizedBox(height: 20),
           ListTile(
@@ -247,7 +254,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             onTap: () {
-              Navigator.pushNamed(context, TermsOfServiceScreen.name);
+              Navigator.pushNamed(context, TermsAndConditionsPage.name);
             },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),

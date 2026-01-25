@@ -28,11 +28,7 @@ class LoginProvider extends ChangeNotifier {
   Future<void> singInWithGoogle(BuildContext context) async {
     if (!await NetworkChecker.hasInternet) {
       if (!context.mounted) return;
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        InternetAccessScreen.name,
-        (p) => false,
-      );
+      Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
     } else {
       _isGoogleUserLoading = true;
       notifyListeners();
@@ -45,26 +41,23 @@ class LoginProvider extends ChangeNotifier {
           return;
         }
 
-        final GoogleSignInAuthentication auth =
-            await googleSignIn.authentication;
+        final GoogleSignInAuthentication auth = await googleSignIn.authentication;
 
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: auth.accessToken,
           idToken: auth.idToken,
         );
 
-        final UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithCredential(credential);
+        final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(
+          credential,
+        );
 
         if (userCredential.user != null) {
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(userCredential.user!.uid)
-              .set({
-                'email': userCredential.user!.email,
-                'name': userCredential.user!.displayName,
-                'createdAt': FieldValue.serverTimestamp(),
-              }, SetOptions(merge: true));
+          await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+            'email': userCredential.user!.email,
+            'name': userCredential.user!.displayName,
+            'createdAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true));
           if (!context.mounted) return;
           ToastHelper.showSuccess(context, 'User login successfully');
           if (!context.mounted) return;
@@ -86,40 +79,27 @@ class LoginProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> emailSignUp(
-    BuildContext context,
-    String email,
-    String password,
-    String name,
-  ) async {
+  Future<void> emailSignUp(BuildContext context, String email, String password, String name) async {
     if (!await NetworkChecker.hasInternet) {
       if (!context.mounted) return;
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        InternetAccessScreen.name,
-        (p) => false,
-      );
+      Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
     } else {
       _isEmailRegisterIsLoading = true;
       notifyListeners();
       try {
-        final credential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
+        final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
         if (credential.user != null) {
           await credential.user!.sendEmailVerification();
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(credential.user!.uid)
-              .set({
-                'email': credential.user!.email,
-                'name': name, // Use the name from the parameter
-                'createdAt': FieldValue.serverTimestamp(),
-              }, SetOptions(merge: true));
+          await FirebaseFirestore.instance.collection('users').doc(credential.user!.uid).set({
+            'email': credential.user!.email,
+            'name': name, // Use the name from the parameter
+            'createdAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true));
           if (!context.mounted) return;
-          ToastHelper.showInfo(
-            context,
-            "Verification email has been sent please check !",
-          );
+          ToastHelper.showInfo(context, "Verification email has been sent please check !");
           Navigator.of(context).pushNamedAndRemoveUntil(
             ConfirmEmailVerification.name,
             (p) => false,
@@ -143,32 +123,23 @@ class LoginProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> emailLogIn(
-    BuildContext context,
-    String email,
-    String password,
-  ) async {
+  Future<void> emailLogIn(BuildContext context, String email, String password) async {
     if (!await NetworkChecker.hasInternet) {
       if (!context.mounted) return;
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        InternetAccessScreen.name,
-        (p) => false,
-      );
+      Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
     } else {
       _isEmailLoginIsLoading = true;
       notifyListeners();
       try {
-        final credential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
+        final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
         final user = credential.user;
         if (user != null && !user.emailVerified) {
           await credential.user!.sendEmailVerification();
           if (!context.mounted) return;
-          ToastHelper.showInfo(
-            context,
-            "Verification email has been sent please check !",
-          );
+          ToastHelper.showInfo(context, "Verification email has been sent please check !");
           Navigator.of(context).pushNamedAndRemoveUntil(
             ConfirmEmailVerification.name,
             (p) => false,
@@ -205,11 +176,7 @@ class LoginProvider extends ChangeNotifier {
   Future<void> resetPassword(BuildContext context, String email) async {
     if (!await NetworkChecker.hasInternet) {
       if (!context.mounted) return;
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        InternetAccessScreen.name,
-        (p) => false,
-      );
+      Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
       return;
     }
     _isResetPasswordIsLoading = true;
@@ -217,19 +184,14 @@ class LoginProvider extends ChangeNotifier {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       if (!context.mounted) return;
-      ToastHelper.showInfo(
-        context,
-        'Password reset email sent. Please check your inbox.',
-      );
+      ToastHelper.showInfo(context, 'Password reset email sent. Please check your inbox.');
+      Navigator.pushNamedAndRemoveUntil(context, ConfirmEmailVerification.name, (p) => false,arguments: email);
     } on FirebaseAuthException catch (e) {
       if (kDebugMode) {
         print(e.code);
       }
       if (!context.mounted) return;
-      ToastHelper.showError(
-        context,
-        e.message ?? 'Failed to send reset email.',
-      );
+      ToastHelper.showError(context, e.message ?? 'Failed to send reset email.');
     } catch (e) {
       if (kDebugMode) {
         print(e);
