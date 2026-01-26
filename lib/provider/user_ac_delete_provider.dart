@@ -64,6 +64,7 @@ class UserAccountDeleteProvider extends ChangeNotifier {
   Future<void> clearUserData(String uid) async {
     final storeData = FirebaseFirestore.instance;
     final batch = storeData.batch();
+    String? customerId;
 
     try {
       // delete companies data
@@ -71,13 +72,16 @@ class UserAccountDeleteProvider extends ChangeNotifier {
       for (final company in companies.docs) {
         batch.delete(company.reference);
       }
-
+      final customers = await storeData.collection('users').doc(uid).collection('customers').get();
+      for (final customer in customers.docs) {
+        customerId = customer.id;
+      }
       // delete invoice data
       final invoices = await storeData
           .collection('users')
           .doc(uid)
           .collection('customers')
-          .doc(uid)
+          .doc(customerId)
           .collection('invoices')
           .get();
       for (final invoice in invoices.docs) {
@@ -85,7 +89,7 @@ class UserAccountDeleteProvider extends ChangeNotifier {
       }
 
       // delete customer data
-      final customers = await storeData.collection('users').doc(uid).collection('customers').get();
+      // final customers = await storeData.collection('users').doc(uid).collection('customers').get();
       for (final customer in customers.docs) {
         batch.delete(customer.reference);
       }
