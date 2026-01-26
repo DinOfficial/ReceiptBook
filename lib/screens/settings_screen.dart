@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:receipt_book/provider/common_provider.dart';
+import 'package:receipt_book/provider/user_ac_delete_provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:receipt_book/screens/company_setup_screen.dart';
 import 'package:receipt_book/screens/invoice_settings_screen.dart';
@@ -27,6 +28,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final WidgetStateProperty<Icon?> thumbIcon = WidgetStateProperty.resolveWith<Icon?>((
     Set<WidgetState> states,
   ) {
@@ -329,35 +332,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
               showDialog(
                 context: context,
                 barrierDismissible: true,
-                builder: (context) => AlertDialog(
-                  title: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      HugeIcon(icon: HugeIcons.strokeRoundedUser, color: Colors.red,size: 40,),
-                      const SizedBox(width: 12),
-                      Text(
-                        'Account Deletion\n'
-                        'Confirmation', style: TextStyle(color: Colors.red),
-                      ),
-                    ],
-                  ),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Center(
-                        child: Text(
-                          'After delete your account you will  lost your account and data ', style: TextStyle(fontSize: 16),
+                builder: (context) => Form(
+                  key: _formKey,
+                  child: AlertDialog(
+                    title: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        HugeIcon(icon: HugeIcons.strokeRoundedUser, color: Colors.red, size: 40),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Account Deletion\n'
+                          'Confirmation',
+                          style: TextStyle(color: Colors.red),
                         ),
+                      ],
+                    ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Center(
+                          child: Text(
+                            'Write down your password in the input field to confirm account deletion. After deletion you won\'t be able to restore your data or user account ',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: 'Input your password',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(context.tr('customer_list_screen.cancel')),
+                      ),
+                      Consumer<UserAccountDeleteProvider>(
+                        builder: (context, settingsProvider, _) {
+                          return Visibility(
+                            visible: !settingsProvider.isProcessing,
+                            replacement: CircularProgressIndicator(),
+                            child: TextButton(
+                              onPressed: onTapDeleteUser,
+                              child: Text(
+                                context.tr('Yes ! Delete'),
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(context.tr('customer_list_screen.cancel')),
-                    ),
-                    TextButton(onPressed: () {}, child: Text(context.tr('Yes ! Delete'), style: TextStyle(color: Colors.red),)),
-                  ],
                 ),
               );
             },
@@ -375,5 +412,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  void onTapDeleteUser() async {
+    final user = FirebaseAuth.instance.currentUser;
+    final providerId = user?.providerData.first.providerId;
+    if (providerId == 'password') {
+      if (_formKey.currentState!.validate()) {
+        String password = _passwordController.text;
+        context.read<UserAccountDeleteProvider>().deleteAccount(context, password: password);
+      }
+    } else {
+      context.read<UserAccountDeleteProvider>().deleteAccount(context);
+    }
   }
 }

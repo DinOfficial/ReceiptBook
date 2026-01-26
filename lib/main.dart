@@ -12,7 +12,7 @@ import 'package:receipt_book/provider/invoice_settings_provider.dart';
 import 'package:receipt_book/provider/item_provider.dart';
 import 'package:receipt_book/provider/log_out_provider.dart';
 import 'package:receipt_book/provider/login_provider.dart';
-import 'package:receipt_book/provider/settings_provider.dart';
+import 'package:receipt_book/provider/user_ac_delete_provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:toastification/toastification.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -41,7 +41,7 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (_) => InvoiceProvider()),
           ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
           ChangeNotifierProvider(create: (_) => BiometricProvider()),
-          ChangeNotifierProvider(create: (_) => SettingsProvider()),
+          ChangeNotifierProvider(create: (_) => UserAccountDeleteProvider()),
         ],
         child: const ToastificationWrapper(child: ReceiptBookApp()),
       ),
