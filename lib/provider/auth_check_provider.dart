@@ -15,20 +15,13 @@ class AuthCheckProvider extends ChangeNotifier {
   final _auth = FirebaseAuth.instance;
   final _fireStore = FirebaseFirestore.instance;
 
-  Future<void> authCheckAndRedirection(
-    BuildContext context, {
-    bool checkBiometrics = true,
-  }) async {
+  Future<void> authCheckAndRedirection(BuildContext context, {bool checkBiometrics = true}) async {
     if (!context.mounted) return;
 
     // Check internet connection
     if (!await NetworkChecker.hasInternet) {
       if (context.mounted) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          InternetAccessScreen.name,
-          (p) => false,
-        );
+        Navigator.pushNamedAndRemoveUntil(context, InternetAccessScreen.name, (p) => false);
       }
       return;
     }
@@ -36,9 +29,7 @@ class AuthCheckProvider extends ChangeNotifier {
     final User? user = _auth.currentUser;
     if (user == null) {
       if (context.mounted) {
-        Navigator.of(
-          context,
-        ).pushNamedAndRemoveUntil(WelcomeScreen.name, (p) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil(WelcomeScreen.name, (p) => false);
       }
       return;
     }
@@ -46,11 +37,7 @@ class AuthCheckProvider extends ChangeNotifier {
     try {
       // User is logged in, check company
       final uid = user.uid;
-      final snapshot = await _fireStore
-          .collection('users')
-          .doc(uid)
-          .collection('companies')
-          .get();
+      final snapshot = await _fireStore.collection('users').doc(uid).collection('companies').get();
 
       if (!context.mounted) return;
 
@@ -65,8 +52,7 @@ class AuthCheckProvider extends ChangeNotifier {
         print(
           '🔍 [AuthCheck] Biometric enabled: ${biometricProvider.isBiometricEnabled}, Can check: ${biometricProvider.canCheckBiometrics}',
         );
-        if (biometricProvider.isBiometricEnabled &&
-            biometricProvider.canCheckBiometrics) {
+        if (biometricProvider.isBiometricEnabled && biometricProvider.canCheckBiometrics) {
           print('🔍 [AuthCheck] Requesting biometric authentication...');
           bool authenticated = await biometricProvider.authenticate();
 
@@ -74,21 +60,19 @@ class AuthCheckProvider extends ChangeNotifier {
 
           if (!authenticated) {
             ToastHelper.showError(context, 'Biometric authentication failed');
-            Navigator.pushReplacementNamed(context, LoginScreen.name);
+            Navigator.pushNamedAndRemoveUntil(context, LoginScreen.name, (p) => false);
             return;
           }
           print('✅ [AuthCheck] Biometric authentication passed');
         } else {
-          print(
-            '⏭️ [AuthCheck] Skipping biometric (not enabled or not available)',
-          );
+          print('⏭️ [AuthCheck] Skipping biometric (not enabled or not available)');
         }
       }
 
       if (!context.mounted) return;
 
       if (snapshot.docs.isNotEmpty) {
-        Navigator.pushReplacementNamed(context, AppMainLayout.name);
+        Navigator.pushNamedAndRemoveUntil(context, AppMainLayout.name, (p) => false);
       } else {
         Navigator.pushReplacementNamed(context, CompanySetupScreen.name);
       }

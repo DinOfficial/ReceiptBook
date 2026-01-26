@@ -12,6 +12,7 @@ import 'package:receipt_book/provider/invoice_settings_provider.dart';
 import 'package:receipt_book/provider/item_provider.dart';
 import 'package:receipt_book/provider/log_out_provider.dart';
 import 'package:receipt_book/provider/login_provider.dart';
+import 'package:receipt_book/provider/settings_provider.dart';
 import 'package:receipt_book/provider/theme_mode_provider.dart';
 import 'package:toastification/toastification.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -23,14 +24,11 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     EasyLocalization(
-      supportedLocales: [Locale('en'),Locale('bn'), Locale('ar',)],
+      supportedLocales: [Locale('en'), Locale('bn'), Locale('ar')],
       path: 'assets/translations',
       fallbackLocale: Locale('en'),
       child: MultiProvider(
         providers: [
-          // *** IMPORTANT Update for upload play store ***
-          // TODO: add invoice screen if not customer not add yet show a default dropdown like no customer selected
-          // TODO: Add account deletion from firebase
           ChangeNotifierProvider(create: (_) => WelcomeScreenProvider()),
           ChangeNotifierProvider(create: (_) => LoginProvider()),
           ChangeNotifierProvider(create: (_) => LogOutProvider()),
@@ -43,6 +41,7 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (_) => InvoiceProvider()),
           ChangeNotifierProvider(create: (_) => InvoiceSettingsProvider()),
           ChangeNotifierProvider(create: (_) => BiometricProvider()),
+          ChangeNotifierProvider(create: (_) => SettingsProvider()),
         ],
         child: const ToastificationWrapper(child: ReceiptBookApp()),
       ),

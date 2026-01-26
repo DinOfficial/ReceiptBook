@@ -311,12 +311,66 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Navigator.pushNamedAndRemoveUntil(context, WelcomeScreen.name, (p) => false);
             },
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            leading: HugeIcon(icon: HugeIcons.strokeRoundedLogout01, size: 32, color: Colors.white,),
-            title: Text(context.tr('settings_screen.logout'), style: TextStyle(fontSize: 20, color: Colors.white)),
+            leading: HugeIcon(icon: HugeIcons.strokeRoundedLogout01, size: 32, color: Colors.white),
+            title: Text(
+              context.tr('settings_screen.logout'),
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
           ),
           const SizedBox(height: 50),
           Center(
             child: Text('App Version: 1.1.1', style: TextStyle(color: Colors.grey, fontSize: 16)),
+          ),
+          const SizedBox(height: 40),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            tileColor: Colors.redAccent[100],
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) => AlertDialog(
+                  title: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      HugeIcon(icon: HugeIcons.strokeRoundedUser, color: Colors.red,size: 40,),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Account Deletion\n'
+                        'Confirmation', style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: Text(
+                          'After delete your account you will  lost your account and data ', style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(context.tr('customer_list_screen.cancel')),
+                    ),
+                    TextButton(onPressed: () {}, child: Text(context.tr('Yes ! Delete'), style: TextStyle(color: Colors.red),)),
+                  ],
+                ),
+              );
+            },
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            leading: HugeIcon(
+              icon: HugeIcons.strokeRoundedUserWarning02,
+              size: 32,
+              color: Colors.white,
+            ),
+            title: Text(
+              context.tr('settings_screen.delete_acc'),
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
           ),
         ],
       ),
